@@ -479,15 +479,22 @@ function admin(){
             const objectStore = transaction.objectStore("users");
     
             if (action === 'delete') {
-                const deleteUserRequest = objectStore.delete(userData.email); // 'userData' es el ID o el email
-                deleteUserRequest.onsuccess = function() {
+                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
                     const NotiTitle = `ユーザー削除`
                     const NotiDescription = `${userData.id}というユーザーはデータベースから削除されました。`;
                     notifications(notificationContainer, NotiDescription, NotiTitle);
-                };
-                deleteUserRequest.onerror = function(event){
-                    console.error("Error al eliminar el usuario:", event);
-                };
+                    if (!response.ok) {
+                        throw new Error('No se pudo eliminar la tarea');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Tarea eliminada:', data);
+                })
+                .catch(err => console.error('Error al eliminar la tarea:', err));
             } else if (action === 'reset') {
                 const getUserRequest = objectStore.get(userData.email);
                 
