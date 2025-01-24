@@ -329,42 +329,6 @@
                     "commentsArray": []
                 }
             ]
-        },
-        {
-            "email": "user7@example.com",
-            "password": "123",
-            "name": "林源太",
-            "id": "@test",
-            "description": "げんちゃん",
-            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
-            "reports": [],
-            "achievements": {
-                "tasksAdded": 0,
-                "tasksCompleted": 0,
-                "tasksShared": 0,
-                "milestones": {
-                    "tasksAdded": [
-                        10,
-                        50,
-                        100
-                    ],
-                    "tasksCompleted": [
-                        10,
-                        50,
-                        100
-                    ],
-                    "tasksShared": [
-                        5,
-                        20,
-                        50
-                    ]
-                },
-                "shownMilestones": {
-                    "tasksAdded": [],
-                    "tasksCompleted": [],
-                    "tasksShared": []
-                }
-            }
         }
     ],
     "tasks": [

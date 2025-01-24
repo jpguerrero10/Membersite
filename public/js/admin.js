@@ -472,80 +472,72 @@ function admin(){
 
     // saving function ------------------------------------------------------------------------
     function saveFunction(userData, action){
-        const dbRequest = indexedDB.open('userDatabase', 1);
-        dbRequest.onsuccess = function(event){
-            const db = event.target.result;
-            const transaction = db.transaction(["users"], "readwrite");
-            const objectStore = transaction.objectStore("users");
-    
-            if (action === 'delete') {
-                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    const NotiTitle = `ユーザー削除`
-                    const NotiDescription = `${userData.id}というユーザーはデータベースから削除されました。`;
-                    notifications(notificationContainer, NotiDescription, NotiTitle);
-                    if (!response.ok) {
-                        throw new Error('No se pudo eliminar la tarea');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Tarea eliminada:', data);
-                })
-                .catch(err => console.error('Error al eliminar la tarea:', err));
-            } else if (action === 'reset') {
-                const getUserRequest = objectStore.get(userData.email);
-                
-                getUserRequest.onsuccess = function() {
-                    const user = getUserRequest.result;
-                    if(user){
-                        user.achievements = userData.achievements;
-                        user.reports = userData.reports;
-                        user.task = userData.task;
-                        const updateUserRequest = objectStore.put(user);
-    
-                        updateUserRequest.onerror = function(event){
-                            console.error("Error updating user:", event);
-                        };
-                        updateUserRequest.onsuccess = function(){
-                            const NotiTitle = `ユーザーリセット`
-                            const NotiDescription = `${userData.id}というユーザーはデータベースからリセットされました。`;
-                            notifications(notificationContainer, NotiDescription, NotiTitle);
-                        };
-                    } else{
-                        console.error(`${userID}ユーザーが見つかりません。`);
-                    }
-                };
-                getUserRequest.onerror = function(event){
-                    console.error("error: ユーザーが見つかりません。", event)
-                };
-            } else if (action === 'update') {
-                const getUserRequest = objectStore.get(userData.email);
-                
-                getUserRequest.onsuccess = function() {
-                    const user = getUserRequest.result;
-                    if(user){
-                        user.reports = userData.reports;
-                        const updateUserRequest = objectStore.put(user);
-    
-                        updateUserRequest.onerror = function(event){
-                            console.error("Error updating user:", event);
-                        };
-                        updateUserRequest.onsuccess = function(){
-                            const NotiTitle = `report update`
-                            const NotiDescription = `${userData.id}というユーザーの報告書をアップデートされました。`;
-                            notifications(notificationContainer, NotiDescription, NotiTitle);
-                        };
-                    } else{
-                        console.error(`${userID}ユーザーが見つかりません。`);
-                    }
-                };
-                getUserRequest.onerror = function(event){
-                    console.error("error: ユーザーが見つかりません。", event)
-                };
-            }
+        if (action === 'delete') {
+            fetch(`http://localhost:3000/users/${encodeURIComponent(userData.id)}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo eliminar la tarea');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const NotiTitle = `ユーザー削除`
+                const NotiDescription = `${userData.id}ユーザーはデータベースから削除されました。`;
+                notifications(notificationContainer, NotiDescription, NotiTitle);
+            })
+            .catch(err => console.error('Error al eliminar la tarea:', err));
+        } else if (action === 'reset') {
+            const getUserRequest = objectStore.get(userData.email);
+            
+            getUserRequest.onsuccess = function() {
+                const user = getUserRequest.result;
+                if(user){
+                    user.achievements = userData.achievements;
+                    user.reports = userData.reports;
+                    user.task = userData.task;
+                    const updateUserRequest = objectStore.put(user);
+
+                    updateUserRequest.onerror = function(event){
+                        console.error("Error updating user:", event);
+                    };
+                    updateUserRequest.onsuccess = function(){
+                        const NotiTitle = `ユーザーリセット`
+                        const NotiDescription = `${userData.id}というユーザーはデータベースからリセットされました。`;
+                        notifications(notificationContainer, NotiDescription, NotiTitle);
+                    };
+                } else{
+                    console.error(`${userID}ユーザーが見つかりません。`);
+                }
+            };
+            getUserRequest.onerror = function(event){
+                console.error("error: ユーザーが見つかりません。", event)
+            };
+        } else if (action === 'update') {
+            const getUserRequest = objectStore.get(userData.email);
+            
+            getUserRequest.onsuccess = function() {
+                const user = getUserRequest.result;
+                if(user){
+                    user.reports = userData.reports;
+                    const updateUserRequest = objectStore.put(user);
+
+                    updateUserRequest.onerror = function(event){
+                        console.error("Error updating user:", event);
+                    };
+                    updateUserRequest.onsuccess = function(){
+                        const NotiTitle = `report update`
+                        const NotiDescription = `${userData.id}というユーザーの報告書をアップデートされました。`;
+                        notifications(notificationContainer, NotiDescription, NotiTitle);
+                    };
+                } else{
+                    console.error(`${userID}ユーザーが見つかりません。`);
+                }
+            };
+            getUserRequest.onerror = function(event){
+                console.error("error: ユーザーが見つかりません。", event)
+            };
         };
     };
     //notifications end
