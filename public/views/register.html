@@ -1,0 +1,51 @@
+    <div class="container d-flex align-items-center justify-content-center vh-100">
+        <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
+            <h2 class="text-center mb-4">Register</h2>
+            <div id="alert" class="alert alert-danger d-none" role="alert">
+                Invalid login credentials.
+            </div>
+            <form id="loginForm">
+                <!-- Name input -->
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="name" placeholder="名前を入力してください" required>
+                    <label for="name" class="form-label">名前</label>
+                </div>
+
+                <!-- ID input -->
+                <div class="mb-2 form-floating">
+                    <input type="text" class="form-control" id="userID" placeholder="IDユーザーを入力してください" required>
+                    <label for="userID" class="form-label">IDユーザー</label>
+                </div>
+
+                <!-- Email input -->
+                <div class="mb-2 form-floating">
+                    <input type="email" class="form-control" id="email" placeholder="アドレスを入力してください" required>
+                    <label for="email" class="form-label">メールアドレス</label>
+                </div>
+
+                <!-- Password input -->
+                <div class="mb-2 form-floating">
+                    <input type="password" class="form-control" id="password" placeholder="パスワードを入力してください" required>
+                    <label for="password" class="form-label">パスワード</label>
+                </div> 
+
+                <!-- description input -->
+                <div class="mb-2 form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;"></textarea>
+                    <label for="description">自己紹介</label>
+                </div>
+
+                <!-- profile image input -->
+                <div class="my-4">
+                    <input class="form-control" type="file" id="formFile" aria-describedby="imageFileText">
+                    <div id="imageFileText" class="form-text ms-2">プロファイル画像を選択して下さい。</div>
+                </div>
+
+                <!-- Submit button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">確認</button>
+                </div>
+            </form>
+            <a class="btnLink link-opacity-50-hover text-center mt-4" style="cursor: pointer;">会員登録しました？ログインはこちら</a>
+        </div>
+    </div>

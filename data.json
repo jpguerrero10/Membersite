@@ -1,0 +1,561 @@
+{
+    "users": [
+        {
+            "email": "user1@example.com",
+            "password": "password123",
+            "name": "John Doe",
+            "id": "@johnD",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user1.jpg",
+            "achievements": {
+                "tasksAdded": 42,
+                "tasksCompleted": 25,
+                "tasksShared": 5,
+                "milestones": {
+                    "tasksAdded": [
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [
+                        10
+                    ],
+                    "tasksCompleted": [
+                        10
+                    ],
+                    "tasksShared": [
+                        5
+                    ]
+                }
+            },
+            "reports": [
+                {
+                    "type": "週報",
+                    "dateStart": "2025-01-20",
+                    "dateEnd": "2025-01-24",
+                    "skills": "HTML, CSS, JS, PHP, Adobe Suite",
+                    "completedTask": "test",
+                    "complain": "",
+                    "nextTask": "test",
+                    "objective": "",
+                    "message": "",
+                    "commentsArray": [
+                        {
+                            "comment": "test comment",
+                            "userName": "David Neeson",
+                            "userID": "@neeman",
+                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
+                            "id": "commentID14659",
+                            "time": "16:44"
+                        },
+                        {
+                            "comment": "test comment 2",
+                            "userName": "David Neeson",
+                            "userID": "@neeman",
+                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
+                            "id": "commentID513",
+                            "time": "16:54"
+                        },
+                        {
+                            "comment": "test comment 3",
+                            "userName": "David Neeson",
+                            "userID": "@neeman",
+                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
+                            "id": "commentID22340",
+                            "time": "16:56"
+                        },
+                        {
+                            "comment": "@neeman 返事",
+                            "userName": "Emily Doe",
+                            "userID": "@emiD",
+                            "image": "img/user4.jpg",
+                            "id": "commentID56490",
+                            "time": "17:03"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "email": "user2@example.com",
+            "password": "password123",
+            "name": "Martin Rodriguez",
+            "id": "@marodriguez",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user2.jpg",
+            "reports": [],
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            }
+        },
+        {
+            "email": "user3@example.com",
+            "password": "password123",
+            "name": "Genta Hayashi",
+            "id": "@genchan",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user3.jpg",
+            "reports": [],
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            }
+        },
+        {
+            "email": "user4@example.com",
+            "password": "password123",
+            "name": "Emily Doe",
+            "id": "@emiD",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user4.jpg",
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            },
+            "reports": [
+                {
+                    "id": "report2025-01-31",
+                    "type": "月報",
+                    "dateStart": "2024-12-01",
+                    "dateEnd": "2025-01-31",
+                    "skills": "html",
+                    "completedTask": "test 2",
+                    "complain": "",
+                    "nextTask": "test 2",
+                    "objective": "",
+                    "message": "test message",
+                    "commentsArray": []
+                }
+            ]
+        },
+        {
+            "email": "user6@example.com",
+            "password": "password123",
+            "name": "Breeze Kenworthy",
+            "id": "@breezthy",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user5.jpg",
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            },
+            "reports": []
+        },
+        {
+            "email": "user5@example.com",
+            "password": "password123",
+            "name": "leela Moon",
+            "id": "@moongirl",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "image": "img/user6.jpg",
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            },
+            "reports": []
+        },
+        {
+            "email": "user@example.com",
+            "password": "123",
+            "name": "David Neeson",
+            "id": "@neeman",
+            "description": "Admin/test",
+            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
+            "achievements": {
+                "tasksAdded": 1,
+                "tasksCompleted": 1,
+                "tasksShared": 6,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": [
+                        5
+                    ]
+                }
+            },
+            "reports": []
+        },
+        {
+            "email": "user7@example.com",
+            "password": "123",
+            "name": "林源太",
+            "id": "@test",
+            "description": "げんちゃん",
+            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
+            "reports": [],
+            "achievements": {
+                "tasksAdded": 0,
+                "tasksCompleted": 0,
+                "tasksShared": 0,
+                "milestones": {
+                    "tasksAdded": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksCompleted": [
+                        10,
+                        50,
+                        100
+                    ],
+                    "tasksShared": [
+                        5,
+                        20,
+                        50
+                    ]
+                },
+                "shownMilestones": {
+                    "tasksAdded": [],
+                    "tasksCompleted": [],
+                    "tasksShared": []
+                }
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "title": "ビューの機能を作成",
+            "description": "crear el sistema de vistas simple basado en JS, todas las vistas deberan desplegarse dentro del mismo div y debera poderse cambiar el script asociado a esa vista.",
+            "deadline": "2024-10-18",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タスク編集のキャンセルエラーを修正",
+            "description": "Hay un bug en el momento que se intenta editar una tarea, si se cancela la edicion y se intenta agregar una nueva tarea esta reemplaza la anterior.",
+            "deadline": "2024-11-08",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タブとセクションを作成",
+            "description": "Creacion de sistema de tabs para navegacion una vez se hace login, de momento la idea es mantener a la izquierda el recuadro del usuario; posteriormente podria usarse un sistema de vistas mas especifico donde poder encapsular cada vista en una funcion que se pueda llamar a cada cambio de tab.",
+            "deadline": "2024-10-25",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タスクフィルターを作成",
+            "description": "Creacion de filtros por nombre, fecha, pendientes/finalizados",
+            "deadline": "2024-10-25",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "データベースを導入",
+            "description": "Hasta ahora el manejo de la informacion se habia dado atraves del local storage, apartir de esta tarea se implementara usando indexedDB.",
+            "deadline": "2024-10-21",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タスク共有システムを作成",
+            "description": "Generar un sistema para compartir tareas entre usuarios",
+            "deadline": "2024-11-08",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タスク達成による実績システムを作成",
+            "description": "crear un sistema de logros por numero de tareas agregadas, resueltas y compartidas/recibidas",
+            "deadline": "2024-11-15",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "ローディング画面を作成",
+            "description": "Crear una pantalla de carga para los tiempos muertos de carga de la app",
+            "deadline": "2024-11-22",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "ダッシュボードページを作成",
+            "description": "crear un dashboard que sea la pantalla de ingreso despues del login, debera contener estadisticas del usuario como cantidad de tareas (resueltas, no resueltas, total), calendario de tareas y logros obtenidos",
+            "deadline": "2024-11-22",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "要素のアニメーションを作成",
+            "description": "Crear animaciones para entrada de tareas / Fase 2. entrada de perfiles de equipo.",
+            "deadline": "2024-11-22",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "レスポンシブを修正",
+            "description": "modificar el responsive para que el perfil ocupe mucho menos espacio y permita visualizar las demas opciones.",
+            "deadline": "2024-11-26",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "報告書セクションを作成",
+            "description": "crear un tab para una seccion donde los usuarios puedan hacer un reporte ya sea semanal o mensual de sus actividades.",
+            "deadline": "2024-11-29",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "報告書セクションのフォームを作成",
+            "description": "Crear el formulario necesario para generar cada reporte, debe tener fechas a las que corresponde el reporte(requerido), input de actividades realizadas(requerido), input de inconvenientes al realizar las actividades, input de actividades del siguiente ciclo(requerido), proposito para ese ciclo (objetivo), mensaje para el equipo.",
+            "deadline": "2024-12-06",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "報告書セクションの表示を作成",
+            "description": "Apartir de los datos ingresados en el formulario, crear una card clickeable de cada reporte que despliegue un modal con toda la informacion.",
+            "deadline": "2024-12-06",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "チームタブで報告書の表示を作成",
+            "description": "crear la visualizacion de los reportes desde la seccion de equipo para visualizar los reportes de los demas miembros.",
+            "deadline": "2024-12-12",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "報告書のコメント機能を作成",
+            "description": "Generar la funcionalidad de hacer comentarios dentro del reporte.",
+            "deadline": "2024-12-20",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "管理者画面を作成",
+            "description": "Crear una pantalla de administracion a la cual solo tendran accesos ciertos usuarios, desde esta pantalla se podra reiniciar, borrar o cambiar la clave de un usuario, entre otras funcionalidades(no resueltas...).",
+            "deadline": "2025-01-10",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        },
+        {
+            "title": "タスクシステムをアップグレード",
+            "description": "mejorar el sistema de tareas para generar una base de datos general de tareas de todos los miembros, que puedan ser vistas, actualizadas y compartidas por todos los miembros a tiempo real.",
+            "deadline": "2025-01-31",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman",
+                "marodriguez"
+            ]
+        },
+        {
+            "title": "社内資料セクションを作成",
+            "description": "Crear la seccion de archivos y enciclopedia.",
+            "deadline": "2025-01-31",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "johnD",
+                "moongirl"
+            ]
+        },
+        {
+            "title": "タスクのチェックリストを作成",
+            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
+            "deadline": "2025-01-31",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "emiD"
+            ]
+        },
+        {
+            "title": "スケジュール表示を作成",
+            "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
+            "deadline": "2025-01-31",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ]
+        },
+        {
+            "title": "データベースをIndexedDBからNodeJSに変換",
+            "description": "Cambiar el guardado de datos de indexedDB a NodeJS",
+            "deadline": "2025-01-24",
+            "isChecked": true,
+            "assignedUsers": [
+                "neeman"
+            ]
+        }
+    ]
+}

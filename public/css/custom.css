@@ -1,0 +1,398 @@
+#app::before {
+    content: '';
+    position: fixed;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    background: rgb(248 249 250);
+    background: linear-gradient(180deg, rgba(248, 249, 250, 0.9501050420168067) 0%, rgba(248, 249, 250, 0) 10%, rgba(248, 249, 250, 0) 90%, rgba(248, 249, 250, 0.9529061624649859) 100%);
+}
+
+.custom-nav-tabs{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: clip;
+    white-space: nowrap;
+}
+
+#taskList.list-group .list-group-item{
+    transition: .5s;
+}
+.taskList .toast-body{
+    max-width: 70%;
+}
+#userImage,
+.teamImage{
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    background-color: whitesmoke;
+}
+.teamImage{
+    width: 50%;
+    margin: 0 auto;
+}
+.edit{
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    padding: .5% 2% 1%;
+}
+.edit svg{
+    fill: #052c65;
+}
+input[type="file"]{
+    display: none;
+}
+label.custom-file-upload {
+    background: #0d6efd;
+    fill: #fff;
+    border-radius: 50%;
+    top: 95px;
+    left: 46%;
+    padding: .5% 2%;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+}
+#plusTask{
+    border-style: dashed;
+}
+.dotContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: -10px;
+    pointer-events: none;
+}
+.blue-dot {
+    width: 10%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    margin: 0 1%;
+}
+#filterInput::placeholder {
+    font-size: 0.9rem;
+}
+#btn-logout {
+    display: flex;
+    margin: 0 auto;
+    width: 80%;
+    transition: .5s ease-in-out;
+}
+#userDescription{
+    transition: .5s ease-in-out;
+}
+.arrow-sm {
+    width: 100%;
+    max-width: 5vw;
+    margin: 0 auto;
+    fill: #0dcaf0;
+    cursor: pointer;
+}
+#infoArrow::before {
+    content: '情報見る';
+    display: block;
+    font-size: .7rem;
+    width: 15vw;
+    text-align: center;
+    transform: translate(-35%, 25%);
+    color: #0dcaf0;
+}
+textarea {
+    height: 17vh;
+}
+#reportForm textarea {
+    height: 25vh;
+}
+.switchCustom {
+    position: relative;
+    margin: 0 !important;
+    float: none !important;
+}
+.form-check.form-switch {
+    padding-left: 15%;
+}
+#reportList .type,
+#reportList .deadline {
+    width: fit-content;
+    border-radius: 25px;
+    padding: 10px 15px;
+    display: inline-block;
+    align-content: center;
+    margin-right: 15px;
+}
+#reportList .type::before,
+#reportList .deadline::before {
+    content: '';
+    display: inline-block;
+    background-position: center;
+    background-size: 45%;
+    background-repeat: no-repeat;
+    background-color: #fff9f0a6;
+    width: 30px;
+    aspect-ratio: 1 / 1;
+    margin-bottom: -10px;
+    margin-right: 10px;
+    border-radius: 50%;
+    transform: translateY(-2px);
+}
+#reportList .type.monthly {
+    background: #c3bcff;
+}
+#reportList .type.weekly {
+    background: #f4bcff;
+}
+#reportList .deadline {
+    background: #bce7ff;
+}
+#reportList .type::before {
+    background-image: url(../img/monthly.svg);
+}
+#reportList .deadline::before {
+    background-image: url(../img/bussiness-hours.svg);
+}
+
+@media (max-width: 480px) {
+    .taskList .toast-body {
+        max-width: 80%;
+        padding-bottom: 10%;
+    }
+    .deadlinePill{
+        white-space: nowrap;
+        position: absolute;
+        right: 3%;
+        bottom: 10px;
+        max-width: 30vw;
+    }
+}
+/* ---------------------------------- team ------------------------------------------ */
+
+
+/*----------------------------------- profile edition ----------------------------------- */
+.profileInfo img{
+    aspect-ratio: 1/1;
+}
+.profileInfo{
+    position: fixed;
+    max-width: 415px;
+    width: 30%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.cardForm{
+    position: relative;
+    transition: .3s;
+}
+.teamContainer .btn-group{
+    max-width: 85%;
+    margin: 0 auto;
+}
+.profileContainer{
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(315px, 29vw);
+}
+.task{
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: min(5vw, 12px);
+}
+.task span {
+    background-color: #cff4fc;
+    padding: 2%;
+    height: 100%;
+    align-content: center;
+    font-size: min(12px, 5vw);
+    margin-right: 5px;
+    font-weight: bolder;
+    color: #055160;
+}
+.task button {
+    margin-left: auto;
+}
+.viewReports .type{
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: min(5vw, 12px);
+}
+.viewReports .type span {
+    padding: 2%;
+    height: 100%;
+    align-content: center;
+    font-size: min(12px, 5vw);
+    margin-right: 5px;
+    font-weight: bolder;
+    color: #055160;
+}
+.viewReports .type.monthly span{
+    background-color: #c3bcff;
+}
+.viewReports .type.weekly span{
+    background-color: #f4bcff;
+}
+.viewReports .type button {
+    margin-left: auto;
+}
+.toast{
+    transition: .3s;
+    opacity: 1;
+}
+.taskTitle::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../img/task.svg);
+    background-position: center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-color: #bccfff;
+    width: 25px;
+    aspect-ratio: 1 / 1;
+    margin-top: -5px;
+    margin-right: 10px;
+    border-radius: 50%;
+    transform: translateY(5px);
+}
+input.task-checkbox {
+    cursor: pointer;
+}
+span.comment-alert {
+    display: block;
+    font-size: 0.7em;
+}
+.comments .teamImage {
+    max-width: 50px;
+    position: absolute;
+    left: -5px;
+}
+
+@media (max-width: 991px) {
+    .profileContainer {
+        position: relative;
+        width: 100%;
+        top: 0;
+        transform: translateY(0%);
+        margin-top: 10%;
+    }
+    #userImage, .teamImage {
+        width: 115px;
+    }
+}
+@media (max-width: 767px) {
+    .profileContainer {
+        margin-top: 15%;
+    }
+}
+@media (max-width: 480px) {
+    #userImage, .teamImage {
+        width: 95px;
+    }
+}
+
+/*----------------------------------- tropy styles ----------------------------------- */
+.trophy{
+    width: 70px;
+    animation: trophyEntry .8s linear;
+    border-radius: 50%;
+    padding: 1%;
+    border: 2px solid #212529;
+    margin-right: 2%;
+}
+.card.trophies .card-body{
+    min-height: 250px;
+    padding-left: 15%;
+}
+.card.trophies .trophy {
+    width: 40px;
+    animation: trophyEntry .8s linear;
+    border-radius: 50%;
+    padding: 1%;
+    border: 1px solid #212529;
+    margin-right: 2%;
+}
+.card.trophies .trophyContainer{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.trophy.completed {
+    filter: hue-rotate(290deg);
+}
+.trophy.shared {
+    filter: hue-rotate(120deg);
+}
+@keyframes trophyEntry {
+    0% {
+        transform: rotatey(0deg) translateY(10px) scale(0.7);
+        border: 0px solid #212529;
+        filter: hue-rotate(-60deg);
+    }
+    50%{
+        transform: rotatey(360deg) translateY(-20px) scale(1.3);
+        filter: hue-rotate(80deg);
+    }
+    90% {
+        transform: rotatey(0deg) translateY(0px) scale(1);
+        border: 1px solid #212529;
+    }
+    100% {
+        transform: rotatey(0deg) translateY(0px) scale(1);
+        border: 2px solid #212529;
+        filter: hue-rotate(0deg);
+    }
+}
+
+/*----------------------------------- calendar styles ----------------------------------- */
+
+.calendar {
+    margin: 0 auto;
+}
+.day, .date {
+    width: 100%;
+    padding: 0.75rem 0;
+    text-align: center;
+}
+.day {
+    font-weight: bold;
+}
+.date {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    aspect-ratio: 1 / 1;
+    max-height: 65px;
+}
+.calendarLegends {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 2% 0;
+}
+.legendItem::before {
+    content: '';
+    width: 15px;
+    height: 5px;
+    display: inline-block;
+    border-radius: 25%;
+    transform: translate(-5px, -3px);
+}
+.completed::before {
+    background-color: #198754;
+}
+.added::before {
+    background-color: #0dcaf0;
+}
+.uncompleted::before {
+    background-color: #dc3545;
+}
+
+/* -------------------------------chart------------------------------------ */
