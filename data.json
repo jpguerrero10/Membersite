@@ -314,7 +314,21 @@
                     ]
                 }
             },
-            "reports": []
+            "reports": [
+                {
+                    "id": "report2025-01-31",
+                    "type": "月報",
+                    "dateStart": "2025-01-01",
+                    "dateEnd": "2025-01-31",
+                    "skills": "HTML, CSS, JS, PHP, Adobe Suite",
+                    "completedTask": "test",
+                    "complain": "",
+                    "nextTask": "test",
+                    "objective": "",
+                    "message": "",
+                    "commentsArray": []
+                }
+            ]
         },
         {
             "email": "user7@example.com",
