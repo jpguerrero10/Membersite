@@ -33,7 +33,6 @@ function team() {
         fetch(`http://localhost:3000/tasks/${userID}`)
             .then(response => response.json())
             .then(tasks => {
-                console.log("Tareas asignadas:", tasks);
                 localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
             })
             .catch(error => console.error('Error al obtener las tareas:', error));
