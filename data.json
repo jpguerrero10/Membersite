@@ -39,6 +39,7 @@
             },
             "reports": [
                 {
+                    "id": "report2025-01-20",
                     "type": "週報",
                     "dateStart": "2025-01-20",
                     "dateEnd": "2025-01-24",
@@ -47,41 +48,8 @@
                     "complain": "",
                     "nextTask": "test",
                     "objective": "",
-                    "message": "",
-                    "commentsArray": [
-                        {
-                            "comment": "test comment",
-                            "userName": "David Neeson",
-                            "userID": "@neeman",
-                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
-                            "id": "commentID14659",
-                            "time": "16:44"
-                        },
-                        {
-                            "comment": "test comment 2",
-                            "userName": "David Neeson",
-                            "userID": "@neeman",
-                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
-                            "id": "commentID513",
-                            "time": "16:54"
-                        },
-                        {
-                            "comment": "test comment 3",
-                            "userName": "David Neeson",
-                            "userID": "@neeman",
-                            "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
-                            "id": "commentID22340",
-                            "time": "16:56"
-                        },
-                        {
-                            "comment": "@neeman 返事",
-                            "userName": "Emily Doe",
-                            "userID": "@emiD",
-                            "image": "img/user4.jpg",
-                            "id": "commentID56490",
-                            "time": "17:03"
-                        }
-                    ]
+                    "message": "test admin",
+                    "commentsArray": []
                 }
             ]
         },
@@ -202,7 +170,7 @@
                     "complain": "",
                     "nextTask": "test 2",
                     "objective": "",
-                    "message": "test message",
+                    "message": "test message admin test",
                     "commentsArray": []
                 }
             ]

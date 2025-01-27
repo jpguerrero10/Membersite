@@ -489,7 +489,7 @@ function admin(){
             })
             .catch(err => console.error('Error al eliminar la tarea:', err));
         } else if (action === 'reset') {
-            fetch(`http://localhost:3000/users/${userData.id}`, {
+            fetch(`http://localhost:3000/users/${encodeURIComponent(userData.id)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -507,29 +507,19 @@ function admin(){
             })
             .catch(err => console.error('Error actualizando los logros:', err));
         } else if (action === 'update') {
-            const getUserRequest = objectStore.get(userData.email);
-            
-            getUserRequest.onsuccess = function() {
-                const user = getUserRequest.result;
-                if(user){
-                    user.reports = userData.reports;
-                    const updateUserRequest = objectStore.put(user);
-
-                    updateUserRequest.onerror = function(event){
-                        console.error("Error updating user:", event);
-                    };
-                    updateUserRequest.onsuccess = function(){
-                        const NotiTitle = `report update`
-                        const NotiDescription = `${userData.id}というユーザーの報告書をアップデートされました。`;
-                        notifications(notificationContainer, NotiDescription, NotiTitle);
-                    };
-                } else{
-                    console.error(`${userID}ユーザーが見つかりません。`);
-                }
-            };
-            getUserRequest.onerror = function(event){
-                console.error("error: ユーザーが見つかりません。", event)
-            };
+            fetch(`http://localhost:3000/users/${encodeURIComponent(userData.id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ reports: userData.reports })
+            })
+            .then(data => {
+                const NotiTitle = `ユーザーリセット`
+                const NotiDescription = `${userData.id}ユーザーはの報告書はアップデートされました。`;
+                notifications(notificationContainer, NotiDescription, NotiTitle);
+            })
+            .catch(err => console.error('Error actualizando los informes:', err));
         };
     };
     //notifications end
