@@ -420,7 +420,7 @@ function admin(){
             }
             
             // Limpia las propiedades
-            user.task = [];
+            user.password = "123";
             user.achievements = {
                 tasksAdded: 0,
                 tasksCompleted: 0,
@@ -489,31 +489,23 @@ function admin(){
             })
             .catch(err => console.error('Error al eliminar la tarea:', err));
         } else if (action === 'reset') {
-            const getUserRequest = objectStore.get(userData.email);
-            
-            getUserRequest.onsuccess = function() {
-                const user = getUserRequest.result;
-                if(user){
-                    user.achievements = userData.achievements;
-                    user.reports = userData.reports;
-                    user.task = userData.task;
-                    const updateUserRequest = objectStore.put(user);
-
-                    updateUserRequest.onerror = function(event){
-                        console.error("Error updating user:", event);
-                    };
-                    updateUserRequest.onsuccess = function(){
-                        const NotiTitle = `ユーザーリセット`
-                        const NotiDescription = `${userData.id}というユーザーはデータベースからリセットされました。`;
-                        notifications(notificationContainer, NotiDescription, NotiTitle);
-                    };
-                } else{
-                    console.error(`${userID}ユーザーが見つかりません。`);
-                }
-            };
-            getUserRequest.onerror = function(event){
-                console.error("error: ユーザーが見つかりません。", event)
-            };
+            fetch(`http://localhost:3000/users/${userData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    password: userData.password,
+                    achievements: userData.achievements,
+                    reports: userData.reports
+                })
+            })
+            .then(data => {
+                const NotiTitle = `ユーザーリセット`
+                const NotiDescription = `${userData.id}ユーザーはデータベースからリセットされました。`;
+                notifications(notificationContainer, NotiDescription, NotiTitle);
+            })
+            .catch(err => console.error('Error actualizando los logros:', err));
         } else if (action === 'update') {
             const getUserRequest = objectStore.get(userData.email);
             
