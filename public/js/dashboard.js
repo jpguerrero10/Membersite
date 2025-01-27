@@ -7,21 +7,15 @@ function dashboard(){
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
                 }),
-            fetch('http://localhost:3000/tasks') // Cambia esta URL según tu configuración
-                .then(response => {
-                    if (!response.ok) throw new Error('Error fetching tasks');
-                    return response.json();
-                }),
             fetch(`http://localhost:3000/tasks/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
                 })
-                .then(tasks => {
-                    localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
-                })
-        ])
-        .then(([users, tasks]) => {
+            ])
+            .then(([users, tasks]) => {
+            console.log(tasks);
+            localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
             // Pasar los datos combinados al callback
             callback({ users, tasks });
         })
@@ -80,7 +74,7 @@ function dashboard(){
     const loadTasks = (container, year, month, day) => {
         loadUsersFromDB(function ({ users, tasks }) {
             let firstElement = true;
-            const user = users.find(user => user.email === userEmail);
+            // const user = users.find(user => user.email === userEmail);
             tasks.forEach((task, index) => {
                 if (!task.isChecked) {
                     const [deadlineYear, deadlineMonth, deadlineDay] = task.deadline.split("-").map(Number);
