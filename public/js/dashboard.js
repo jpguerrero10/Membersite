@@ -14,7 +14,6 @@ function dashboard(){
                 })
             ])
             .then(([users, tasks]) => {
-            console.log(tasks);
             localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
             // Pasar los datos combinados al callback
             callback({ users, tasks });
@@ -61,7 +60,7 @@ function dashboard(){
     aisatsu.style.transition = ".5s ease-in-out";
     aisatsu.style.opacity = "0";
     aisatsu.style.transform = "translateY(-80px)";
-    const card = document.querySelector('#calendarContainer');
+    const card = document.querySelector('#calendar');
 
     card.parentNode.insertBefore(aisatsu, card);
     setTimeout(() => {
@@ -69,19 +68,64 @@ function dashboard(){
     }, 20);
 
     // Calendar creation -------------------------------------------------------------------------------------------------------------
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     loadUsersFromDB(function ({ users, tasks }) {
+    //         console.log("entre");
+    //         const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `よこそう、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
+    //         aisatsu.style.transition = ".5s ease-in-out";
+    //         aisatsu.style.opacity = "0";
+    //         aisatsu.style.transform = "translateY(-80px)";
+    //         const card = document.querySelector('#calendar');
+    //         card.parentNode.insertBefore(aisatsu, card);
+    //         setTimeout(() => {
+    //             fadeIn(aisatsu, 200);
+    //         }, 20);
+    
+    //         // Aquí es donde inicializas el calendario, una vez tienes las tareas
+    //         const calendarEl = document.getElementById('calendar');
+    //         const calendar = new Calendar(calendarEl, {
+    //             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    //             initialView: 'timeGridDay',
+    //             headerToolbar: {
+    //                 left: 'prev,next today',
+    //                 center: 'title',
+    //                 right: 'timeGridDay,timeGridWeek,dayGridMonth'
+    //             },
+    //             editable: true,
+    //             selectable: true,
+    //             dateClick: function(info) {
+    //                 alert(`Has seleccionado: ${info.dateStr}`);
+    //             },
+    //             eventClick: function(info) {
+    //                 alert(`Evento: ${info.event.title}`);
+    //             },
+    //             events: [] // Aquí agregaremos las tareas de forma dinámica
+    //         });
+    
+    //         // Cargar las tareas dinámicamente
+    //         tasks.forEach(task => {
+    //             calendar.addEvent({
+    //                 title: task.title,
+    //                 start: task.deadline, // Asegúrate de que 'deadline' tenga el formato adecuado
+    //                 allDay: false
+    //             });
+    //         });
+    
+    //         // Renderizar el calendario
+    //         calendar.render();
+    //     });
+    // });
 
     //load tasks
     const loadTasks = (container, year, month, day) => {
         loadUsersFromDB(function ({ users, tasks }) {
             let firstElement = true;
-            // const user = users.find(user => user.email === userEmail);
             tasks.forEach((task, index) => {
                 if (!task.isChecked) {
                     const [deadlineYear, deadlineMonth, deadlineDay] = task.deadline.split("-").map(Number);
                     if (Number(year) === deadlineYear && (Number(month) + 1) === deadlineMonth && Number(day) === deadlineDay){
-                        const taskTitle = addElement("div", { class: `tasks d-flex justify-content-between align-items-center py-2 border-bottom border-info`, id: `task${index}-${task.deadline}`}, `
-                        <p class="d-inline-block m-0" style=" max-width: 70%; text-align: left;">${task.title}</p>
-                        <button type="button" class="btn btn-outline-info btn-sm">詳細</button>
+                        const taskTitle = addElement("div", { class: `tasks card flex-row bg-primary align-items-center mt-1 p-2 border-bottom border-info border-top shadow text-white`, id: `task${index}-${task.deadline}`, style: "cursor: pointer;"}, `
+                        <p class="text-start m-0" style="font-size: 0.8rem">${task.title}</p>
                         `);
                         
                         if (firstElement) {
@@ -175,14 +219,22 @@ function dashboard(){
         const rightCol = addElement("div", { class: "col-12 col-md-5" });
         calendarRow.appendChild(rightCol);
 
-        const dayInfoRow = addElement("div", { class: "row text-info-emphasis text-center h-100 bg-info-subtle bg-gradient py-3" });
-        const dayInfo = addElement("div", { class: "day-info d-flex flex-column justify-content-center" });
+        const dayInfoRow = addElement("div", { class: "row text-info-emphasis text-center h-100 bg-info-subtle bg-gradient pt-3" });
+        const dayInfo = addElement("div", { class: "day-info d-flex flex-column p-0" });
+        const dayTask = addElement("div", { class: "day-tasks d-flex flex-column p-1 mt-2 shadow-sm"});
 
-        const dayNumber = addElement("p", { class: "fs-1 fw-bolder m-0", id: "dayNumber" });
-        const dayName = addElement("p", { id: "dayName" });
+        // schedule container
+        const daySchedule = addElement("div", { class: "day-schedule d-flex flex-column" });
+        
+        // tasks container
+        const dayNumber = addElement("p", { class: "m-0" },`
+            <span class="d-block fs-2 fw-bolder" id="dayNumber"></span>
+            <span id="dayName"></span>
+        `);
 
         dayInfo.appendChild(dayNumber);
-        dayInfo.appendChild(dayName);
+        dayInfo.appendChild(dayTask);
+        dayInfo.appendChild(daySchedule);
         dayInfoRow.appendChild(dayInfo);
         rightCol.appendChild(dayInfoRow);
 
@@ -249,18 +301,41 @@ function dashboard(){
         showDayInfo(currentYear , currentMonth, currentDay)
     };
 
+    const createScheduleGrid = (container) => {
+        container.innerHTML = ''; // Limpiar contenido previo
+    
+        for (let hour = 0; hour < 24; hour++) {
+            const hourRow = addElement("div", { class: "hour-row d-flex align-items-center border-bottom p-1", "data-hour": hour }, `
+                <span class="hour-label text-primary fw-bold">${hour}:00</span>
+                <input type="text" class="form-control ms-2 reminder-input" placeholder="予定を追加...">
+            `);
+    
+            // Evento para guardar recordatorio
+            hourRow.querySelector('.reminder-input').addEventListener('change', (event) => {
+                const reminder = event.target.value;
+                const selectedDay = document.getElementById("dayNumber").textContent;
+                saveReminder(selectedDay, hour, reminder);
+            });
+    
+            container.appendChild(hourRow);
+        }
+    };
+
     // Add calendar to DOM
     card.appendChild(createCalendar());
-    const dayInfo = document.querySelector(".day-info");
+    const dayInfo = document.querySelector(".day-tasks");
     
     // Show day details (tasks, date, day of week)
     const showDayInfo = (year, month, day) => {
         const date = new Date(year, month, day);
         document.getElementById("dayNumber").textContent = `${day}日`;
         document.getElementById("dayName").textContent = date.toLocaleDateString("ja-JP", { weekday: 'long' });
+
+        const scheduleContainer = document.querySelector(".day-schedule");
+        createScheduleGrid(scheduleContainer);
         
         loadTasks(dayInfo, year, month, day);
-    };
+    }; 
 
     const markDeadlineOnCalendar = (year, month, day, checkController) => {
         const selectedYear = parseInt(document.getElementById("yearSelect").value);
@@ -295,6 +370,13 @@ function dashboard(){
                 
             });
         }
+    };
+    
+    // Función para guardar recordatorio en localStorage
+    const saveReminder = (day, hour, reminder) => {
+        const key = `reminder_${day}_${hour}`;
+        localStorage.setItem(key, reminder);
+        alert(`Recordatorio guardado para ${day} a las ${hour}:00`);
     };
 
     updateCalendar();

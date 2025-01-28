@@ -151,6 +151,23 @@ textarea {
 #reportList .deadline::before {
     background-image: url(../img/bussiness-hours.svg);
 }
+.calendar .tasks:hover{
+    background-color: #0b5ed7 !important;
+}
+.day-info{
+    aspect-ratio: 1/1;
+}
+.day-tasks,
+.day-schedule{
+    overflow-y: auto;
+}
+.day-tasks{
+    flex: 3;
+}
+.day-schedule{
+    flex: 5;
+    box-shadow: inset 0 10px 10px -5px rgb(45 44 49 / 20%);
+}
 
 @media (max-width: 480px) {
     .taskList .toast-body {

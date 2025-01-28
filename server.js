@@ -197,8 +197,6 @@ app.delete('/tasks/:title', async (req, res) => {
     }
 });
 
-
-
 // Iniciar servidor
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
