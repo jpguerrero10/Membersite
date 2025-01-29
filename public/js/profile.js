@@ -61,7 +61,7 @@ function profile() {
         
         
         // form creation -------------------------------------------------------------
-        const createFormInputs = () => {
+        const createFormInputs = (action) => {
             formContainer.innerHTML = "";
             
             const formCard = addElement("div", { class: "card cardForm shadow p-4 my-3" });
@@ -92,8 +92,26 @@ function profile() {
                 name: "deadline",
                 required: true
             });
+            const checkList = addElement("div", {id: "check-list", class: "mb-3"}, "<div>チェックリスト</div>");
+            const checkListProgress = addElement("div", {
+                id: "check-list-progress",
+                class: "progress mb-2",
+                role: "progressbar",
+                ariaLabel: "Success example",
+                ariaValuenow: "25",
+                ariaValuemin: "0",
+                ariaValuemax: "100",
+                style: "display: none;"
+            });
+            const progressBar = addElement("div", {class: "progress-bar", style: "width: 0%"}, "0%");
+            const addCheckListItemButton = addElement("div", {
+                id: "add-check-list-item-button",
+                class: "btn btn-outline-primary border-primary-subtle mb-3 w-100",
+                type: "button"
+            }, "✙ チェックリストを追加");
+            const checkListGroup = addElement("div", {id: "check-list-group"});
             const btnGroup = addElement("div", { class: "btn-group"});
-            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "タスク追加");
+            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, `${action === "add" ? "タスク追加" : "タスク保存"}`); //20250124gen
             const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
             
             formContainer.parentNode.insertBefore(formCard, formContainer);
@@ -104,13 +122,26 @@ function profile() {
             containerRow.appendChild(containerCol2);
             containerCol2.appendChild(deadlineInput);
             formContainer.appendChild(descriptionInput);
+            checkList.appendChild(checkListProgress);
+            checkListProgress.appendChild(progressBar);
+            checkList.appendChild(addCheckListItemButton);
+            checkList.appendChild(checkListGroup);
             descriptionInput.insertAdjacentElement('afterend', btnGroup);
+            descriptionInput.insertAdjacentElement('afterend', checkList);
             btnGroup.appendChild(submitButton);
             btnGroup.appendChild(cancelButton);
             setTimeout(() => {
                 fadeIn(formCard, 200); // 1s fadein
             }, 20);
             addButton.hidden = true;
+            // document.getElementById('filterButton').disabled = true; //20250127gen
+            // const btnEditAll = document.querySelectorAll('.btn-edit');
+            // if (btnEditAll.length > 0) {
+            //     btnEditAll.forEach(btn => btn.disabled = true);
+            // }
+            //add CheckList Item Button
+            addCheckListItemButton.addEventListener('click', createCheckItemElm);
+            renderProgressbar();
         };
 
         // task creation submit -----------------------------------------------------------------------
@@ -120,11 +151,21 @@ function profile() {
             const description = document.querySelector("#description").value;
             const deadline = document.querySelector("#deadline").value;
             const isChecked = false;
-            
+            let checkList = [];
+            const checkListGroup = document.querySelector('#check-list-group');
+            const checkListInputAll = document.querySelectorAll('.check-list-input');
+            const formTitleTextAll = document.querySelectorAll('.form-title-text');
+            for (let i = 0; i < checkListGroup.children.length; i++) {
+                const checkListItem = {
+                    listCompleted: checkListInputAll[i].checked,
+                    listName: formTitleTextAll[i].value,
+                };
+                checkList.push(checkListItem);
+            }
             if (title && description && deadline) {
                 achievements.tasksAdded++;
                 checkAchievements(achievements);
-                addTask(title, description, deadline, isChecked);
+                addTask(title, description, deadline, isChecked, checkList);
                 closeForm();                
             } else {
                 console.error("Please fill all the fields");
@@ -147,18 +188,24 @@ function profile() {
             document.querySelector(".cardForm").insertAdjacentElement('afterend', formContainer);
             document.querySelector(".cardForm").remove();
             addButton.hidden = false;
+            document.getElementById('filterButton').disabled = false;
+            const btnEditAll = document.querySelectorAll('.btn-edit');
+            if (btnEditAll.length > 0) {
+                btnEditAll.forEach(btn => btn.disabled = false);
+            }
         };
         
         // load previous data ------------------------------------------------------------------------
         const loadSavedTasks = () => {
-            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked));
+            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked, task.checkList));
         };
         
         // new task creation ------------------------------------------------------------------------
         let index = 0;
-        const addTask = (title, description, deadline, isChecked) => {
-            const newTaskItem = addElement( "li",{ class: `list-group-item`, id: `task${index}-${deadline}` });
+        const addTask = (title, description, deadline, isChecked, checkList) => {
+            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative`, id: `task${index}-${deadline}` });
             index++;
+            const checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
             fadeIn(newTaskItem, 30); // 1s fadein
             const fragment = document.createDocumentFragment();
             const taskFlexContainer = addElement('div', { class: "d-flex"});
@@ -173,24 +220,27 @@ function profile() {
                 checkInput.checked = false;
             }
             const toastBody = addElement("div", { class: "toast-body ms-3" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-3"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
-            const divDeadline = addElement("div", { class: "deadline ms-auto d-flex flex-wrap"});
+            const divEditClose = addElement("div", { class: "edit-close ms-auto flex-wrap position-absolute top-0 end-0"});
             const btnCloseTask = addElement("button", { 
                 class: "btn-close close-btn btn-close-success ms-auto",
                 arialabel: "close",
                 style: "display: none;"
             });
             const btnEdit = addElement("button", {
-                class: "btn btn-light position-absolute top-0 end-0",
+                class: "btn btn-light btn-edit",
             },`
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="15" height="15" style="fill: #566d83;"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg>
             `);
-            const paragraphDeadline = addElement("p", { class: "deadlinePill bg-warning-subtle text-dark-emphasis px-2 m-0 mt-auto rounded-pill d-block w-100 text-center" }, `<small><strong>期限:</strong> ${deadline}</small>`);
-            
-            taskFlexContainer.append(checkInput, toastBody, divDeadline);
-            divDeadline.append(btnEdit, btnCloseTask, paragraphDeadline);
+            const deadlineChecklist = addElement("div", {class: "deadline-checklist d-flex justify-content-between"});
+            const paragraphDeadline = addElement("p", {class: "deadlinePill bg-warning-subtle text-dark-emphasis px-3 m-0 mt-auto rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/></svg></strong> ${deadline}</small>`);
+            const paragraphChecklist = addElement("p", {class: "checklistPill bg-secondary text-light px-3 m-0 mt-auto rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m424-312 282-282-56-56-226 226-114-114-56 56 170 170ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z"/></svg></strong> ${checklistCompletedCount}/${checkList.length}</small>`);
+            taskFlexContainer.append(checkInput, toastBody, divEditClose);
+            divEditClose.append(btnEdit, btnCloseTask);
+            deadlineChecklist.append(paragraphChecklist, paragraphDeadline);
             
             fragment.appendChild(taskFlexContainer);
             newTaskItem.appendChild(fragment);
+            newTaskItem.appendChild( deadlineChecklist);
             taskContainer.insertBefore(newTaskItem, taskContainer.firstChild);
 
             //check function
@@ -228,15 +278,15 @@ function profile() {
             checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, title, description, deadline, paragraphDeadline));
     
             //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline));
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, checkList));
 
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
                 let assignedUsers = [];
                 assignedUsers.push(userID.replace(/\W+/g, ''));
-                tasks.push({title, description, deadline, isChecked, assignedUsers});
-                let task = {title, description, deadline, isChecked, assignedUsers};
+                tasks.push({title, description, deadline, isChecked, assignedUsers, checkList});
+                let task = {title, description, deadline, isChecked, assignedUsers, checkList};
                 saveTask("add", task, title);
             }
         };
@@ -335,22 +385,40 @@ function profile() {
 
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline){
+        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, checkList){
             newTaskItem.hidden = true;
-            createFormInputs();
-            
+            createFormInputs('edit');
             document.querySelector("#title").value = title;
             document.querySelector("#description").value = description;
             document.querySelector("#deadline").value = deadline;
             let submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;               
+            submitButton.disabled = true;
+            console.log(checkList);
+            if (!checkList) {
+                checkList = [];
+            }
+            checkList.forEach(list => {
+                createCheckItemElm('edit', list.listCompleted, list.listName)
+            });
+            renderProgressbar();
             
             const validateInputs = () => {
                 const currentTitle = document.querySelector("#title").value;
                 const currentDescription = document.querySelector("#description").value;
                 const currentDeadline = document.querySelector("#deadline").value;
+                const currentCheckList = [];
+                const checkListGroup = document.querySelector('#check-list-group');
+                const checkListInputAll = document.querySelectorAll('.check-list-input');
+                const formTitleTextAll = document.querySelectorAll('.form-title-text');
+                for (let i = 0; i < checkListGroup.children.length; i++) {
+                    const checkListItem = {
+                        listCompleted: checkListInputAll[i].checked,
+                        listName: formTitleTextAll[i].value,
+                    };
+                    currentCheckList.push(checkListItem);
+                }
                 
-                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline){
+                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline || currentCheckList !== checkList){
                     submitButton.disabled = false;
                 } else{
                     submitButton.disabled = true; 
@@ -360,8 +428,10 @@ function profile() {
                 document.querySelector("#title").addEventListener('input', validateInputs);
                 document.querySelector("#description").addEventListener('input', validateInputs);
                 document.querySelector("#deadline").addEventListener('input', validateInputs);
+                document.querySelectorAll('.check-list-input').forEach(checkListInput => checkListInput.addEventListener('change', validateInputs));
+                document.querySelectorAll('.form-title-text').forEach(checkListInput => checkListInput.addEventListener('input', validateInputs));
             }, 0);
-
+            
             const addListeners = () =>{
                 const handleCancelEdit = () => {
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
@@ -401,7 +471,7 @@ function profile() {
         
         // new task button || flow start
         addButton.addEventListener("click", () => {
-            createFormInputs();
+            createFormInputs('add');
             formContainer.addEventListener('submit', handleFormSubmit);
             document.querySelector("#cancelBtn").addEventListener('click', handleCancel);
         });
@@ -433,6 +503,107 @@ function profile() {
 
         //notifications end
         cardParent.parentNode.insertBefore(notificationContainer, cardParent);
+
+        //checklist create
+        function createCheckItemElm(action, checkListCompeted, checkListTitle) {
+            const checkListGroup = document.getElementById('check-list-group');
+            const checkListItem = addElement("div", {class: "check-list-item mb-2 d-flex align-items-center"});
+            const checkBoxInput = addElement('input', {
+                class:'check-list-input mt-0',
+                type:'checkbox',
+            });
+            const titleInput = addElement('input', {
+                class:'form-title-text form-control mx-2',
+                type:'text',
+                ariaLabel: 'Text input with checkbox'
+            });
+            const checkListItemRemoveButton = addElement('div', {class:'check-list-item-remove-button btn-close close-btn btn-close-success ms-auto'});
+            checkListGroup.append(checkListItem);
+            checkListItem.append(checkBoxInput);
+            checkListItem.append(titleInput);
+            checkListItem.append(checkListItemRemoveButton);
+
+            if (action === 'edit') {
+                checkBoxInput.checked = checkListCompeted;
+                titleInput.value = checkListTitle;
+                if (checkListGroup.children.length > 0) {
+                    const checkListProgress = document.querySelector('#check-list-progress');
+                    checkListProgress.style.display = 'block';
+                    renderProgressbar();
+                }
+                if (checkBoxInput.checked) {
+                    titleInput.style.textDecoration = 'line-through';
+                } else {
+                    titleInput.style.textDecoration = 'none';
+                }
+
+            } else {
+                titleInput.focus();
+            }
+            //チェック項目のタイトルを入力した時の処理
+            titleInput.addEventListener('focusout', function() {
+                const checkListGroup = document.getElementById('check-list-group');
+                const checkListProgress = document.querySelector('#check-list-progress');
+                if (titleInput.value === '') {
+                    if (titleInput.value !== beforeText && action === 'edit') {
+                        titleInput.value = beforeText;
+                    } else {
+                        checkListItem.remove();
+                        return;
+                    }
+                } else {
+                    if (checkListGroup.children.length > 0) {
+                        checkListProgress.style.display = 'block';
+                        renderProgressbar();
+                    } else {
+                        checkListProgress.style.display = 'none';
+                    }
+                }
+                beforeText = '';
+            });
+            //チェック項目のタイトルからフォーカスを外した時の処理
+            checkBoxInput.addEventListener('change', ()=> {
+                renderProgressbar();
+                if (checkBoxInput.checked) {
+                    titleInput.style.textDecoration = 'line-through';
+                } else {
+                    titleInput.style.textDecoration = 'none';
+                }
+            });
+            //チェック項目を削除する処理
+            checkListItemRemoveButton.addEventListener('click', function() {
+                const checkListGroup = document.getElementById('check-list-group');
+                const checkListProgress = document.querySelector('#check-list-progress');
+                checkListItem.remove();
+                if (!checkListGroup.children.length) {
+                    checkListProgress.style.display = 'none';
+                } else {
+                    renderProgressbar();
+                }
+            });
+            //テキストエリアをフォーカスした時の処理
+            let beforeText = '';
+            titleInput.addEventListener('focus', function() {
+                if (titleInput.value) {
+                    beforeText = titleInput.value;
+                }
+            });
+        }
+
+        //プログレスバーの処理
+        function renderProgressbar() {
+            const checkListProgress = document.querySelector('#check-list-progress');
+            const allFormCheckInput = document.querySelectorAll('.check-list-input');
+            let chekedCount = 0;
+            for (let i = 0; i < allFormCheckInput.length; i++) {
+                if (allFormCheckInput[i].checked) {
+                    chekedCount++;
+                }
+            }
+            const progressRate = chekedCount / allFormCheckInput.length * 100;
+            checkListProgress.firstElementChild.style.width = `${progressRate}%`;
+            checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
+        }
 
         loadSavedTasks();
         return {tasks};

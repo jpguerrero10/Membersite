@@ -96,14 +96,40 @@
             "id": "@genchan",
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user3.jpg",
-            "reports": [],
+            "reports": [
+                {
+                    "id": "report2025-02-01",
+                    "type": "月報",
+                    "dateStart": "2025-01-01",
+                    "dateEnd": "2025-02-01",
+                    "skills": "ああ",
+                    "completedTask": "ああ",
+                    "complain": "ああ",
+                    "nextTask": "ああ",
+                    "objective": "ああ",
+                    "message": "あ",
+                    "commentsArray": []
+                },
+                {
+                    "id": "report2025-01-14",
+                    "type": "週報",
+                    "dateStart": "2025-01-03",
+                    "dateEnd": "2025-01-14",
+                    "skills": "あ",
+                    "completedTask": "ああ",
+                    "complain": "ああ",
+                    "nextTask": "ああ",
+                    "objective": "ああ",
+                    "message": "",
+                    "commentsArray": []
+                }
+            ],
             "achievements": {
-                "tasksAdded": 0,
-                "tasksCompleted": 0,
+                "tasksAdded": 12,
+                "tasksCompleted": 3,
                 "tasksShared": 0,
                 "milestones": {
                     "tasksAdded": [
-                        10,
                         50,
                         100
                     ],
@@ -119,7 +145,9 @@
                     ]
                 },
                 "shownMilestones": {
-                    "tasksAdded": [],
+                    "tasksAdded": [
+                        10
+                    ],
                     "tasksCompleted": [],
                     "tasksShared": []
                 }
@@ -476,12 +504,22 @@
         },
         {
             "title": "タスクのチェックリストを作成",
-            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
+            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.\n↑え？",
             "deadline": "2025-01-31",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
                 "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "これやる1"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "これやる2"
+                }
             ]
         },
         {
@@ -500,6 +538,35 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
+            ]
+        },
+        {
+            "title": "sdsd",
+            "description": "sdsds",
+            "deadline": "2025-01-01",
+            "isChecked": false,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": []
+        },
+        {
+            "title": "tesa12",
+            "description": "tesa12",
+            "deadline": "2025-01-17",
+            "isChecked": false,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "dddd"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "dddd"
+                }
             ]
         }
     ]
