@@ -61,7 +61,7 @@ function profile() {
         
         
         // form creation -------------------------------------------------------------
-        const createFormInputs = () => {
+        const createFormInputs = (action) => {
             formContainer.innerHTML = "";
             
             const formCard = addElement("div", { class: "card cardForm shadow p-4 my-3" });
@@ -92,8 +92,26 @@ function profile() {
                 name: "deadline",
                 required: true
             });
+            const checkList = addElement("div", {id: "check-list", class: "mb-3"}, "<div>チェックリスト</div>");
+            const checkListProgress = addElement("div", {
+                id: "check-list-progress",
+                class: "progress mb-2",
+                role: "progressbar",
+                ariaLabel: "Success example",
+                ariaValuenow: "25",
+                ariaValuemin: "0",
+                ariaValuemax: "100",
+                style: "display: none;"
+            });
+            const progressBar = addElement("div", {class: "progress-bar", style: "width: 0%"}, "0%");
+            const addCheckListItemButton = addElement("div", {
+                id: "add-check-list-item-button",
+                class: "btn btn-outline-primary border-primary-subtle mb-3 w-100",
+                type: "button"
+            }, "✙ チェックリストを追加");
+            const checkListGroup = addElement("div", {id: "check-list-group"});
             const btnGroup = addElement("div", { class: "btn-group"});
-            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "タスク追加");
+            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, `${action === "add" ? "タスク追加" : "タスク保存"}`); //20250124gen
             const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
             
             formContainer.parentNode.insertBefore(formCard, formContainer);
@@ -104,13 +122,26 @@ function profile() {
             containerRow.appendChild(containerCol2);
             containerCol2.appendChild(deadlineInput);
             formContainer.appendChild(descriptionInput);
+            checkList.appendChild(checkListProgress);
+            checkListProgress.appendChild(progressBar);
+            checkList.appendChild(addCheckListItemButton);
+            checkList.appendChild(checkListGroup);
             descriptionInput.insertAdjacentElement('afterend', btnGroup);
+            descriptionInput.insertAdjacentElement('afterend', checkList);
             btnGroup.appendChild(submitButton);
             btnGroup.appendChild(cancelButton);
             setTimeout(() => {
                 fadeIn(formCard, 200); // 1s fadein
             }, 20);
             addButton.hidden = true;
+            // document.getElementById('filterButton').disabled = true; //20250127gen
+            // const btnEditAll = document.querySelectorAll('.btn-edit');
+            // if (btnEditAll.length > 0) {
+            //     btnEditAll.forEach(btn => btn.disabled = true);
+            // }
+            //add CheckList Item Button
+            addCheckListItemButton.addEventListener('click', createCheckItemElm);
+            renderProgressbar();
         };
 
         // task creation submit -----------------------------------------------------------------------
@@ -120,11 +151,21 @@ function profile() {
             const description = document.querySelector("#description").value;
             const deadline = document.querySelector("#deadline").value;
             const isChecked = false;
-            
+            let checkList = [];
+            const checkListGroup = document.querySelector('#check-list-group');
+            const checkListInputAll = document.querySelectorAll('.check-list-input');
+            const formTitleTextAll = document.querySelectorAll('.form-title-text');
+            for (let i = 0; i < checkListGroup.children.length; i++) {
+                const checkListItem = {
+                    listCompleted: checkListInputAll[i].checked,
+                    listName: formTitleTextAll[i].value,
+                };
+                checkList.push(checkListItem);
+            }
             if (title && description && deadline) {
                 achievements.tasksAdded++;
                 checkAchievements(achievements);
-                addTask(title, description, deadline, isChecked);
+                addTask(title, description, deadline, isChecked, checkList);
                 closeForm();                
             } else {
                 console.error("Please fill all the fields");
@@ -147,18 +188,31 @@ function profile() {
             document.querySelector(".cardForm").insertAdjacentElement('afterend', formContainer);
             document.querySelector(".cardForm").remove();
             addButton.hidden = false;
+            document.getElementById('filterButton').disabled = false;
+            const btnEditAll = document.querySelectorAll('.btn-edit');
+            if (btnEditAll.length > 0) {
+                btnEditAll.forEach(btn => btn.disabled = false);
+            }
         };
         
         // load previous data ------------------------------------------------------------------------
         const loadSavedTasks = () => {
-            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked));
+            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked, task.checkList));
         };
         
         // new task creation ------------------------------------------------------------------------
         let index = 0;
-        const addTask = (title, description, deadline, isChecked) => {
-            const newTaskItem = addElement( "li",{ class: `list-group-item`, id: `task${index}-${deadline}` });
+        const addTask = (title, description, deadline, isChecked, checkList) => {
+            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative`, id: `task${index}-${deadline}` });
             index++;
+            console.log(checkList);
+            let checklistLength = 0;
+            let checklistCompletedCount = 0;
+            if (checkList) {
+                checklistLength = checkList.length;
+                checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
+                console.log(checklistCompletedCount);
+            }
             fadeIn(newTaskItem, 30); // 1s fadein
             const fragment = document.createDocumentFragment();
             const taskFlexContainer = addElement('div', { class: "d-flex"});
@@ -173,26 +227,34 @@ function profile() {
                 checkInput.checked = false;
             }
             const toastBody = addElement("div", { class: "toast-body ms-3" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-3"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
-            const divDeadline = addElement("div", { class: "deadline ms-auto d-flex flex-wrap"});
+            const divEditClose = addElement("div", { class: "edit-close ms-auto flex-wrap position-absolute top-0 end-0"});
             const btnCloseTask = addElement("button", { 
                 class: "btn-close close-btn btn-close-success ms-auto",
                 arialabel: "close",
                 style: "display: none;"
             });
             const btnEdit = addElement("button", {
-                class: "btn btn-light position-absolute top-0 end-0",
+                class: "btn btn-light btn-edit",
             },`
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="15" height="15" style="fill: #566d83;"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg>
             `);
-            const paragraphDeadline = addElement("p", { class: "deadlinePill bg-warning-subtle text-dark-emphasis px-2 m-0 mt-auto rounded-pill d-block w-100 text-center" }, `<small><strong>期限:</strong> ${deadline}</small>`);
-            
-            taskFlexContainer.append(checkInput, toastBody, divDeadline);
-            divDeadline.append(btnEdit, btnCloseTask, paragraphDeadline);
-            
+            const deadlineChecklist = addElement("div", {class: "deadline-checklist d-flex justify-content-between"});
+            const paragraphDeadline = addElement("p", {class: "deadlinePill bg-warning-subtle text-dark-emphasis px-3 m-0 rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 600" width="16px" fill="#495057"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg></strong> ${deadline}</small>`);
+            const paragraphChecklist = addElement("p", {class: "checklistPill bg-secondary text-light px-3 m-0 rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}</small>`);
+            taskFlexContainer.append(checkInput, toastBody, divEditClose);
+            divEditClose.append(btnEdit, btnCloseTask);
+            deadlineChecklist.append(paragraphChecklist, paragraphDeadline);
+
             fragment.appendChild(taskFlexContainer);
             newTaskItem.appendChild(fragment);
+            newTaskItem.appendChild( deadlineChecklist);
             taskContainer.insertBefore(newTaskItem, taskContainer.firstChild);
 
+            if (checklistLength === 0) {
+                if (!paragraphChecklist.classList.contains("opacity-0")) {
+                    paragraphChecklist.classList.add("opacity-0");
+                }
+            }
             //check function
             setTimeout(() => {
                 if(isChecked){
@@ -211,7 +273,7 @@ function profile() {
                     checkInput.removeAttribute("checked");
                     paragraphDeadline.classList.remove("bg-info-subtle");
                     paragraphDeadline.classList.add("bg-warning-subtle", "text-dark-emphasis", "px-2");
-                }                
+                }
             }, 10);
 
             //close task button
@@ -224,25 +286,30 @@ function profile() {
                 }, 300);
             });
             
+            //assign user to task
+            let assignedUsers = [];
+            assignedUsers.push(userID.replace(/\W+/g, ''));
+
             //check button
-            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, title, description, deadline, paragraphDeadline));
+            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers));
     
             //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline));
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers));
 
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
-                let assignedUsers = [];
-                assignedUsers.push(userID.replace(/\W+/g, ''));
-                tasks.push({title, description, deadline, isChecked, assignedUsers});
-                let task = {title, description, deadline, isChecked, assignedUsers};
+                tasks.push({title, description, deadline, isChecked, assignedUsers, checkList});
+                let task = {title, description, deadline, isChecked, assignedUsers, checkList};
                 saveTask("add", task, title);
             }
         };
         
         // checked status function ------------------------------------------------------------------------
-        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, title, description, deadline, paragraphDeadline){
+        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers){
+            const title = newTaskItem.querySelector(".taskTitle strong").textContent;
+            const description = newTaskItem.querySelector("p").textContent;
+            const deadline = newTaskItem.querySelector(".deadlinePill small").innerHTML.match(/\d{4}-\d{2}/)[0];
             if(checkInput.checked){
                 newTaskItem.querySelector('h3').classList.remove("text-primary-emphasis");
                 newTaskItem.classList.add("bg-success-subtle", "text-success");
@@ -266,8 +333,8 @@ function profile() {
             }
             const isChecked = checkInput.checked;
             tasks = tasks.filter(task => task.title !== title || task.description !== description);
-            tasks.push({title, description, deadline, isChecked});
-            let task = {title, description, deadline, isChecked};
+            tasks.push({title, description, deadline, isChecked, assignedUsers});
+            let task = {title, description, deadline, isChecked, assignedUsers};
             saveTask("edition", task, title);
         }
 
@@ -335,22 +402,46 @@ function profile() {
 
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline){
+        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers){
             newTaskItem.hidden = true;
-            createFormInputs();
-            
+            createFormInputs('edit');
             document.querySelector("#title").value = title;
             document.querySelector("#description").value = description;
             document.querySelector("#deadline").value = deadline;
             let submitButton = document.querySelector('button[type="submit"]');
-            submitButton.disabled = true;               
+            submitButton.disabled = true;
+            let checkList;
+            tasks.forEach(task => {
+                if (task.title === title) {
+                    if (task.checkList) {
+                        checkList = task.checkList;
+                    } else {
+                        checkList = [];
+                    }
+                }
+            });
+            checkList.forEach(list => {
+                createCheckItemElm('edit', list.listCompleted, list.listName)
+            });
+            renderProgressbar();
             
             const validateInputs = () => {
                 const currentTitle = document.querySelector("#title").value;
                 const currentDescription = document.querySelector("#description").value;
                 const currentDeadline = document.querySelector("#deadline").value;
+                const currentCheckList = [];
+                const checkListGroup = document.querySelector('#check-list-group');
+                const checkListInputAll = document.querySelectorAll('.check-list-input');
+                const formTitleTextAll = document.querySelectorAll('.form-title-text');
+                for (let i = 0; i < checkListGroup.children.length; i++) {
+                    const checkListItem = {
+                        listCompleted: checkListInputAll[i].checked,
+                        listName: formTitleTextAll[i].value,
+                    };
+                    currentCheckList.push(checkListItem);
+                }
                 
-                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline){
+                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline || JSON.stringify(currentCheckList) !== JSON.stringify(checkList)){
                     submitButton.disabled = false;
                 } else{
                     submitButton.disabled = true; 
@@ -360,8 +451,12 @@ function profile() {
                 document.querySelector("#title").addEventListener('input', validateInputs);
                 document.querySelector("#description").addEventListener('input', validateInputs);
                 document.querySelector("#deadline").addEventListener('input', validateInputs);
+                document.querySelector("#add-check-list-item-button").addEventListener('click', validateInputs);
+                document.querySelectorAll('.check-list-input').forEach(checkListInput => checkListInput.addEventListener('change', validateInputs));
+                document.querySelectorAll('.form-title-text').forEach(checkListInput => checkListInput.addEventListener('input', validateInputs));
+                document.querySelectorAll('.check-list-item-remove-button').forEach(checkListInput => checkListInput.addEventListener('click', validateInputs));
             }, 0);
-
+            
             const addListeners = () =>{
                 const handleCancelEdit = () => {
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
@@ -372,23 +467,49 @@ function profile() {
                 };
                 const handleFormSubmitEdit = (event) => {
                     event.preventDefault();
-                    tasks = tasks.filter(task => task.title !== title || task.description !== description || task.deadline !== deadline);
-                    
+                    tasks = tasks.filter(task => task.title !== title || task.description !== description || task.deadline !== deadline || JSON.stringify(task.checkList) !== JSON.stringify(checkList));
+                    const currentCheckList = [];
+                    const checkListGroup = document.querySelector('#check-list-group');
+                    const checkListInputAll = document.querySelectorAll('.check-list-input');
+                    const formTitleTextAll = document.querySelectorAll('.form-title-text');
+                    for (let i = 0; i < checkListGroup.children.length; i++) {
+                        const checkListItem = {
+                            listCompleted: checkListInputAll[i].checked,
+                            listName: formTitleTextAll[i].value,
+                        };
+                        currentCheckList.push(checkListItem);
+                    }
                     const newEditTask = {
                         title: document.querySelector("#title").value,
                         description: document.querySelector("#description").value,
                         deadline: document.querySelector("#deadline").value,
-                        isChecked: checkInput.checked
+                        isChecked: checkInput.checked,
+                        assignedUsers: assignedUsers,
+                        checkList: currentCheckList
                     };
-                    tasks.push(newEditTask);
-                    saveTask("edition", newEditTask, title);
 
+                    const checklistLength = currentCheckList.length;
+                    const checklistCompletedCount = currentCheckList.filter(completed => completed.listCompleted).length;
+                    newTaskItem.querySelector(".checklistPill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}`;
+                    if (checklistLength === 0) {
+                        if (!newTaskItem.querySelector(".checklistPill").classList.contains("opacity-0")) {
+                            newTaskItem.querySelector(".checklistPill").classList.add("opacity-0");
+                        }
+                    } else {
+                        newTaskItem.querySelector(".checklistPill").classList.remove("opacity-0");
+                    }
                     if (title && description && deadline) {
-                        addTask(newEditTask.title, newEditTask.description, newEditTask.deadline, newEditTask.isChecked);
+                        newTaskItem.querySelector(".taskTitle strong").textContent = newEditTask.title;
+                        newTaskItem.querySelector("p").textContent = newEditTask.description;
+                        newTaskItem.querySelector(".deadlinePill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 600" width="16px" fill="#495057"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg></strong> ${newEditTask.deadline}`;
+                        newTaskItem.hidden = false;
+                        // addTask(newEditTask.title, newEditTask.description, newEditTask.deadline, newEditTask.isChecked);
                         closeForm();                
                     } else {
                         console.error("Please fill all the fields");
                     }
+                    tasks.push(newEditTask);
+                    saveTask("edition", newEditTask, title);
 
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
                     formContainer.innerHTML = "";
@@ -401,7 +522,7 @@ function profile() {
         
         // new task button || flow start
         addButton.addEventListener("click", () => {
-            createFormInputs();
+            createFormInputs('add');
             formContainer.addEventListener('submit', handleFormSubmit);
             document.querySelector("#cancelBtn").addEventListener('click', handleCancel);
         });
@@ -433,6 +554,107 @@ function profile() {
 
         //notifications end
         cardParent.parentNode.insertBefore(notificationContainer, cardParent);
+
+        //checklist create
+        function createCheckItemElm(action, checkListCompeted, checkListTitle) {
+            const checkListGroup = document.getElementById('check-list-group');
+            const checkListItem = addElement("div", {class: "check-list-item mb-2 d-flex align-items-center"});
+            const checkBoxInput = addElement('input', {
+                class:'check-list-input mt-0',
+                type:'checkbox',
+            });
+            const titleInput = addElement('input', {
+                class:'form-title-text form-control mx-2',
+                type:'text',
+                ariaLabel: 'Text input with checkbox'
+            });
+            const checkListItemRemoveButton = addElement('div', {class:'check-list-item-remove-button btn-close close-btn btn-close-success ms-auto'});
+            checkListGroup.append(checkListItem);
+            checkListItem.append(checkBoxInput);
+            checkListItem.append(titleInput);
+            checkListItem.append(checkListItemRemoveButton);
+
+            if (action === 'edit') {
+                checkBoxInput.checked = checkListCompeted;
+                titleInput.value = checkListTitle;
+                if (checkListGroup.children.length > 0) {
+                    const checkListProgress = document.querySelector('#check-list-progress');
+                    checkListProgress.style.display = 'block';
+                    renderProgressbar();
+                }
+                if (checkBoxInput.checked) {
+                    titleInput.style.textDecoration = 'line-through';
+                } else {
+                    titleInput.style.textDecoration = 'none';
+                }
+
+            } else {
+                titleInput.focus();
+            }
+            //チェック項目のタイトルを入力した時の処理
+            titleInput.addEventListener('focusout', function() {
+                const checkListGroup = document.getElementById('check-list-group');
+                const checkListProgress = document.querySelector('#check-list-progress');
+                if (titleInput.value === '') {
+                    if (titleInput.value !== beforeText && action === 'edit') {
+                        titleInput.value = beforeText;
+                    } else {
+                        checkListItem.remove();
+                        return;
+                    }
+                } else {
+                    if (checkListGroup.children.length > 0) {
+                        checkListProgress.style.display = 'block';
+                        renderProgressbar();
+                    } else {
+                        checkListProgress.style.display = 'none';
+                    }
+                }
+                beforeText = '';
+            });
+            //チェック項目のタイトルからフォーカスを外した時の処理
+            checkBoxInput.addEventListener('change', ()=> {
+                renderProgressbar();
+                if (checkBoxInput.checked) {
+                    titleInput.style.textDecoration = 'line-through';
+                } else {
+                    titleInput.style.textDecoration = 'none';
+                }
+            });
+            //チェック項目を削除する処理
+            checkListItemRemoveButton.addEventListener('click', function() {
+                const checkListGroup = document.getElementById('check-list-group');
+                const checkListProgress = document.querySelector('#check-list-progress');
+                checkListItem.remove();
+                if (!checkListGroup.children.length) {
+                    checkListProgress.style.display = 'none';
+                } else {
+                    renderProgressbar();
+                }
+            });
+            //テキストエリアをフォーカスした時の処理
+            let beforeText = '';
+            titleInput.addEventListener('focus', function() {
+                if (titleInput.value) {
+                    beforeText = titleInput.value;
+                }
+            });
+        }
+
+        //プログレスバーの処理
+        function renderProgressbar() {
+            const checkListProgress = document.querySelector('#check-list-progress');
+            const allFormCheckInput = document.querySelectorAll('.check-list-input');
+            let chekedCount = 0;
+            for (let i = 0; i < allFormCheckInput.length; i++) {
+                if (allFormCheckInput[i].checked) {
+                    chekedCount++;
+                }
+            }
+            const progressRate = chekedCount / allFormCheckInput.length * 100;
+            checkListProgress.firstElementChild.style.width = `${progressRate}%`;
+            checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
+        }
 
         loadSavedTasks();
         return {tasks};

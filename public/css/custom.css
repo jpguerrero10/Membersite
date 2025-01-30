@@ -54,7 +54,7 @@ label.custom-file-upload {
     aspect-ratio: 1/1;
     cursor: pointer;
 }
-#plusTask{
+#plusTask, #add-check-list-item-button{
     border-style: dashed;
 }
 .dotContainer {
@@ -113,7 +113,7 @@ textarea {
     padding-left: 15%;
 }
 #reportList .type,
-#reportList .deadline {
+#reportList .edit-close {
     width: fit-content;
     border-radius: 25px;
     padding: 10px 15px;
@@ -122,7 +122,7 @@ textarea {
     margin-right: 15px;
 }
 #reportList .type::before,
-#reportList .deadline::before {
+#reportList .edit-close::before {
     content: '';
     display: inline-block;
     background-position: center;
@@ -142,13 +142,13 @@ textarea {
 #reportList .type.weekly {
     background: #f4bcff;
 }
-#reportList .deadline {
+#reportList .edit-close {
     background: #bce7ff;
 }
 #reportList .type::before {
     background-image: url(../img/monthly.svg);
 }
-#reportList .deadline::before {
+#reportList .edit-close::before {
     background-image: url(../img/bussiness-hours.svg);
 }
 .calendar .tasks:hover{
@@ -179,7 +179,6 @@ textarea {
         position: absolute;
         right: 3%;
         bottom: 10px;
-        max-width: 30vw;
     }
 }
 /* ---------------------------------- team ------------------------------------------ */
