@@ -197,6 +197,18 @@ app.delete('/tasks/:title', async (req, res) => {
     }
 });
 
+// rutas eventos -------------------------------------------------------------------------------
+
+// Ruta para obtener eventos
+app.get('/events', async (req, res) => {
+    try {
+        const data = await readData(); // Leer el archivo JSON
+        res.json(data.events); // Enviar solo los eventos
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los eventos' });
+    }
+});
+
 // Iniciar servidor
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
