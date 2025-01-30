@@ -529,6 +529,24 @@
             "isChecked": false,
             "assignedUsers": [
                 "neeman"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "Instalar fullCalendar"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "Generar la vista dentro del dashboard"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "Convertir eventos y tareas al formato de fullCalendar"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
+                }
             ]
         },
         {
