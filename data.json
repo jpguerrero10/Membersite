@@ -652,6 +652,11 @@
             "title": "Click for Google",
             "url": "https://google.com/",
             "start": "2025-01-28"
+        },
+        {
+            "title": "帰社日",
+            "start": "2025-01-31T15:00:00",
+            "end": "2025-01-31T19:30:00"
         }
     ]
 }

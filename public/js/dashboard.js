@@ -101,7 +101,6 @@ function dashboard(){
         return {
             title: `${task.title}`,  
             start: task.deadline,       
-            end: task.deadline,        
             color: taskColor, 
             textColor: textColor,
             extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
@@ -133,7 +132,7 @@ function dashboard(){
             headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             events: allEvents,
             eventClick: function(info) {
