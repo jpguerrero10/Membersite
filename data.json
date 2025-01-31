@@ -550,6 +550,24 @@
             "assignedUsers": [
                 "neeman"
             ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "Instalar fullCalendar"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "Generar la vista dentro del dashboard"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "Convertir eventos y tareas al formato de fullCalendar"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
+                }
+            ],
             "id": "f523f13d-0aac-4795-88b2-16093826d75b"
         },
         {
@@ -636,6 +654,92 @@
                 }
             ],
             "id": "2ff8c3f0-b9b0-44ed-9ce9-265a8a5a84f5"
+        }
+    ],
+    "events": [
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "All Day Event",
+            "start": "2025-01-01"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Long Event",
+            "start": "2025-01-07",
+            "end": "2025-01-10"
+        },
+        {
+            "groupId": "999",
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Repeating Event",
+            "start": "2025-01-09T16:00:00"
+        },
+        {
+            "groupId": "999",
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Repeating Event",
+            "start": "2025-01-16T16:00:00"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Conference",
+            "start": "2025-01-11",
+            "end": "2025-01-13"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Meeting",
+            "start": "2025-01-12T10:30:00",
+            "end": "2025-01-12T12:30:00"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Lunch",
+            "start": "2025-01-12T12:00:00"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Meeting",
+            "start": "2025-01-12T14:30:00"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Birthday Party",
+            "start": "2025-01-13T07:00:00"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "Click for Google",
+            "url": "https://google.com/",
+            "start": "2025-01-28"
+        },
+        {
+            "assignedUsers": [
+                "neeman"
+            ],
+            "title": "帰社日",
+            "start": "2025-01-31T15:00:00",
+            "end": "2025-01-31T19:30:00"
         }
     ]
 }

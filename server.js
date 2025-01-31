@@ -197,6 +197,28 @@ app.delete('/tasks/:title', async (req, res) => {
     }
 });
 
+// rutas eventos -------------------------------------------------------------------------------
+
+// Ruta para obtener eventos
+app.get('/events', async (req, res) => {
+    try {
+        const data = await readData(); // Leer el archivo JSON
+        res.json(data.events); // Enviar solo los eventos
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los eventos' });
+    }
+});
+app.get('/events/:userId', async (req, res) => {
+    try {
+        const data = await readData();
+        const userId = req.params.userId.replace('@', ''); 
+        const userTasks = data.events.filter(event => event.assignedUsers.includes(userId));
+        res.json(userTasks);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener las tareas' });
+    }
+});
+
 // Iniciar servidor
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
