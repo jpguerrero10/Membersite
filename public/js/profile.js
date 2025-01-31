@@ -42,38 +42,6 @@ function profile() {
         loadView("login");
     });
 
-    function addTaskId() {
-        fetch(`http://localhost:3000/tasks/`)
-            .then(response => response.json())
-            .then(tasks => {
-                tasks.forEach(task => {
-                    if (!task.id) { //既存のタスクがIDを持っていなかった時の処理
-                        const taskId = generateUUID();
-                        task.id = taskId;
-                        console.log('taskId', taskId);
-                        saveID(task, task.title);
-                    }
-                });
-
-    
-                function saveID(task, title){
-                    fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(task)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                            console.log('Tarea actualizada:', data);
-                        })
-                        .catch(err => console.error('Error al actualizar la tarea:', err));
-                    }
-                })
-                .catch(error => console.error('Error al obtener las tareas:', error));
-        }
-        addTaskId();
     //ランダムにIDを生成する処理
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -350,7 +318,7 @@ function profile() {
             checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
     
             //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline));
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId));
 
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
@@ -362,73 +330,12 @@ function profile() {
             }
         };
 
-        // DB saving function ------------------------------------------------------------------------
-        // task DB update
-        function saveTask(action, task, title){
-            localStorage.setItem(`userTask_${userID}`, JSON.stringify(tasks));
-            localStorage.setItem(`achievements_${userID}`, JSON.stringify(achievements));
-            
-            if(action == "add"){
-                fetch('http://localhost:3000/tasks', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(task)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('タスクは作成された:', data);
-                    updateAchievements(userID, achievements);
-                })
-                .catch(err => console.error('Error al agregar la tarea:', err));
-            } else if( action == "edition"){
-                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(task)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('タスクはアップデートされた:', data);
-                    updateAchievements(userID, achievements);
-                })
-                .catch(err => console.error('Error al actualizar la tarea:', err));
-            } else if( action == "delete"){
-                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('No se pudo eliminar la tarea');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Tarea eliminada:', data);
-                })
-                .catch(err => console.error('Error al eliminar la tarea:', err));
-            }
-        };
-        //user achievements DB update
-        function updateAchievements(userID, achievements){
-            fetch(`http://localhost:3000/users/${userID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ achievements: achievements })
-            })
-            .catch(err => console.error('Error actualizando los logros:', err));
-        }
-
         // checked status function ------------------------------------------------------------------------
         function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId){
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
+            const id = taskId;
             if(checkInput.checked){
                 newTaskItem.querySelector('h3').classList.remove("text-primary-emphasis");
                 newTaskItem.classList.add("bg-success-subtle", "text-success");
@@ -452,15 +359,21 @@ function profile() {
             }
             const isChecked = checkInput.checked;
             tasks = tasks.filter(task => task.title !== title || task.description !== description);
-            tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, taskId});
-            let task = {title, description, deadline, isChecked, assignedUsers, checkList, taskId};
+            tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id});
+            let task = {title, description, deadline, isChecked, assignedUsers, checkList, id};
             saveTask("edition", task, title);
         }
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers, taskId){
+        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId){
             newTaskItem.hidden = true;
             createFormInputs('edit');
+
+            const title = newTaskItem.querySelector(".taskTitle strong").textContent;
+            const description = newTaskItem.querySelector("p").textContent;
+            const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
+            const id = taskId;
+
             document.querySelector("#title").value = title;
             document.querySelector("#description").value = description;
             document.querySelector("#deadline").value = deadline;
@@ -523,18 +436,17 @@ function profile() {
                 };
                 const handleFormSubmitEdit = (event) => {
                     event.preventDefault();
-                    tasks = tasks.filter(task => task.title !== title || task.description !== description || task.deadline !== deadline || JSON.stringify(task.checkList) !== JSON.stringify(checkList));
-                    const currentCheckList = [];
-                    const checkListGroup = document.querySelector('#check-list-group');
-                    const checkListInputAll = document.querySelectorAll('.check-list-input');
-                    const formTitleTextAll = document.querySelectorAll('.form-title-text');
-                    for (let i = 0; i < checkListGroup.children.length; i++) {
-                        const checkListItem = {
-                            listCompleted: checkListInputAll[i].checked,
-                            listName: formTitleTextAll[i].value,
-                        };
-                        currentCheckList.push(checkListItem);
-                    }
+                    let currentCheckList = [];
+                    const checkListItems = document.querySelectorAll('.check-list-item');
+
+                    checkListItems.forEach(item => {
+                        const listCompleted = item.querySelector(".check-list-input").checked;
+                        const listName = item.querySelector(".form-title-text").value;
+
+                        const checkListItem = {listCompleted, listName};
+                        currentCheckList.push({listCompleted: checkListItem.listCompleted, listName: checkListItem.listName});
+                    });
+
                     const newEditTask = {
                         title: document.querySelector("#title").value,
                         description: document.querySelector("#description").value,
@@ -542,7 +454,7 @@ function profile() {
                         isChecked: checkInput.checked,
                         assignedUsers: assignedUsers,
                         checkList: currentCheckList,
-                        id: taskId
+                        id: id
                     };
 
                     const checklistLength = currentCheckList.length;
@@ -579,9 +491,15 @@ function profile() {
                     } else {
                         console.error("Please fill all the fields");
                     }
-                    tasks.push(newEditTask);
-                    saveTask("edition", newEditTask, title);
-                    console.log(newEditTask);
+
+                    const taskIndex = tasks.findIndex(task => task.id === id);
+                    if (taskIndex !== -1) {
+                        tasks[taskIndex] = newEditTask; // Sobreescribe la tarea existente
+                    } else {
+                        console.warn("⚠ La tarea no fue encontrada, agregando como nueva.");
+                        tasks.push(newEditTask); // Si por alguna razón la tarea no existe, agrégala
+                    }
+                    saveTask("edition", newEditTask, newEditTask.title);
 
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
                     formContainer.innerHTML = "";
@@ -591,6 +509,69 @@ function profile() {
             };
             addListeners();
         };
+
+        // DB saving function ------------------------------------------------------------------------
+        // task DB update
+        function saveTask(action, task, title){
+            localStorage.setItem(`userTask_${userID}`, JSON.stringify(tasks));
+            localStorage.setItem(`achievements_${userID}`, JSON.stringify(achievements));
+            
+            if(action == "add"){
+                fetch('http://localhost:3000/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('タスクは作成された:', data);
+                    updateAchievements(userID, achievements);
+                })
+                .catch(err => console.error('Error al agregar la tarea:', err));
+            } else if( action == "edition"){
+                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('タスクはアップデートされた:', data);
+                    // updateAchievements(userID, achievements);
+                })
+                .catch(err => console.error('Error al actualizar la tarea:', err));
+            } else if( action == "delete"){
+                fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo eliminar la tarea');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Tarea eliminada:', data);
+                })
+                .catch(err => console.error('Error al eliminar la tarea:', err));
+            }
+        };
+        //user achievements DB update
+        function updateAchievements(userID, achievements){
+            console.log(userID);
+            fetch(`http://localhost:3000/users/${userID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ achievements: achievements })
+            })
+            .catch(err => console.error('Error actualizando los logros:', err));
+        }
         
         // new task button || flow start
         addButton.addEventListener("click", () => {
@@ -726,13 +707,6 @@ function profile() {
             const progressRate = chekedCount / allFormCheckInput.length * 100;
             checkListProgress.firstElementChild.style.width = `${progressRate}%`;
             checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
-        }
-
-        //そのタスクのチェックリストが完了しているかを判断する処理
-        function checkListCompetedJudgement(checkListItem) {
-            console.log(checkListItem);
-            const completedCount = checkListItem.filter(list => list.listCompleted === true).length;
-            console.log(completedCount);
         }
 
         loadSavedTasks();

@@ -8,12 +8,11 @@
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
-                "tasksAdded": 42,
-                "tasksCompleted": 25,
+                "tasksAdded": 55,
+                "tasksCompleted": -15,
                 "tasksShared": 5,
                 "milestones": {
                     "tasksAdded": [
-                        50,
                         100
                     ],
                     "tasksCompleted": [
@@ -27,7 +26,8 @@
                 },
                 "shownMilestones": {
                     "tasksAdded": [
-                        10
+                        10,
+                        50
                     ],
                     "tasksCompleted": [
                         10
@@ -524,7 +524,7 @@
         },
         {
             "title": "タスクのチェックリストを作成",
-            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.wwwww\n↑え？",
+            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
             "deadline": "2025-01-31",
             "isChecked": true,
             "assignedUsers": [
@@ -540,8 +540,7 @@
                     "listName": "これやる2"
                 }
             ],
-            "id": "2565ba70-7404-4525-baf6-5b55750e9781",
-            "taskId": "2565ba70-7404-4525-baf6-5b55750e9781"
+            "id": "2565ba70-7404-4525-baf6-5b55750e9781"
         },
         {
             "title": "スケジュール表示を作成",
@@ -565,14 +564,13 @@
         },
         {
             "title": "sdsd",
-            "description": "sdsdsｄｄｄｄｄｓｓｓｓ",
+            "description": "sdsds",
             "deadline": "2025-01-01",
             "isChecked": false,
             "assignedUsers": [
                 "genchan"
             ],
             "id": "8cf0225d-f2d9-4ec2-a5ca-6c2b2feb248f",
-            "taskId": "8cf0225d-f2d9-4ec2-a5ca-6c2b2feb248f",
             "checkList": []
         },
         {
@@ -586,7 +584,7 @@
             "checkList": [
                 {
                     "listCompleted": true,
-                    "listName": "dddderいいいいいｆｆｆ"
+                    "listName": "dddderいいいいい"
                 },
                 {
                     "listCompleted": true,
@@ -597,12 +595,11 @@
                     "listName": "dddderrrooooo"
                 }
             ],
-            "id": "5f175627-dbc5-4d84-bf3a-ec72d56b28c3",
-            "taskId": "5f175627-dbc5-4d84-bf3a-ec72d56b28c3"
+            "id": "5f175627-dbc5-4d84-bf3a-ec72d56b28c3"
         },
         {
-            "title": "test13；；；",
-            "description": "testtestさだｓｄ",
+            "title": "test13",
+            "description": "testtestさだ",
             "deadline": "2025-01-30",
             "isChecked": true,
             "assignedUsers": [
@@ -614,8 +611,31 @@
                     "listName": "dadasdad"
                 }
             ],
-            "id": "83b02148-9b19-41fc-9edf-93d1e74436b6",
-            "taskId": "83b02148-9b19-41fc-9edf-93d1e74436b6"
+            "id": "83b02148-9b19-41fc-9edf-93d1e74436b6"
+        },
+        {
+            "title": "test john 2",
+            "description": "test",
+            "deadline": "2025-01-31",
+            "isChecked": false,
+            "assignedUsers": [
+                "johnD"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "test4"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "test5"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "test6"
+                }
+            ],
+            "id": "2ff8c3f0-b9b0-44ed-9ce9-265a8a5a84f5"
         }
     ]
 }
