@@ -12,7 +12,7 @@ function dashboard(){
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
                 }),
-            fetch(`http://localhost:3000/events`)
+            fetch(`http://localhost:3000/events/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
