@@ -147,7 +147,7 @@ app.post('/tasks', async (req, res) => {
         data.tasks.push(newTask);
         await writeData(data);
 
-        res.status(201).json({ message: 'Tarea agregada exitosamente', task: newTask });
+        res.status(201).json({ message: 'タスクは作成された', task: newTask });
     } catch (error) {
         res.status(500).json({ error: 'Error al agregar la tarea' });
     }
@@ -170,7 +170,7 @@ app.put('/tasks/:title', async (req, res) => {
         data.tasks[taskIndex] = { ...data.tasks[taskIndex], ...updatedTask };
         await writeData(data);
         
-        res.json({ message: 'Tarea actualizada exitosamente', task: data.tasks[taskIndex] });
+        res.json({ message: 'タスクはアップデートされた', task: data.tasks[taskIndex] });
     } catch (error) {
         res.status(500).json({ error: 'Error al actualizar la tarea' });
     }

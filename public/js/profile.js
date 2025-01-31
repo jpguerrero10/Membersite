@@ -15,7 +15,7 @@ function profile() {
                 localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
             })
             .catch(error => console.error('Error al obtener las tareas:', error));
-        }
+    }
     userTask = JSON.parse(localStorage.getItem(`userTask_${userID}`));
 
     // ----------------------------------------- displaying data on screen ------------------------------------------------------
@@ -42,6 +42,47 @@ function profile() {
         loadView("login");
     });
 
+    function addTaskId() {
+        fetch(`http://localhost:3000/tasks/`)
+            .then(response => response.json())
+            .then(tasks => {
+                tasks.forEach(task => {
+                    if (!task.id) { //既存のタスクがIDを持っていなかった時の処理
+                        const taskId = generateUUID();
+                        task.id = taskId;
+                        console.log('taskId', taskId);
+                        saveID(task, task.title);
+                    }
+                });
+
+    
+                function saveID(task, title){
+                    fetch(`http://localhost:3000/tasks/${encodeURIComponent(title)}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(task)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                            console.log('Tarea actualizada:', data);
+                        })
+                        .catch(err => console.error('Error al actualizar la tarea:', err));
+                    }
+                })
+                .catch(error => console.error('Error al obtener las tareas:', error));
+        }
+        addTaskId();
+    //ランダムにIDを生成する処理
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = (Math.random() * 16) | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+        
     //notifications start
     const notificationContainer = addElement("div", { class:"toast-container position-fixed top-0 end-0 p-3" });
 
@@ -133,7 +174,8 @@ function profile() {
             setTimeout(() => {
                 fadeIn(formCard, 200); // 1s fadein
             }, 20);
-            addButton.hidden = true;
+            // addButton.hidden = true;
+            // //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
             // document.getElementById('filterButton').disabled = true; //20250127gen
             // const btnEditAll = document.querySelectorAll('.btn-edit');
             // if (btnEditAll.length > 0) {
@@ -150,7 +192,7 @@ function profile() {
             const title = document.querySelector("#title").value;
             const description = document.querySelector("#description").value;
             const deadline = document.querySelector("#deadline").value;
-            const isChecked = false;
+            let isChecked = false;
             let checkList = [];
             const checkListGroup = document.querySelector('#check-list-group');
             const checkListInputAll = document.querySelectorAll('.check-list-input');
@@ -162,11 +204,21 @@ function profile() {
                 };
                 checkList.push(checkListItem);
             }
+            if (checkList.length !== 0) {
+                checklistLength = checkList.length;
+                checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
+                console.log(checklistCompletedCount);
+                if (checklistCompletedCount === checklistLength) {
+                    newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
+                    isChecked = true;
+                }
+            }
             if (title && description && deadline) {
                 achievements.tasksAdded++;
                 checkAchievements(achievements);
                 addTask(title, description, deadline, isChecked, checkList);
-                closeForm();                
+                closeForm();
+                // checkListCompetedJudgement(checkList)
             } else {
                 console.error("Please fill all the fields");
             }
@@ -197,21 +249,19 @@ function profile() {
         
         // load previous data ------------------------------------------------------------------------
         const loadSavedTasks = () => {
-            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked, task.checkList));
+            tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked, task.checkList, task.id));
         };
         
         // new task creation ------------------------------------------------------------------------
         let index = 0;
-        const addTask = (title, description, deadline, isChecked, checkList) => {
+        const addTask = (title, description, deadline, isChecked, checkList, taskId) => {
             const newTaskItem = addElement( "li",{ class: `list-group-item position-relative`, id: `task${index}-${deadline}` });
             index++;
-            console.log(checkList);
             let checklistLength = 0;
             let checklistCompletedCount = 0;
             if (checkList) {
                 checklistLength = checkList.length;
                 checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
-                console.log(checklistCompletedCount);
             }
             fadeIn(newTaskItem, 30); // 1s fadein
             const fragment = document.createDocumentFragment();
@@ -229,7 +279,7 @@ function profile() {
             const toastBody = addElement("div", { class: "toast-body ms-3" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-3"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
             const divEditClose = addElement("div", { class: "edit-close ms-auto flex-wrap position-absolute top-0 end-0"});
             const btnCloseTask = addElement("button", { 
-                class: "btn-close close-btn btn-close-success ms-auto",
+                class: "btn-close close-btn btn-close-success m-2",
                 arialabel: "close",
                 style: "display: none;"
             });
@@ -253,6 +303,12 @@ function profile() {
             if (checklistLength === 0) {
                 if (!paragraphChecklist.classList.contains("opacity-0")) {
                     paragraphChecklist.classList.add("opacity-0");
+                }
+            } else {
+                if (checklistLength === checklistCompletedCount) {
+                    if(!paragraphChecklist.classList.contains("bg-success")) {
+                        paragraphChecklist.classList.add("bg-success");
+                    }
                 }
             }
             //check function
@@ -291,52 +347,20 @@ function profile() {
             assignedUsers.push(userID.replace(/\W+/g, ''));
 
             //check button
-            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers));
+            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
     
             //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers));
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline));
 
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
-                tasks.push({title, description, deadline, isChecked, assignedUsers, checkList});
-                let task = {title, description, deadline, isChecked, assignedUsers, checkList};
+                const id = generateUUID();
+                tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id});
+                let task = {title, description, deadline, isChecked, assignedUsers, checkList, id};
                 saveTask("add", task, title);
             }
         };
-        
-        // checked status function ------------------------------------------------------------------------
-        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers){
-            const title = newTaskItem.querySelector(".taskTitle strong").textContent;
-            const description = newTaskItem.querySelector("p").textContent;
-            const deadline = newTaskItem.querySelector(".deadlinePill small").innerHTML.match(/\d{4}-\d{2}/)[0];
-            if(checkInput.checked){
-                newTaskItem.querySelector('h3').classList.remove("text-primary-emphasis");
-                newTaskItem.classList.add("bg-success-subtle", "text-success");
-                btnEdit.style.display = "none";
-                btnCloseTask.style.display = "block";
-                checkInput.setAttribute("checked", "");
-                paragraphDeadline.classList.remove("bg-warning-subtle", "text-dark-emphasis", "px-2");
-                paragraphDeadline.classList.add("bg-info-subtle");
-                achievements.tasksCompleted++;
-                checkAchievements(achievements);
-            } else{
-                newTaskItem.classList.remove("bg-success-subtle", "text-success");
-                newTaskItem.querySelector('h3').classList.add("text-primary-emphasis");
-                btnCloseTask.style.display = "none";
-                btnEdit.style.display = "block";
-                checkInput.removeAttribute("checked");
-                paragraphDeadline.classList.remove("bg-info-subtle");
-                paragraphDeadline.classList.add("bg-warning-subtle", "text-dark-emphasis", "px-2");
-                achievements.tasksCompleted--;
-                checkAchievements(achievements);
-            }
-            const isChecked = checkInput.checked;
-            tasks = tasks.filter(task => task.title !== title || task.description !== description);
-            tasks.push({title, description, deadline, isChecked, assignedUsers});
-            let task = {title, description, deadline, isChecked, assignedUsers};
-            saveTask("edition", task, title);
-        }
 
         // DB saving function ------------------------------------------------------------------------
         // task DB update
@@ -354,7 +378,7 @@ function profile() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Tarea agregada:', data);
+                    console.log('タスクは作成された:', data);
                     updateAchievements(userID, achievements);
                 })
                 .catch(err => console.error('Error al agregar la tarea:', err));
@@ -368,7 +392,7 @@ function profile() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Tarea actualizada:', data);
+                    console.log('タスクはアップデートされた:', data);
                     updateAchievements(userID, achievements);
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
@@ -400,9 +424,41 @@ function profile() {
             .catch(err => console.error('Error actualizando los logros:', err));
         }
 
+        // checked status function ------------------------------------------------------------------------
+        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId){
+            const title = newTaskItem.querySelector(".taskTitle strong").textContent;
+            const description = newTaskItem.querySelector("p").textContent;
+            const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
+            if(checkInput.checked){
+                newTaskItem.querySelector('h3').classList.remove("text-primary-emphasis");
+                newTaskItem.classList.add("bg-success-subtle", "text-success");
+                btnEdit.style.display = "none";
+                btnCloseTask.style.display = "block";
+                checkInput.setAttribute("checked", "");
+                paragraphDeadline.classList.remove("bg-warning-subtle", "text-dark-emphasis", "px-2");
+                paragraphDeadline.classList.add("bg-info-subtle");
+                achievements.tasksCompleted++;
+                checkAchievements(achievements);
+            } else{
+                newTaskItem.classList.remove("bg-success-subtle", "text-success");
+                newTaskItem.querySelector('h3').classList.add("text-primary-emphasis");
+                btnCloseTask.style.display = "none";
+                btnEdit.style.display = "block";
+                checkInput.removeAttribute("checked");
+                paragraphDeadline.classList.remove("bg-info-subtle");
+                paragraphDeadline.classList.add("bg-warning-subtle", "text-dark-emphasis", "px-2");
+                achievements.tasksCompleted--;
+                checkAchievements(achievements);
+            }
+            const isChecked = checkInput.checked;
+            tasks = tasks.filter(task => task.title !== title || task.description !== description);
+            tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, taskId});
+            let task = {title, description, deadline, isChecked, assignedUsers, checkList, taskId};
+            saveTask("edition", task, title);
+        }
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers){
+        function taskEdition(taskContainer, newTaskItem, title, description, checkInput, deadline, assignedUsers, taskId){
             newTaskItem.hidden = true;
             createFormInputs('edit');
             document.querySelector("#title").value = title;
@@ -485,7 +541,8 @@ function profile() {
                         deadline: document.querySelector("#deadline").value,
                         isChecked: checkInput.checked,
                         assignedUsers: assignedUsers,
-                        checkList: currentCheckList
+                        checkList: currentCheckList,
+                        id: taskId
                     };
 
                     const checklistLength = currentCheckList.length;
@@ -497,19 +554,34 @@ function profile() {
                         }
                     } else {
                         newTaskItem.querySelector(".checklistPill").classList.remove("opacity-0");
+                        if (checklistCompletedCount === checklistLength) {
+                            if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                                newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
+                            }
+                            newEditTask.isChecked = true;
+                            checkInput.checked = true;
+                            checkInput.dispatchEvent(new Event('change'));
+                        } else {
+                            if(newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                                newTaskItem.querySelector(".checklistPill").classList.remove("bg-success");
+                            }
+                            newEditTask.isChecked = false;
+                            checkInput.checked = false;
+                            checkInput.dispatchEvent(new Event('change'));
+                        }
                     }
                     if (title && description && deadline) {
                         newTaskItem.querySelector(".taskTitle strong").textContent = newEditTask.title;
                         newTaskItem.querySelector("p").textContent = newEditTask.description;
                         newTaskItem.querySelector(".deadlinePill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 600" width="16px" fill="#495057"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg></strong> ${newEditTask.deadline}`;
                         newTaskItem.hidden = false;
-                        // addTask(newEditTask.title, newEditTask.description, newEditTask.deadline, newEditTask.isChecked);
                         closeForm();                
                     } else {
                         console.error("Please fill all the fields");
                     }
                     tasks.push(newEditTask);
                     saveTask("edition", newEditTask, title);
+                    console.log(newEditTask);
 
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
                     formContainer.innerHTML = "";
@@ -654,6 +726,13 @@ function profile() {
             const progressRate = chekedCount / allFormCheckInput.length * 100;
             checkListProgress.firstElementChild.style.width = `${progressRate}%`;
             checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
+        }
+
+        //そのタスクのチェックリストが完了しているかを判断する処理
+        function checkListCompetedJudgement(checkListItem) {
+            console.log(checkListItem);
+            const completedCount = checkListItem.filter(list => list.listCompleted === true).length;
+            console.log(completedCount);
         }
 
         loadSavedTasks();
