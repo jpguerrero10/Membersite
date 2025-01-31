@@ -8,12 +8,11 @@
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
-                "tasksAdded": 42,
-                "tasksCompleted": 25,
+                "tasksAdded": 55,
+                "tasksCompleted": -15,
                 "tasksShared": 5,
                 "milestones": {
                     "tasksAdded": [
-                        50,
                         100
                     ],
                     "tasksCompleted": [
@@ -27,7 +26,8 @@
                 },
                 "shownMilestones": {
                     "tasksAdded": [
-                        10
+                        10,
+                        50
                     ],
                     "tasksCompleted": [
                         10
@@ -125,8 +125,8 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 13,
-                "tasksCompleted": 3,
+                "tasksAdded": 35,
+                "tasksCompleted": -7,
                 "tasksShared": 0,
                 "milestones": {
                     "tasksAdded": [
@@ -134,7 +134,6 @@
                         100
                     ],
                     "tasksCompleted": [
-                        10,
                         50,
                         100
                     ],
@@ -148,7 +147,9 @@
                     "tasksAdded": [
                         10
                     ],
-                    "tasksCompleted": [],
+                    "tasksCompleted": [
+                        10
+                    ],
                     "tasksShared": []
                 }
             }
@@ -335,7 +336,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "12cc8ce8-dca1-4ed9-84a8-8e33554b1468"
         },
         {
             "title": "タスク編集のキャンセルエラーを修正",
@@ -344,7 +346,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "16fd24cb-4403-4839-abc7-9ce6305aed4f"
         },
         {
             "title": "タブとセクションを作成",
@@ -353,7 +356,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "eef02429-8661-4084-92fc-6cdbe8327be9"
         },
         {
             "title": "タスクフィルターを作成",
@@ -362,7 +366,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "b343ef8d-d0ff-4ca9-bca0-7fdc5ce6ad3c"
         },
         {
             "title": "データベースを導入",
@@ -371,7 +376,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "75569b35-c405-4ed3-8842-b12d8059071e"
         },
         {
             "title": "タスク共有システムを作成",
@@ -380,7 +386,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "55424e17-f5e0-4772-865c-8f63780ee6e3"
         },
         {
             "title": "タスク達成による実績システムを作成",
@@ -389,7 +396,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "f19025cb-4301-4835-b6ae-26161d7c6108"
         },
         {
             "title": "ローディング画面を作成",
@@ -398,7 +406,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "1e482d3d-0de0-4b49-a122-3586ee182651"
         },
         {
             "title": "ダッシュボードページを作成",
@@ -407,7 +416,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "50f963c0-c7fe-4a90-9ad2-cbf2a32e19e3"
         },
         {
             "title": "要素のアニメーションを作成",
@@ -416,7 +426,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "831c2f1e-7363-4a6e-aa0a-6b3779996c10"
         },
         {
             "title": "レスポンシブを修正",
@@ -425,7 +436,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "60fcee29-bbcc-4a97-8559-2019d69e702a"
         },
         {
             "title": "報告書セクションを作成",
@@ -434,7 +446,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "206a0e7e-427c-49fc-a82b-ce43f4852d89"
         },
         {
             "title": "報告書セクションのフォームを作成",
@@ -443,7 +456,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "1e8b6f7f-781b-401c-86c1-129612d1540a"
         },
         {
             "title": "報告書セクションの表示を作成",
@@ -452,7 +466,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "431d8891-72b5-4584-98df-f257e42bc511"
         },
         {
             "title": "チームタブで報告書の表示を作成",
@@ -461,7 +476,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "c72cf94b-e9e0-4be6-9039-de44be131ec9"
         },
         {
             "title": "報告書のコメント機能を作成",
@@ -470,7 +486,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "ca49d79c-8866-4028-b932-99e0d11b402e"
         },
         {
             "title": "管理者画面を作成",
@@ -479,7 +496,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "7d25c87a-a35d-44d2-ad36-ff341b08dc4e"
         },
         {
             "title": "タスクシステムをアップグレード",
@@ -489,7 +507,8 @@
             "assignedUsers": [
                 "neeman",
                 "marodriguez"
-            ]
+            ],
+            "id": "32c6dc3b-97e3-4969-b16c-d2d9f28cbc67"
         },
         {
             "title": "社内資料セクションを作成",
@@ -500,15 +519,15 @@
                 "neeman",
                 "johnD",
                 "moongirl"
-            ]
+            ],
+            "id": "a51372b1-4f6b-4537-ae61-a7572789f00e"
         },
         {
             "title": "タスクのチェックリストを作成",
-            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.wwwww\n↑え？",
+            "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
             "deadline": "2025-01-31",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
-                "neeman",
                 "genchan"
             ],
             "checkList": [
@@ -517,10 +536,11 @@
                     "listName": "これやる1w"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "これやる2"
                 }
-            ]
+            ],
+            "id": "2565ba70-7404-4525-baf6-5b55750e9781"
         },
         {
             "title": "スケジュール表示を作成",
@@ -547,7 +567,8 @@
                     "listCompleted": false,
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
                 }
-            ]
+            ],
+            "id": "f523f13d-0aac-4795-88b2-16093826d75b"
         },
         {
             "title": "データベースをIndexedDBからNodeJSに変換",
@@ -556,7 +577,8 @@
             "isChecked": true,
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "id": "8687a2ed-ff17-45f9-b65c-10a484dd10e1"
         },
         {
             "title": "sdsd",
@@ -565,45 +587,73 @@
             "isChecked": false,
             "assignedUsers": [
                 "genchan"
-            ]
+            ],
+            "id": "8cf0225d-f2d9-4ec2-a5ca-6c2b2feb248f",
+            "checkList": []
         },
         {
             "title": "tesa12",
             "description": "tesa1fff",
             "deadline": "2025-01-17",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "genchan"
             ],
             "checkList": [
                 {
                     "listCompleted": true,
-                    "listName": "dddderいいいいいｆｆｆ"
+                    "listName": "dddderいいいいい"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "ddddw"
                 },
                 {
                     "listCompleted": true,
                     "listName": "dddderrrooooo"
                 }
-            ]
+            ],
+            "id": "5f175627-dbc5-4d84-bf3a-ec72d56b28c3"
         },
         {
             "title": "test13",
-            "description": "testtest",
+            "description": "testtestさだ",
             "deadline": "2025-01-30",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "genchan"
             ],
             "checkList": [
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "dadasdad"
                 }
-            ]
+            ],
+            "id": "83b02148-9b19-41fc-9edf-93d1e74436b6"
+        },
+        {
+            "title": "test john 2",
+            "description": "test",
+            "deadline": "2025-01-31",
+            "isChecked": false,
+            "assignedUsers": [
+                "johnD"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "test4"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "test5"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "test6"
+                }
+            ],
+            "id": "2ff8c3f0-b9b0-44ed-9ce9-265a8a5a84f5"
         }
     ],
     "events": [
