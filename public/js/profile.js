@@ -142,13 +142,13 @@ function profile() {
             setTimeout(() => {
                 fadeIn(formCard, 200); // 1s fadein
             }, 20);
-            // addButton.hidden = true;
-            // //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
-            // document.getElementById('filterButton').disabled = true; //20250127gen
-            // const btnEditAll = document.querySelectorAll('.btn-edit');
-            // if (btnEditAll.length > 0) {
-            //     btnEditAll.forEach(btn => btn.disabled = true);
-            // }
+            addButton.hidden = true;
+            //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
+            document.getElementById('filterButton').disabled = true; //20250127gen
+            const btnEditAll = document.querySelectorAll('.btn-edit');
+            if (btnEditAll.length > 0) {
+                btnEditAll.forEach(btn => btn.disabled = true);
+            }
             //add CheckList Item Button
             addCheckListItemButton.addEventListener('click', createCheckItemElm);
             renderProgressbar();
@@ -177,7 +177,6 @@ function profile() {
                 checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
                 console.log(checklistCompletedCount);
                 if (checklistCompletedCount === checklistLength) {
-                    newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
                     isChecked = true;
                 }
             }
@@ -314,12 +313,7 @@ function profile() {
             let assignedUsers = [];
             assignedUsers.push(userID.replace(/\W+/g, ''));
 
-            //check button
-            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
-    
-            //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId));
-
+            
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
@@ -327,11 +321,50 @@ function profile() {
                 tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id});
                 let task = {title, description, deadline, isChecked, assignedUsers, checkList, id};
                 saveTask("add", task, title);
+                taskId = id;
             }
+            //check button
+            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
+    
+            //edit task button
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList));
         };
 
         // checked status function ------------------------------------------------------------------------
         function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId){
+            //タスクのチェックボタンが押された時、チェックリストが完了していないもがあったら全て完了にする処理
+            let incomplete = false;
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+            if (tasks[taskIndex].checkList) {
+                incomplete = tasks[taskIndex].checkList.some(list => list.listCompleted === false);
+            }
+            checkList = tasks[taskIndex].checkList;
+            if (!incomplete) {
+                saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+            } else {
+                const toggleConfirm = confirm('チェックリストに未完了の項目がありますが、このタスクを完了にしますか。');
+                if  (toggleConfirm) {
+                    console.log( tasks[taskIndex]);
+                    tasks[taskIndex].checkList.forEach(list => {
+                        if (list.listCompleted === false) {
+                            list.listCompleted = true;
+                        }
+                    });
+                    if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                        newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
+                    }
+                    newTaskItem.querySelector('.checklistPill small').innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checkList.length}/${checkList.length}`;
+                    checkList = tasks[taskIndex].checkList;
+                    saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+                } else {
+                    tasks[taskIndex].isChecked = false;
+                    checkInput.checked = false;
+                    return;
+                }
+            }
+        }
+
+        function saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId) {
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
@@ -365,7 +398,7 @@ function profile() {
         }
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId){
+        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList){
             newTaskItem.hidden = true;
             createFormInputs('edit');
 
@@ -379,7 +412,6 @@ function profile() {
             document.querySelector("#deadline").value = deadline;
             let submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            let checkList;
             tasks.forEach(task => {
                 if (task.title === title) {
                     if (task.checkList) {
@@ -472,14 +504,14 @@ function profile() {
                             }
                             newEditTask.isChecked = true;
                             checkInput.checked = true;
-                            checkInput.dispatchEvent(new Event('change'));
+                            saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
                         } else {
                             if(newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
                                 newTaskItem.querySelector(".checklistPill").classList.remove("bg-success");
                             }
                             newEditTask.isChecked = false;
                             checkInput.checked = false;
-                            checkInput.dispatchEvent(new Event('change'));
+                            saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
                         }
                     }
                     if (title && description && deadline) {
