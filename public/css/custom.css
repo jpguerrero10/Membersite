@@ -168,6 +168,12 @@ textarea {
     flex: 5;
     box-shadow: inset 0 10px 10px -5px rgb(45 44 49 / 20%);
 }
+.label-box {
+    font-size: 0.6rem;
+}
+.assigned-user-icon-box .assigned-user-icon {
+    width: 30px;
+}
 
 @media (max-width: 480px) {
     .taskList .toast-body {

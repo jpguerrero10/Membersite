@@ -125,12 +125,11 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 35,
-                "tasksCompleted": -7,
+                "tasksAdded": 62,
+                "tasksCompleted": -62,
                 "tasksShared": 0,
                 "milestones": {
                     "tasksAdded": [
-                        50,
                         100
                     ],
                     "tasksCompleted": [
@@ -145,7 +144,8 @@
                 },
                 "shownMilestones": {
                     "tasksAdded": [
-                        10
+                        10,
+                        50
                     ],
                     "tasksCompleted": [
                         10
@@ -654,6 +654,26 @@
                 }
             ],
             "id": "2ff8c3f0-b9b0-44ed-9ce9-265a8a5a84f5"
+        },
+        {
+            "title": "タスクにラベルを付ける機能を追加",
+            "description": "タスクにラベルを付ける",
+            "deadline": "2025-02-03",
+            "isChecked": false,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "ラベルの機能の全容をまとめる"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "画面遷移を考える"
+                }
+            ],
+            "id": "c6ed0599-6f1f-415a-a76a-f73db33ac972"
         }
     ],
     "events": [
@@ -741,5 +761,14 @@
             "start": "2025-01-31T15:00:00",
             "end": "2025-01-31T19:30:00"
         }
+    ],
+    "project": [
+        {"title": "Asterisk", "color": "#1b498c"},
+        {"title": "Ultimate Nervous", "color": "#ffa811"},
+        {"title": "Ultimate Plus+", "color": "#fff200"},
+        {"title": "ZIPANG", "color": "#ff1111"},
+        {"title": "Project1", "color": "#45c715"},
+        {"title": "Project2", "color": "#2485c5"},
+        {"title": "Project3", "color": "#9c11ff"}
     ]
 }

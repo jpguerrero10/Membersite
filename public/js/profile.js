@@ -223,7 +223,7 @@ function profile() {
         // new task creation ------------------------------------------------------------------------
         let index = 0;
         const addTask = (title, description, deadline, isChecked, checkList, taskId) => {
-            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative`, id: `task${index}-${deadline}` });
+            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative p-3`, id: `task${index}-${deadline}` });
             index++;
             let checklistLength = 0;
             let checklistCompletedCount = 0;
@@ -244,7 +244,11 @@ function profile() {
             } else{
                 checkInput.checked = false;
             }
-            const toastBody = addElement("div", { class: "toast-body ms-3" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-3"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
+            const labelBox = addElement("div", {class: "label-box d-flex"});
+            const labelElm = addElement("div", {class: "labelPill bg-warning  px-3 m-0 rounded-pill col"}, "Ultimate Nervous");
+            const assignedUserIconBox = addElement("div", {class: "assigned-user-icon-box d-flex ms-2"});
+            const assignedUserIcon = addElement("img", {class: "assigned-user-icon rounded-circle bg-secondary object-fit-cover", src: `${userImage}`});
+            const toastBody = addElement("div", { class: "toast-body ms-3  w-75" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-2"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
             const divEditClose = addElement("div", { class: "edit-close ms-auto flex-wrap position-absolute top-0 end-0"});
             const btnCloseTask = addElement("button", { 
                 class: "btn-close close-btn btn-close-success m-2",
@@ -256,13 +260,17 @@ function profile() {
             },`
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="15" height="15" style="fill: #566d83;"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg>
             `);
-            const deadlineChecklist = addElement("div", {class: "deadline-checklist d-flex justify-content-between"});
+            const deadlineChecklist = addElement("div", {class: "deadline-checklist d-flex justify-content-between align-items-center"});
+            const checklistAssignedUserIcon = addElement("div", {class: "d-flex align-items-center"});
             const paragraphDeadline = addElement("p", {class: "deadlinePill bg-warning-subtle text-dark-emphasis px-3 m-0 rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 600" width="16px" fill="#495057"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg></strong> ${deadline}</small>`);
             const paragraphChecklist = addElement("p", {class: "checklistPill bg-secondary text-light px-3 m-0 rounded-pill d-block text-center" }, `<small><strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}</small>`);
             taskFlexContainer.append(checkInput, toastBody, divEditClose);
             divEditClose.append(btnEdit, btnCloseTask);
-            deadlineChecklist.append(paragraphChecklist, paragraphDeadline);
-
+            checklistAssignedUserIcon.append(paragraphChecklist, assignedUserIconBox)
+            deadlineChecklist.append(checklistAssignedUserIcon, paragraphDeadline);
+            toastBody.prepend(labelBox);
+            labelBox.appendChild(labelElm);
+            assignedUserIconBox.appendChild(assignedUserIcon);
             fragment.appendChild(taskFlexContainer);
             newTaskItem.appendChild(fragment);
             newTaskItem.appendChild( deadlineChecklist);
