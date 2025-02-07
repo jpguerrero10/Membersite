@@ -125,12 +125,11 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 35,
-                "tasksCompleted": -7,
+                "tasksAdded": 1,
+                "tasksCompleted": 1,
                 "tasksShared": 0,
                 "milestones": {
                     "tasksAdded": [
-                        50,
                         100
                     ],
                     "tasksCompleted": [
@@ -145,7 +144,8 @@
                 },
                 "shownMilestones": {
                     "tasksAdded": [
-                        10
+                        10,
+                        50
                     ],
                     "tasksCompleted": [
                         10

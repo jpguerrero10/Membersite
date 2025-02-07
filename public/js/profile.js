@@ -142,13 +142,13 @@ function profile() {
             setTimeout(() => {
                 fadeIn(formCard, 200); // 1s fadein
             }, 20);
-            // addButton.hidden = true;
-            // //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
-            // document.getElementById('filterButton').disabled = true; //20250127gen
-            // const btnEditAll = document.querySelectorAll('.btn-edit');
-            // if (btnEditAll.length > 0) {
-            //     btnEditAll.forEach(btn => btn.disabled = true);
-            // }
+            addButton.hidden = true;
+            //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
+            document.getElementById('filterButton').disabled = true; //20250127gen
+            const btnEditAll = document.querySelectorAll('.btn-edit');
+            if (btnEditAll.length > 0) {
+                btnEditAll.forEach(btn => btn.disabled = true);
+            }
             //add CheckList Item Button
             addCheckListItemButton.addEventListener('click', createCheckItemElm);
             renderProgressbar();
@@ -177,7 +177,6 @@ function profile() {
                 checklistCompletedCount = checkList.filter(completed => completed.listCompleted).length;
                 console.log(checklistCompletedCount);
                 if (checklistCompletedCount === checklistLength) {
-                    newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
                     isChecked = true;
                 }
             }
@@ -186,7 +185,6 @@ function profile() {
                 checkAchievements(achievements);
                 addTask(title, description, deadline, isChecked, checkList);
                 closeForm();
-                // checkListCompetedJudgement(checkList)
             } else {
                 console.error("Please fill all the fields");
             }
@@ -314,12 +312,7 @@ function profile() {
             let assignedUsers = [];
             assignedUsers.push(userID.replace(/\W+/g, ''));
 
-            //check button
-            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
-    
-            //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId));
-
+            
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
@@ -327,11 +320,52 @@ function profile() {
                 tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id});
                 let task = {title, description, deadline, isChecked, assignedUsers, checkList, id};
                 saveTask("add", task, title);
+                taskId = id;
             }
+            //check button
+            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
+    
+            //edit task button
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList));
         };
 
         // checked status function ------------------------------------------------------------------------
         function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId){
+            //タスクのチェックボタンが押された時、チェックリストが完了していないもがあったら全て完了にする処理
+            let incomplete = false;
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+            if (tasks[taskIndex].checkList) {
+                incomplete = tasks[taskIndex].checkList.some(list => list.listCompleted === false);
+            }
+            checkList = tasks[taskIndex].checkList;
+            if (!incomplete) {
+                saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+            } else {
+                const toggleConfirm = confirm('チェックリストに未完了の項目がありますが、このタスクを完了にしますか。');
+                if  (toggleConfirm) {
+                    console.log( tasks[taskIndex]);
+                    tasks[taskIndex].checkList.forEach(list => {
+                        if (list.listCompleted === false) {
+                            list.listCompleted = true;
+                        }
+                    });
+                    if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                        newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
+                    }
+                    newTaskItem.querySelector('.checklistPill small').innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checkList.length}/${checkList.length}`;
+                    checkList = tasks[taskIndex].checkList;
+                    saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+                } else {
+                    tasks[taskIndex].isChecked = false;
+                    checkInput.checked = false;
+                    return;
+                }
+            }
+        }
+
+        function saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId) {
+            console.log('saveToggleTaskStatus: checkList', checkList);
+            console.log('saveToggleTaskStatus: checkInput', checkInput.checked);
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
@@ -365,7 +399,7 @@ function profile() {
         }
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId){
+        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList){
             newTaskItem.hidden = true;
             createFormInputs('edit');
 
@@ -379,7 +413,6 @@ function profile() {
             document.querySelector("#deadline").value = deadline;
             let submitButton = document.querySelector('button[type="submit"]');
             submitButton.disabled = true;
-            let checkList;
             tasks.forEach(task => {
                 if (task.title === title) {
                     if (task.checkList) {
@@ -457,31 +490,6 @@ function profile() {
                         id: id
                     };
 
-                    const checklistLength = currentCheckList.length;
-                    const checklistCompletedCount = currentCheckList.filter(completed => completed.listCompleted).length;
-                    newTaskItem.querySelector(".checklistPill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}`;
-                    if (checklistLength === 0) {
-                        if (!newTaskItem.querySelector(".checklistPill").classList.contains("opacity-0")) {
-                            newTaskItem.querySelector(".checklistPill").classList.add("opacity-0");
-                        }
-                    } else {
-                        newTaskItem.querySelector(".checklistPill").classList.remove("opacity-0");
-                        if (checklistCompletedCount === checklistLength) {
-                            if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
-                                newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
-                            }
-                            newEditTask.isChecked = true;
-                            checkInput.checked = true;
-                            checkInput.dispatchEvent(new Event('change'));
-                        } else {
-                            if(newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
-                                newTaskItem.querySelector(".checklistPill").classList.remove("bg-success");
-                            }
-                            newEditTask.isChecked = false;
-                            checkInput.checked = false;
-                            checkInput.dispatchEvent(new Event('change'));
-                        }
-                    }
                     if (title && description && deadline) {
                         newTaskItem.querySelector(".taskTitle strong").textContent = newEditTask.title;
                         newTaskItem.querySelector("p").textContent = newEditTask.description;
@@ -500,7 +508,43 @@ function profile() {
                         tasks.push(newEditTask); // Si por alguna razón la tarea no existe, agrégala
                     }
                     saveTask("edition", newEditTask, newEditTask.title);
-
+                    const checklistLength = currentCheckList.length;
+                    const checklistCompletedCount = currentCheckList.filter(completed => completed.listCompleted).length;
+                    newTaskItem.querySelector(".checklistPill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}`;
+                    console.log(newEditTask.isChecked);
+                    console.log(checkInput.checked);
+                    console.log('currentCheckList', currentCheckList);
+                    if (checklistLength === 0) {
+                        if (!newTaskItem.querySelector(".checklistPill").classList.contains("opacity-0")) {
+                            newTaskItem.querySelector(".checklistPill").classList.add("opacity-0");
+                        }
+                    } else {
+                        newTaskItem.querySelector(".checklistPill").classList.remove("opacity-0");
+                        console.log(newEditTask.isChecked);
+                        if (checklistCompletedCount === checklistLength) {
+                            if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                                newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
+                            }
+                            if (!newEditTask.isChecked) {
+                                console.log('checkList', checkList);
+                                newEditTask.isChecked = true;
+                                // checkInput.checked = true;
+                                checkInput.click();
+                                // saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, currentCheckList, taskId);
+                            }
+                        } else {
+                            if(newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
+                                newTaskItem.querySelector(".checklistPill").classList.remove("bg-success");
+                            }
+                            if (newEditTask.isChecked) {
+                                newEditTask.isChecked = false;
+                                // checkInput.checked = false;
+                                checkInput.click();
+                                // saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, currentCheckList, taskId);
+                            }
+                        }
+                    }
+                    
                     formContainer.removeEventListener('submit', handleFormSubmitEdit);
                     formContainer.innerHTML = "";
                 };
@@ -541,7 +585,7 @@ function profile() {
                 .then(response => response.json())
                 .then(data => {
                     console.log('タスクはアップデートされた:', data);
-                    // updateAchievements(userID, achievements);
+                    updateAchievements(userID, achievements);
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
             } else if( action == "delete"){
@@ -562,7 +606,6 @@ function profile() {
         };
         //user achievements DB update
         function updateAchievements(userID, achievements){
-            console.log(userID);
             fetch(`http://localhost:3000/users/${userID}`, {
                 method: 'PUT',
                 headers: {
@@ -610,6 +653,8 @@ function profile() {
 
         //checklist create
         function createCheckItemElm(action, checkListCompeted, checkListTitle) {
+            const checkListProgress = document.querySelector('#check-list-progress');
+            checkListProgress.style.display = 'block';
             const checkListGroup = document.getElementById('check-list-group');
             const checkListItem = addElement("div", {class: "check-list-item mb-2 d-flex align-items-center"});
             const checkBoxInput = addElement('input', {
@@ -631,7 +676,6 @@ function profile() {
                 checkBoxInput.checked = checkListCompeted;
                 titleInput.value = checkListTitle;
                 if (checkListGroup.children.length > 0) {
-                    const checkListProgress = document.querySelector('#check-list-progress');
                     checkListProgress.style.display = 'block';
                     renderProgressbar();
                 }
@@ -644,7 +688,7 @@ function profile() {
             } else {
                 titleInput.focus();
             }
-            //チェック項目のタイトルを入力した時の処理
+            //チェック項目のタイトルからフォーカスを外した時の処理
             titleInput.addEventListener('focusout', function() {
                 const checkListGroup = document.getElementById('check-list-group');
                 const checkListProgress = document.querySelector('#check-list-progress');
@@ -653,6 +697,12 @@ function profile() {
                         titleInput.value = beforeText;
                     } else {
                         checkListItem.remove();
+                        if (checkListGroup.children.length > 0) {
+                            checkListProgress.style.display = 'block';
+                            renderProgressbar();
+                        } else {
+                            checkListProgress.style.display = 'none';
+                        }
                         return;
                     }
                 } else {
@@ -665,7 +715,7 @@ function profile() {
                 }
                 beforeText = '';
             });
-            //チェック項目のタイトルからフォーカスを外した時の処理
+            //チェック項目のチェックボックスをクリックした時の処理
             checkBoxInput.addEventListener('change', ()=> {
                 renderProgressbar();
                 if (checkBoxInput.checked) {
@@ -679,15 +729,15 @@ function profile() {
                 const checkListGroup = document.getElementById('check-list-group');
                 const checkListProgress = document.querySelector('#check-list-progress');
                 checkListItem.remove();
+                renderProgressbar();
                 if (!checkListGroup.children.length) {
                     checkListProgress.style.display = 'none';
-                } else {
-                    renderProgressbar();
                 }
             });
             //テキストエリアをフォーカスした時の処理
             let beforeText = '';
             titleInput.addEventListener('focus', function() {
+                renderProgressbar();
                 if (titleInput.value) {
                     beforeText = titleInput.value;
                 }
@@ -698,15 +748,20 @@ function profile() {
         function renderProgressbar() {
             const checkListProgress = document.querySelector('#check-list-progress');
             const allFormCheckInput = document.querySelectorAll('.check-list-input');
-            let chekedCount = 0;
-            for (let i = 0; i < allFormCheckInput.length; i++) {
-                if (allFormCheckInput[i].checked) {
-                    chekedCount++;
+            if (allFormCheckInput.length > 0) {
+                let chekedCount = 0;
+                for (let i = 0; i < allFormCheckInput.length; i++) {
+                    if (allFormCheckInput[i].checked) {
+                        chekedCount++;
+                    }
                 }
+                const progressRate = chekedCount / allFormCheckInput.length * 100;
+                checkListProgress.firstElementChild.style.width = `${progressRate}%`;
+                checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
+            } else {
+                checkListProgress.firstElementChild.style.width = '0%';
+                checkListProgress.firstElementChild.textContent = 0 + '%';
             }
-            const progressRate = chekedCount / allFormCheckInput.length * 100;
-            checkListProgress.firstElementChild.style.width = `${progressRate}%`;
-            checkListProgress.firstElementChild.textContent = Math.trunc(progressRate) + '%';
         }
 
         loadSavedTasks();
