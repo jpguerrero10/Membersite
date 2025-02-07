@@ -269,6 +269,192 @@ function checkAchievements(achievements){
 //modal creation
 const modalDialog = document.querySelector(".modal-dialog");
 
+//event modal view creation ------------------------------------------------------------------------------
+const generateEventForm = (dateInfo) => {
+    modalDialog.innerHTML = "";
+
+    const modalContent = addElement("div",{class: "modal-content"});
+    const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">${dateInfo}の予定を追加</h3><button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
+    const modalBody = addElement("div", { class: "modal-body" });
+    const eventFormContainer = addElement("form", { id: "eventForm" });
+
+    const fragment = document.createDocumentFragment();
+
+    const checkcontainer1 = addElement("div");
+    const checkcontainer2 = addElement("div");
+    const allDayCheck = addElement("input",{
+        type: "checkbox",
+        id: "allDay-checkbox",
+        name: "allDay-checkbox"
+    });
+    const repeatCheck = addElement("input",{
+        type: "checkbox",
+        id: "repeat-checkbox",
+        name: "repeat-checkbox"
+    });
+    const dateStartInput = addElement("input", {
+        type: "date",
+        id: "startDate",
+        class: "form-control mb-3",
+        name: "startDate",
+        min: "2000-01-01",
+        max: "2030-01-01",
+        required: true
+    });
+    const dateEndInput = addElement("input", {
+        type: "date",
+        id: "endDate",
+        class: "form-control mb-3",
+        name: "endDate",
+        min: "2000-01-01",
+        max: "2030-01-01",
+        required: true
+    });
+    const eventTitleInput = addElement("input", {
+        type: "text",
+        id: "eventTitle",
+        class: "form-control mb-3",
+        name: "eventTitle",
+        placeholder: "技術",
+        required: true
+    });
+    const completedActivitiesInput = addElement("textarea", {
+        id: "completedTask",
+        class: "form-control mb-3",
+        name: "completedTask",
+        placeholder: "作業内容",
+        required: true
+    });
+    const problemsInput = addElement("textarea", {
+        id: "complain",
+        class: "form-control mb-3",
+        name: "complain",
+        placeholder: "現場での懸念事項／その他"
+    });
+    const nextActivitiesInput = addElement("textarea", {
+        id: "nextTask",
+        class: "form-control mb-3",
+        name: "nextTask",
+        placeholder: "翌週・翌月作業予定",
+        required: true
+    });
+    const objectiveInput = addElement("textarea", {
+        id: "objective",
+        class: "form-control mb-3",
+        name: "objective",
+        placeholder: "個人目標"
+    });
+    const messageInput = addElement("textarea", {
+        id: "message",
+        class: "form-control mb-3",
+        name: "message",
+        placeholder: "会社、メンバーへの意見／その他"
+    });
+    const btnGroup = addElement("div", { class: "btn-group" });
+    const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "報告書追加");
+    const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
+    
+    // fecha(desde-hasta/終日todo el dia), opcion de repetir cada x tiempo(todas las semanas, cada semana x dia, cada mes x dia), titulo, lugar, contenido, participantes
+    // Col and row containers
+    const containerRow1 = addElement("div", { class: "row" });
+    const containerRow2 = addElement("div", { class: "row" });
+    const containerRow3 = addElement("div", { class: "row" });
+    const containerCol1 = addElement("div", { class: "col" });
+    const containerCol2 = addElement("div", { class: "col" });
+    const containerCol3 = addElement("div", { class: "col-12 col-md-3 align-content-center" });
+    const containerCol4 = addElement("div", { class: "col-12 form-floating" });
+    const containerCol5 = addElement("div", { class: "col-12 col-md-6 form-floating" });
+    const containerCol6 = addElement("div", { class: "col-12 col-md-6 form-floating" });
+    const containerCol7 = addElement("div", { class: "col-12 col-md-6 form-floating" });
+    const containerCol8 = addElement("div", { class: "col-12 col-md-6 form-floating" });
+    const container9 = addElement("div", { class: "form-floating" });
+
+    //labels
+    const allDayLabel = addElement("label", {
+        for: "allDay-checkbox",
+        class: "form-label fs-6 m-0 me-2"
+    }, "<small>終日</small>");
+    const repeatLabel = addElement("label", {
+        for: "allDay-checkbox",
+        class: "form-label fs-6 m-0 me-2"
+    }, "<small>繰り返し</small>");
+    const startLabel = addElement("label", {
+        for: "startDate",
+        class: "form-label fs-6"
+    }, "<small>開始日</small>");
+    const endLabel = addElement("label", {
+        for: "endDate",
+        class: "form-label fs-6"
+    }, "<small>終了日</small>");
+    const skillsLabel = addElement("label", {
+        for: "skills",
+        class: "form-label ms-2"
+    }, "技術");
+    const completedActivitiesLabel = addElement("label", {
+        for: "completedTask",
+        class: "form-label ms-2"
+    }, "作業内容");
+    const problemsLabel = addElement("label", {
+        for: "complain",
+        class: "form-label ms-2"
+    }, "現場での懸念事項／その他");
+    const nextActivitiesLabel = addElement("label", {
+        for: "nextTask",
+        class: "form-label ms-2"
+    }, "翌週・翌月作業予定");
+    const objectiveLabel = addElement("label", {
+        for: "objective",
+        class: "form-label ms-2"
+    }, "個人目標");
+    const messageLabel = addElement("label", {
+        for: "message",
+        class: "form-label ms-2"
+    }, "会社、メンバーへの意見／その他"); 
+
+    // Structure
+    containerRow1.append(containerCol1, containerCol2, containerCol3, containerCol4);
+    containerRow2.append(containerCol5, containerCol6);
+    containerRow3.append(containerCol7, containerCol8);
+    
+    containerCol1.append(startLabel, dateStartInput);
+    containerCol2.append(endLabel,dateEndInput);
+    containerCol3.append(checkcontainer1, checkcontainer2);
+    containerCol4.append(eventTitleInput, skillsLabel);
+    containerCol5.append(completedActivitiesInput, completedActivitiesLabel);
+    containerCol6.append(problemsInput, problemsLabel);
+    containerCol7.append(nextActivitiesInput, nextActivitiesLabel);
+    containerCol8.append(objectiveInput, objectiveLabel);
+    container9.append(messageInput, messageLabel);
+    checkcontainer1.append(allDayLabel, allDayCheck);
+    checkcontainer2.append(repeatLabel, repeatCheck);
+
+    fragment.append(containerRow1, containerRow2, containerRow3, container9, btnGroup);
+    btnGroup.append(submitButton, cancelButton);
+    
+    // Insert the fragment into the form's container
+    eventFormContainer.appendChild(fragment);
+
+    // Insert form's card
+    modalBody.appendChild(eventFormContainer);
+    modalContent.append(modalHeader, modalBody)
+    
+    modalDialog.appendChild(modalContent);
+
+    const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+    exampleModal.show();
+    // <form id="eventForm">
+    //     <div class="mb-3">
+    //         <label for="eventTitle" class="form-label">Título del Evento</label>
+    //         <input type="text" class="form-control" id="eventTitle" required>
+    //     </div>
+    //     <div class="mb-3">
+    //         <label for="eventStart" class="form-label">Fecha</label>
+    //         <input type="date" class="form-control" id="eventStart" required>
+    //     </div>
+    //     <button type="submit" class="btn btn-primary">Guardar</button>
+    // </form>
+};
+
 //report modal view creation -----------------------------------------------------------------------------
 const generateReportView = (reports, reportData, reportUserID, loggedUserName, loggedUserID, userImage) => {
     const modalContent = addElement("div",{class: "modal-content"});

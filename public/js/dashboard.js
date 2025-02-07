@@ -95,7 +95,7 @@ function dashboard(){
                 textColor = '#0d6efd';
             } else {
                 taskColor = '#f8d7da'; // expired task (bg-danger)
-                textColor = 'white';
+                textColor = 'red';
             }
 
         return {
@@ -122,10 +122,10 @@ function dashboard(){
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             height: '90vh',
-            initialDate: '2025-01-07',
+            initialDate: today,
             locale: 'ja',
-            buttonIcons: false, // show the prev/next text
-            weekNumbers: true,
+            buttonIcons: true, // show the prev/next text
+            weekNumbers: false,
             navLinks: true, // can click day/week names to navigate views
             editable: true,
             dayMaxEvents: true, // allow "more" link when too many events
@@ -135,6 +135,11 @@ function dashboard(){
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             events: allEvents,
+            dateClick: function(info) {
+                // document.getElementById('eventStart').value = info.dateStr;
+                console.log(info.dateStr);
+                generateEventForm(info.dateStr);//go to app.js
+            },
             eventClick: function(info) {
             if (info.event.extendedProps.type === 'task') {
                 alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
@@ -147,273 +152,9 @@ function dashboard(){
         calendar.render();
     });
 
-    //load tasks
-    // const loadTasks = (container, year, month, day) => {
-    //     loadUsersFromDB(function ({ users, tasks }) {
-    //         let firstElement = true;
-    //         tasks.forEach((task, index) => {
-    //             if (!task.isChecked) {
-    //                 const [deadlineYear, deadlineMonth, deadlineDay] = task.deadline.split("-").map(Number);
-    //                 if (Number(year) === deadlineYear && (Number(month) + 1) === deadlineMonth && Number(day) === deadlineDay){
-    //                     const taskTitle = addElement("div", { class: `tasks card flex-row bg-primary align-items-center mt-1 p-2 border-bottom border-info border-top shadow text-white`, id: `task${index}-${task.deadline}`, style: "cursor: pointer;"}, `
-    //                     <p class="text-start m-0" style="font-size: 0.8rem">${task.title}</p>
-    //                     `);
-                        
-    //                     if (firstElement) {
-    //                         taskTitle.classList.add("border-top");
-    //                         firstElement = false; 
-    //                     }
-    //                     container.appendChild(taskTitle);
-
-    //                     container.querySelectorAll(".tasks").forEach(btnTask => {
-    //                         btnTask.addEventListener('click', () => {
-    //                             loadView('profile');
-    //                         });
-    //                     });
-    //                 }
-
-    //             }
-    //             if (task.deadline) {
-    //                 const [year, month, day] = task.deadline.split("-").map(Number);
-    //                 const checkController = task.isChecked;
-    //                 markDeadlineOnCalendar(year, month, day, checkController);
-    //             }
-    //         });
-    //     });
-    // }
-    // // Calendar's main container
-    // const currentDay = `${currentDate.getDate()}`;
-    // const currentMonth = `${currentDate.getMonth()}`;
-    // const currentYear = `${currentDate.getFullYear()}`;
-
-    // const createCalendar = () => {
-    //     // Main calendar row
-    //     const cardBody = addElement("div", { class: "card-body" });
-    //     const calendarRow = addElement("div", { class: "row calendar" });
-    //     cardBody.appendChild(calendarRow);
-
-    //     //calendar Legends
-    //     const legendsContainer = addElement("div", {class: "calendarLegends"},[
-    //         addElement("div", { class: "legendItem text-info added" }, "追加タスク"),
-    //         addElement("div", { class: "legendItem text-success completed" }, "完了タスク"),
-    //         addElement("div", { class: "legendItem text-danger uncompleted" }, "未完了タスク")
-    //     ]);
-    //     cardBody.appendChild(legendsContainer);
-
-
-
-    //     // Left side (dates and controls)
-    //     const leftCol = addElement("div", { class: "col-12 col-md-7" });
-    //     calendarRow.appendChild(leftCol);
-
-    //     // Month/Year selectors
-    //     const monthYearRow = addElement("div", { class: "row text-center" });
-    //     const monthYearCol = addElement("div", { class: "col month-year fs-5 fw-bolder text-primary-emphasis" });
-
-    //     const yearSelect = addElement("select", { class: "form-select d-inline w-auto mx-2", id: "yearSelect", "aria-label": "Select Year" });
-    //     const currentYear = new Date().getFullYear();
-    //     for (let year = currentYear - 4; year <= currentYear + 2; year++) {
-    //         const option = addElement("option", null, `${year}年`);
-    //         option.value = year;
-    //         if (year === currentYear) option.selected = true;
-    //         yearSelect.appendChild(option);
-    //     }
-
-    //     const monthSelect = addElement("select", { class: "form-select d-inline w-auto mx-2", id: "monthSelect", "aria-label": "Select Month" });
-    //     const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-    //     months.forEach((month, index) => {
-    //         const option = addElement("option", { value: index + 1 }, month);
-    //         if (index === new Date().getMonth()) option.selected = true;
-    //         monthSelect.appendChild(option);
-    //     });
-
-    //     monthYearCol.appendChild(yearSelect);
-    //     monthYearCol.appendChild(monthSelect);
-    //     monthYearRow.appendChild(monthYearCol);
-    //     leftCol.appendChild(monthYearRow);
-
-    //     // Weekday headers
-    //     const weekHeaderRow = addElement("div", { class: "row text-center text-primary-emphasis" });
-    //     const days = ["日", "月", "火", "水", "木", "金", "土"];
-    //     days.forEach(day => {
-    //         const dayCol = addElement("div", { class: "col day" }, day);
-    //         weekHeaderRow.appendChild(dayCol);
-    //     });
-    //     leftCol.appendChild(weekHeaderRow);
-
-    //     // Dates rows 
-    //     const datesContainer = addElement("div", { class: "dates-container" });
-    //     leftCol.appendChild(datesContainer);
-        
-
-    //     // Right side (day details)
-    //     const rightCol = addElement("div", { class: "col-12 col-md-5" });
-    //     calendarRow.appendChild(rightCol);
-
-    //     const dayInfoRow = addElement("div", { class: "row text-info-emphasis text-center h-100 bg-info-subtle bg-gradient pt-3" });
-    //     const dayInfo = addElement("div", { class: "day-info d-flex flex-column p-0" });
-    //     const dayTask = addElement("div", { class: "day-tasks d-flex flex-column p-1 mt-2 shadow-sm"});
-
-    //     // schedule container
-    //     const daySchedule = addElement("div", { class: "day-schedule d-flex flex-column" });
-        
-    //     // tasks container
-    //     const dayNumber = addElement("p", { class: "m-0" },`
-    //         <span class="d-block fs-2 fw-bolder" id="dayNumber"></span>
-    //         <span id="dayName"></span>
-    //     `);
-
-    //     dayInfo.appendChild(dayNumber);
-    //     dayInfo.appendChild(dayTask);
-    //     dayInfo.appendChild(daySchedule);
-    //     dayInfoRow.appendChild(dayInfo);
-    //     rightCol.appendChild(dayInfoRow);
-
-    //     // Add Event Listeners
-    //     yearSelect.addEventListener("change", updateCalendar);
-    //     monthSelect.addEventListener("change", updateCalendar);
-        
-    //     return cardBody;
-    // };
-    
-    // // Function to calculate the calendar depending of selected year/month
-    // const updateCalendar = () => {
-    //     const year = parseInt(document.getElementById("yearSelect").value);
-    //     const month = parseInt(document.getElementById("monthSelect").value) - 1;
-    //     const datesContainer = document.querySelector(".dates-container");
-    //     datesContainer.innerHTML = "";
-    //     const removeTask = document.querySelectorAll(".tasks");
-    //     if(removeTask.length > 0){
-    //         removeTask.forEach(task => {
-    //             task.remove();
-    //         });
-    //     }
-        
-    //     const firstDay = new Date(year, month, 1).getDay();
-    //     const lastDate = new Date(year, month + 1, 0).getDate();
-        
-    //     let dayCount = 1;
-    //     for (let week = 0; week < 6; week++) {
-    //         const weekRow = addElement("div", { class: "row text-center text-body-secondary" });
-    //         for (let day = 0; day < 7; day++) {
-    //             const dateCol = addElement("div", { class: "col date", style: "cursor: pointer" });
-    //             const dotContainer = addElement("div", { class: "dotContainer" });
-    //             if ((week === 0 && day < firstDay) || dayCount > lastDate) {
-    //                 dateCol.classList.add("bg-dark-subtle");
-    //                 weekRow.appendChild(dateCol);
-    //             } else {
-    //                 dateCol.textContent = dayCount;
-    //                 dateCol.dataset.date = dayCount; 
-    //                 dateCol.appendChild(dotContainer);
-    //                 if(dateCol.textContent === currentDay && year.toString()  === currentYear && month.toString()  === currentMonth){
-    //                     dateCol.classList.add("bg-primary-subtle", "text-primary-emphasis");
-    //                 }
-    //                 dateCol.addEventListener("click", (event) => {
-    //                     const removeTask = document.querySelectorAll(".tasks");
-    //                     const blueDot = document.querySelectorAll(".blue-dot");
-    //                     if(removeTask.length > 0){
-    //                         removeTask.forEach(task => {
-    //                             task.remove();
-    //                         });
-    //                     }
-    //                     if(blueDot.length > 0){
-    //                         blueDot.forEach(dot => {
-    //                             dot.remove();
-    //                         });
-    //                     }
-    //                     showDayInfo(year, month, parseInt(event.target.dataset.date));
-    //                 });
-    //                 weekRow.appendChild(dateCol);
-    //                 dayCount++;
-    //             }
-    //         }
-    //         datesContainer.appendChild(weekRow);
-    //     }
-    //     showDayInfo(currentYear , currentMonth, currentDay)
-    // };
-
-    // const createScheduleGrid = (container) => {
-    //     container.innerHTML = ''; // Limpiar contenido previo
-    
-    //     for (let hour = 0; hour < 24; hour++) {
-    //         const hourRow = addElement("div", { class: "hour-row d-flex align-items-center border-bottom p-1", "data-hour": hour }, `
-    //             <span class="hour-label text-primary fw-bold">${hour}:00</span>
-    //             <input type="text" class="form-control ms-2 reminder-input" placeholder="予定を追加...">
-    //         `);
-    
-    //         // Evento para guardar recordatorio
-    //         hourRow.querySelector('.reminder-input').addEventListener('change', (event) => {
-    //             const reminder = event.target.value;
-    //             const selectedDay = document.getElementById("dayNumber").textContent;
-    //             saveReminder(selectedDay, hour, reminder);
-    //         });
-    
-    //         container.appendChild(hourRow);
-    //     }
-    // };
-
-    // // Add calendar to DOM
-    // card.appendChild(createCalendar());
-    // const dayInfo = document.querySelector(".day-tasks");
-    
-    // // Show day details (tasks, date, day of week)
-    // const showDayInfo = (year, month, day) => {
-    //     const date = new Date(year, month, day);
-    //     document.getElementById("dayNumber").textContent = `${day}日`;
-    //     document.getElementById("dayName").textContent = date.toLocaleDateString("ja-JP", { weekday: 'long' });
-
-    //     const scheduleContainer = document.querySelector(".day-schedule");
-    //     createScheduleGrid(scheduleContainer);
-        
-    //     loadTasks(dayInfo, year, month, day);
-    // }; 
-
-    // const markDeadlineOnCalendar = (year, month, day, checkController) => {
-    //     const selectedYear = parseInt(document.getElementById("yearSelect").value);
-    //     const selectedMonth = parseInt(document.getElementById("monthSelect").value);
-        
-    //     // Verify if the year/month coincide with the actual date
-    //     if (year === selectedYear && month === selectedMonth) {
-    //         const dateElements = document.querySelectorAll(".dates-container .col.date");
-
-    //         dateElements.forEach(dateElement => {
-    //             if (parseInt(dateElement.textContent) === day) {
-    //                 if(year === Number(currentYear) && month === (Number(currentMonth) + 1) && day >= Number(currentDay)){
-    //                     const dotContainer = dateElement.querySelector(".dotContainer");
-    //                     const blueDot = addElement("span", { class: "blue-dot" });
-    //                     blueDot.classList.add("bg-info");
-    //                     dotContainer.appendChild(blueDot);
-    //                     if(checkController){
-    //                         blueDot.classList.remove("bg-info");
-    //                         blueDot.classList.add("bg-success");
-    //                     }
-    //                 } else{
-    //                     const dotContainer = dateElement.querySelector(".dotContainer");
-    //                     const blueDot = addElement("span", { class: "blue-dot" });
-    //                     blueDot.classList.add("bg-danger");
-    //                     dotContainer.appendChild(blueDot);
-    //                     if(checkController){
-    //                         blueDot.classList.remove("bg-danger");
-    //                         blueDot.classList.add("bg-success");
-    //                     }
-    //                 }
-    //             }
-                
-    //         });
-    //     }
-    // };
-    
-    // // Función para guardar recordatorio en localStorage
-    // const saveReminder = (day, hour, reminder) => {
-    //     const key = `reminder_${day}_${hour}`;
-    //     localStorage.setItem(key, reminder);
-    //     alert(`Recordatorio guardado para ${day} a las ${hour}:00`);
-    // };
-
-    // updateCalendar();
-    // setTimeout(() => {
-    //     fadeIn(card, 20); // Hace un fade in en 1 segundo
-    // }, 150);
+    setTimeout(() => {
+        fadeIn(card, 20); // Hace un fade in en 1 segundo
+    }, 150);
     
     // create dashboard trophy card ----------------------------------------------------------------------------------
     const cardBody = addElement('div', { class: 'card-body text-primary-emphasis d-flex flex-wrap align-content-center' });
