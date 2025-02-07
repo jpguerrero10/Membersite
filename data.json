@@ -9,7 +9,7 @@
             "image": "img/user1.jpg",
             "achievements": {
                 "tasksAdded": 55,
-                "tasksCompleted": -15,
+                "tasksCompleted": 15,
                 "tasksShared": 5,
                 "milestones": {
                     "tasksAdded": [
