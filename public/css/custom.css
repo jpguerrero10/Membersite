@@ -170,9 +170,22 @@ textarea {
 }
 .label-box {
     font-size: 0.6rem;
+    gap: 10px;
+}
+.assigned-user-icon-box {
+    flex-direction: row-reverse;
 }
 .assigned-user-icon-box .assigned-user-icon {
     width: 30px;
+    border: 1px solid #ffffff;
+    margin-left: -7px;
+}
+.assigned-user-icon-box .assigned-user-icon:last-child {
+    margin-left: 0px;
+}
+.label-box .labelPill {
+    width: fit-content;
+    color: #ffffff;
 }
 
 @media (max-width: 480px) {

@@ -244,10 +244,19 @@ function profile() {
             } else{
                 checkInput.checked = false;
             }
-            const labelBox = addElement("div", {class: "label-box d-flex"});
-            const labelElm = addElement("div", {class: "labelPill bg-warning  px-3 m-0 rounded-pill col"}, "Ultimate Nervous");
+            const labelBox = addElement("div", {class: "label-box row"});
+            const labelElm = addElement("div", {class: "labelPill px-3 m-0 rounded-pill col-auto", style: "background: #1b498c;"}, "Asterisk");
+            const labelElm2 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #f68719;"}, "Ultimate Nervous");
+            const labelElm3 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #ffd900;"}, "Ultimate Plus+");
+            const labelElm4 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #ff1111;"}, "ZIPANG");
+            const labelElm5 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #45c715;"}, "Project1");
+            const labelElm6 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #2485c5;"}, "Project2");
+            const labelElm7 = addElement("div", {class: "labelPill  px-3 m-0 rounded-pill col-auto", style: "background: #9c11ff;"}, "Project3");
             const assignedUserIconBox = addElement("div", {class: "assigned-user-icon-box d-flex ms-2"});
-            const assignedUserIcon = addElement("img", {class: "assigned-user-icon rounded-circle bg-secondary object-fit-cover", src: `${userImage}`});
+            const assignedUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
+            const assignedUserIcon2 = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
+            const assignedUserIcon3 = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
+            const assignedUserIcon4 = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
             const toastBody = addElement("div", { class: "toast-body ms-3  w-75" }, `<h3 class="taskTitle text-primary-emphasis fs-5 mb-1 mt-2"><strong>${title}</strong></h3><p class="text-dark-emphasis">${description}</p>`);
             const divEditClose = addElement("div", { class: "edit-close ms-auto flex-wrap position-absolute top-0 end-0"});
             const btnCloseTask = addElement("button", { 
@@ -270,7 +279,14 @@ function profile() {
             deadlineChecklist.append(checklistAssignedUserIcon, paragraphDeadline);
             toastBody.prepend(labelBox);
             labelBox.appendChild(labelElm);
+            labelBox.appendChild(labelElm2);
+            labelBox.appendChild(labelElm3);
+            labelBox.appendChild(labelElm4);
+            labelBox.appendChild(labelElm5);
             assignedUserIconBox.appendChild(assignedUserIcon);
+            assignedUserIconBox.appendChild(assignedUserIcon2);
+            assignedUserIconBox.appendChild(assignedUserIcon3);
+            assignedUserIconBox.appendChild(assignedUserIcon4);
             fragment.appendChild(taskFlexContainer);
             newTaskItem.appendChild(fragment);
             newTaskItem.appendChild( deadlineChecklist);
