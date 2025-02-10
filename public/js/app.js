@@ -223,6 +223,19 @@ function fadeOut(element, duration = 500) {
 //     });
 //     }, 100);
 
+function choices () {
+    var element = document.getElementById('participants');
+    var choices = new Choices(element, {
+        removeItemButton: true,   // Permite eliminar elementos seleccionados
+        searchEnabled: true,      // Activa la búsqueda en el dropdown
+        itemSelectText: '',       // Quita el texto predeterminado en el selector
+        placeholder: true,        // Activa el texto de placeholder
+        placeholderValue: 'ユーザー追加',
+        // maxItemCount: 5,          // Límite de opciones seleccionables
+        allowHTML: true,          // Permite HTML en las opciones
+    });
+};
+
 // -----------------------------------------------------------------------------------------------------------------------
 
 //notifications
@@ -279,7 +292,7 @@ const generateEventForm = (dateInfo) => {
     const eventFormContainer = addElement("form", { id: "eventForm" });
 
     const fragment = document.createDocumentFragment();
-
+    
     const checkcontainer1 = addElement("div");
     const checkcontainer2 = addElement("div");
     const allDayCheck = addElement("input",{
@@ -292,82 +305,159 @@ const generateEventForm = (dateInfo) => {
         id: "repeat-checkbox",
         name: "repeat-checkbox"
     });
-    const dateStartInput = addElement("input", {
+    const hourStartInput = addElement("select", {
         type: "date",
-        id: "startDate",
-        class: "form-control mb-3",
-        name: "startDate",
-        min: "2000-01-01",
-        max: "2030-01-01",
+        id: "hourDate",
+        class: "form-select mb-3",
+        name: "hourDate",
         required: true
-    });
-    const dateEndInput = addElement("input", {
+    },`
+    <option value="0">0時</option>
+    <option value="1" selected>1時</option>
+    <option value="2">2時</option>
+    <option value="3">3時</option>
+    <option value="4">4時</option>
+    <option value="5">5時</option>
+    <option value="6">6時</option>
+    <option value="7">7時</option>
+    <option value="8">8時</option>
+    <option value="9">9時</option>
+    <option value="10">10時</option>
+    <option value="11">11時</option>
+    <option value="12">12時</option>
+    <option value="13">13時</option>
+    <option value="14">14時</option>
+    <option value="15">15時</option>
+    <option value="16">16時</option>
+    <option value="17">17時</option>
+    <option value="18">18時</option>
+    <option value="19>19時</option>
+    <option value="20">20時</option>
+    <option value="21">21時</option>
+    <option value="22">22時</option>
+    <option value="23">23時</option>
+    `);
+    const minStartInput = addElement("select", {
         type: "date",
-        id: "endDate",
-        class: "form-control mb-3",
-        name: "endDate",
-        min: "2000-01-01",
-        max: "2030-01-01",
+        id: "minDate",
+        class: "form-select mb-3",
+        name: "minDate",
         required: true
-    });
+    },`
+    <option value="5" selected>5分</option>
+    <option value="10">10分</option>
+    <option value="15">15分</option>
+    <option value="20">20分</option>
+    <option value="25">25分</option>
+    <option value="30">30分</option>
+    <option value="35">35分</option>
+    <option value="40">40分</option>
+    <option value="45">45分</option>
+    <option value="50">50分</option>
+    <option value="55">55分</option>
+    `);
+    const hourEndInput = addElement("select", {
+        type: "date",
+        id: "hourDate",
+        class: "form-select mb-3",
+        name: "hourDate",
+        required: true
+    },`
+    <option value="0">0時</option>
+    <option value="1" selected>1時</option>
+    <option value="2">2時</option>
+    <option value="3">3時</option>
+    <option value="4">4時</option>
+    <option value="5">5時</option>
+    <option value="6">6時</option>
+    <option value="7">7時</option>
+    <option value="8">8時</option>
+    <option value="9">9時</option>
+    <option value="10">10時</option>
+    <option value="11">11時</option>
+    <option value="12">12時</option>
+    <option value="13">13時</option>
+    <option value="14">14時</option>
+    <option value="15">15時</option>
+    <option value="16">16時</option>
+    <option value="17">17時</option>
+    <option value="18">18時</option>
+    <option value="19>19時</option>
+    <option value="20">20時</option>
+    <option value="21">21時</option>
+    <option value="22">22時</option>
+    <option value="23">23時</option>
+    `);
+    const minEndInput = addElement("select", {
+        type: "date",
+        id: "minDate",
+        class: "form-select mb-3",
+        name: "minDate",
+        required: true
+    },`
+    <option value="5" selected>5分</option>
+    <option value="10">10分</option>
+    <option value="15">15分</option>
+    <option value="20">20分</option>
+    <option value="25">25分</option>
+    <option value="30">30分</option>
+    <option value="35">35分</option>
+    <option value="40">40分</option>
+    <option value="45">45分</option>
+    <option value="50">50分</option>
+    <option value="55">55分</option>
+    `);
+    const separatorTime = addElement("span", {class:"input-group-text mb-3"}, "～");
     const eventTitleInput = addElement("input", {
         type: "text",
         id: "eventTitle",
         class: "form-control mb-3",
         name: "eventTitle",
-        placeholder: "技術",
+        placeholder: "タイトル",
         required: true
     });
-    const completedActivitiesInput = addElement("textarea", {
-        id: "completedTask",
+    const eventPlaceInput = addElement("input", {
+        type: "text",
+        id: "eventPlace",
+        class: "form-control mb-3",
+        name: "eventPlace",
+        placeholder: "場所",
+        required: true
+    });
+    const contentInput = addElement("textarea", {
+        id: "content",
         class: "form-control mb-3",
         name: "completedTask",
-        placeholder: "作業内容",
+        placeholder: "内容",
         required: true
     });
-    const problemsInput = addElement("textarea", {
-        id: "complain",
-        class: "form-control mb-3",
-        name: "complain",
-        placeholder: "現場での懸念事項／その他"
-    });
-    const nextActivitiesInput = addElement("textarea", {
-        id: "nextTask",
-        class: "form-control mb-3",
-        name: "nextTask",
-        placeholder: "翌週・翌月作業予定",
-        required: true
-    });
-    const objectiveInput = addElement("textarea", {
-        id: "objective",
-        class: "form-control mb-3",
-        name: "objective",
-        placeholder: "個人目標"
-    });
-    const messageInput = addElement("textarea", {
-        id: "message",
-        class: "form-control mb-3",
+    const participantsInput = addElement("select", {
+        id: "participants",
+        class: "form-select mb-3",
         name: "message",
-        placeholder: "会社、メンバーへの意見／その他"
-    });
+        multiple: '' 
+    },`
+    <option value="1">Neeman</option>
+    <option value="2">Genchan</option>
+    <option value="3">Joe</option>
+    <option value="4">Leela</option>
+    <option value="5">Emy</option>
+    `);
+
     const btnGroup = addElement("div", { class: "btn-group" });
     const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "報告書追加");
     const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
     
-    // fecha(desde-hasta/終日todo el dia), opcion de repetir cada x tiempo(todas las semanas, cada semana x dia, cada mes x dia), titulo, lugar, contenido, participantes
     // Col and row containers
     const containerRow1 = addElement("div", { class: "row" });
     const containerRow2 = addElement("div", { class: "row" });
     const containerRow3 = addElement("div", { class: "row" });
-    const containerCol1 = addElement("div", { class: "col" });
-    const containerCol2 = addElement("div", { class: "col" });
-    const containerCol3 = addElement("div", { class: "col-12 col-md-3 align-content-center" });
+    const containerCol1 = addElement("div", { class: "col input-group" });
+    const containerCol3 = addElement("div", { class: "col-12 col-md-3 align-content-center mb-3" });
     const containerCol4 = addElement("div", { class: "col-12 form-floating" });
-    const containerCol5 = addElement("div", { class: "col-12 col-md-6 form-floating" });
-    const containerCol6 = addElement("div", { class: "col-12 col-md-6 form-floating" });
-    const containerCol7 = addElement("div", { class: "col-12 col-md-6 form-floating" });
-    const containerCol8 = addElement("div", { class: "col-12 col-md-6 form-floating" });
-    const container9 = addElement("div", { class: "form-floating" });
+    const containerCol5 = addElement("div", { class: "col-12 form-floating" });
+    const containerCol6 = addElement("div", { class: "col-12 form-floating" });
+    const container9 = addElement("div", { class: "mb-3" });
 
     //labels
     const allDayLabel = addElement("label", {
@@ -379,52 +469,37 @@ const generateEventForm = (dateInfo) => {
         class: "form-label fs-6 m-0 me-2"
     }, "<small>繰り返し</small>");
     const startLabel = addElement("label", {
-        for: "startDate",
+        for: "hourDate",
         class: "form-label fs-6"
-    }, "<small>開始日</small>");
-    const endLabel = addElement("label", {
-        for: "endDate",
-        class: "form-label fs-6"
-    }, "<small>終了日</small>");
-    const skillsLabel = addElement("label", {
-        for: "skills",
+    }, "<small>日時</small>");
+    const eventTitleLabel = addElement("label", {
+        for: "eventTitle",
         class: "form-label ms-2"
-    }, "技術");
-    const completedActivitiesLabel = addElement("label", {
-        for: "completedTask",
+    }, "タイトル");
+    const contentLabel = addElement("label", {
+        for: "content",
         class: "form-label ms-2"
-    }, "作業内容");
-    const problemsLabel = addElement("label", {
-        for: "complain",
+    }, "内容");
+    const placeLabel = addElement("label", {
+        for: "eventPlace",
         class: "form-label ms-2"
-    }, "現場での懸念事項／その他");
-    const nextActivitiesLabel = addElement("label", {
-        for: "nextTask",
+    }, "場所");
+    const participantsLabel = addElement("label", {
+        for: "participants",
         class: "form-label ms-2"
-    }, "翌週・翌月作業予定");
-    const objectiveLabel = addElement("label", {
-        for: "objective",
-        class: "form-label ms-2"
-    }, "個人目標");
-    const messageLabel = addElement("label", {
-        for: "message",
-        class: "form-label ms-2"
-    }, "会社、メンバーへの意見／その他"); 
+    }, "参加ユーザー"); 
 
     // Structure
-    containerRow1.append(containerCol1, containerCol2, containerCol3, containerCol4);
-    containerRow2.append(containerCol5, containerCol6);
-    containerRow3.append(containerCol7, containerCol8);
+    containerRow1.append(startLabel,containerCol1, containerCol3, containerCol4);
+    containerRow2.append(containerCol5);
+    containerRow3.append(containerCol6);
     
-    containerCol1.append(startLabel, dateStartInput);
-    containerCol2.append(endLabel,dateEndInput);
+    containerCol1.append(hourStartInput, minStartInput, separatorTime, hourEndInput, minEndInput );
     containerCol3.append(checkcontainer1, checkcontainer2);
-    containerCol4.append(eventTitleInput, skillsLabel);
-    containerCol5.append(completedActivitiesInput, completedActivitiesLabel);
-    containerCol6.append(problemsInput, problemsLabel);
-    containerCol7.append(nextActivitiesInput, nextActivitiesLabel);
-    containerCol8.append(objectiveInput, objectiveLabel);
-    container9.append(messageInput, messageLabel);
+    containerCol4.append(eventTitleInput, eventTitleLabel);
+    containerCol5.append(eventPlaceInput, placeLabel);
+    containerCol6.append(contentInput, contentLabel);
+    container9.append(participantsLabel, participantsInput);
     checkcontainer1.append(allDayLabel, allDayCheck);
     checkcontainer2.append(repeatLabel, repeatCheck);
 
@@ -442,17 +517,9 @@ const generateEventForm = (dateInfo) => {
 
     const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
     exampleModal.show();
-    // <form id="eventForm">
-    //     <div class="mb-3">
-    //         <label for="eventTitle" class="form-label">Título del Evento</label>
-    //         <input type="text" class="form-control" id="eventTitle" required>
-    //     </div>
-    //     <div class="mb-3">
-    //         <label for="eventStart" class="form-label">Fecha</label>
-    //         <input type="date" class="form-control" id="eventStart" required>
-    //     </div>
-    //     <button type="submit" class="btn btn-primary">Guardar</button>
-    // </form>
+    setTimeout(() => {
+        choices();
+    }, 10);
 };
 
 //report modal view creation -----------------------------------------------------------------------------

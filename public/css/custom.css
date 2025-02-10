@@ -390,4 +390,11 @@ h2.fc-toolbar-title {
 #calendar {
     height: 90vh;
 }
+
+.modal .choices__list--dropdown, .choices__list[aria-expanded]{
+    z-index: 999;
+}
+.modal .choices__input{
+    width: fit-content !important;
+}
 /* -------------------------------chart------------------------------------ */

@@ -286,7 +286,7 @@
             "achievements": {
                 "tasksAdded": 1,
                 "tasksCompleted": 1,
-                "tasksShared": 12,
+                "tasksShared": 17,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -521,7 +521,10 @@
                 "johnD",
                 "johnD",
                 "johnD",
-                "johnD"
+                "johnD",
+                "johnD",
+                "marodriguez",
+                "genchan"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
             "checkList": []
@@ -553,7 +556,9 @@
             "deadline": "2025-02-14",
             "isChecked": false,
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD",
+                "genchan"
             ],
             "checkList": [
                 {
