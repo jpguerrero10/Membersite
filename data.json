@@ -8,8 +8,8 @@
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
-                "tasksAdded": 55,
-                "tasksCompleted": -15,
+                "tasksAdded": 5,
+                "tasksCompleted": 6,
                 "tasksShared": 5,
                 "milestones": {
                     "tasksAdded": [
@@ -286,7 +286,7 @@
             "achievements": {
                 "tasksAdded": 1,
                 "tasksCompleted": 1,
-                "tasksShared": 7,
+                "tasksShared": 17,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -513,14 +513,21 @@
         {
             "title": "社内資料セクションを作成",
             "description": "Crear la seccion de archivos y enciclopedia.",
-            "deadline": "2025-01-31",
+            "deadline": "2025-02-28",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "moongirl"
+                "johnD",
+                "johnD",
+                "johnD",
+                "johnD",
+                "johnD",
+                "marodriguez",
+                "genchan"
             ],
-            "id": "a51372b1-4f6b-4537-ae61-a7572789f00e"
+            "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
+            "checkList": []
         },
         {
             "title": "タスクのチェックリストを作成",
@@ -528,7 +535,8 @@
             "deadline": "2025-01-31",
             "isChecked": true,
             "assignedUsers": [
-                "genchan"
+                "genchan",
+                "neeman"
             ],
             "checkList": [
                 {
@@ -545,10 +553,12 @@
         {
             "title": "スケジュール表示を作成",
             "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
-            "deadline": "2025-01-31",
+            "deadline": "2025-02-14",
             "isChecked": false,
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD",
+                "genchan"
             ],
             "checkList": [
                 {
