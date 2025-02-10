@@ -125,9 +125,9 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 62,
-                "tasksCompleted": -62,
-                "tasksShared": 0,
+                "tasksAdded": 8,
+                "tasksCompleted": 2,
+                "tasksShared": 2,
                 "milestones": {
                     "tasksAdded": [
                         100
@@ -581,99 +581,38 @@
             "id": "8687a2ed-ff17-45f9-b65c-10a484dd10e1"
         },
         {
-            "title": "sdsd",
-            "description": "sdsds",
-            "deadline": "2025-01-01",
+            "title": "タスクにラベルを付与する機能を追加",
+            "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに誰が参画しているかわかるようにユーザーを表示する",
+            "deadline": "2025-02-07",
             "isChecked": false,
             "assignedUsers": [
-                "genchan"
-            ],
-            "id": "8cf0225d-f2d9-4ec2-a5ca-6c2b2feb248f",
-            "checkList": []
-        },
-        {
-            "title": "tesa12",
-            "description": "tesa1fff",
-            "deadline": "2025-01-17",
-            "isChecked": true,
-            "assignedUsers": [
-                "genchan"
-            ],
-            "checkList": [
-                {
-                    "listCompleted": true,
-                    "listName": "dddderいいいいい"
-                },
-                {
-                    "listCompleted": true,
-                    "listName": "ddddw"
-                },
-                {
-                    "listCompleted": true,
-                    "listName": "dddderrrooooo"
-                }
-            ],
-            "id": "5f175627-dbc5-4d84-bf3a-ec72d56b28c3"
-        },
-        {
-            "title": "test13",
-            "description": "testtestさだ",
-            "deadline": "2025-01-30",
-            "isChecked": true,
-            "assignedUsers": [
-                "genchan"
-            ],
-            "checkList": [
-                {
-                    "listCompleted": true,
-                    "listName": "dadasdad"
-                }
-            ],
-            "id": "83b02148-9b19-41fc-9edf-93d1e74436b6"
-        },
-        {
-            "title": "test john 2",
-            "description": "test",
-            "deadline": "2025-01-31",
-            "isChecked": false,
-            "assignedUsers": [
+                "neeman",
+                "marodriguez",
                 "johnD"
             ],
             "checkList": [
                 {
                     "listCompleted": true,
-                    "listName": "test4"
+                    "listName": "ラベル機能の追加用にタスクカードのデザインを考える"
                 },
                 {
                     "listCompleted": false,
-                    "listName": "test5"
+                    "listName": "タスク追加時にラベルを付与できるようにする"
                 },
                 {
                     "listCompleted": false,
-                    "listName": "test6"
+                    "listName": "タスク編集時にラベルを編集できるようにする"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "タスクのフォームに参画しているユーザーがわかるように表示する"
                 }
             ],
-            "id": "2ff8c3f0-b9b0-44ed-9ce9-265a8a5a84f5"
-        },
-        {
-            "title": "タスクにラベルを付ける機能を追加",
-            "description": "タスクにラベルを付ける",
-            "deadline": "2025-02-03",
-            "isChecked": false,
-            "assignedUsers": [
-                "genchan"
-            ],
-            "checkList": [
-                {
-                    "listCompleted": false,
-                    "listName": "ラベルの機能の全容をまとめる"
-                },
-                {
-                    "listCompleted": false,
-                    "listName": "画面遷移を考える"
-                }
-            ],
-            "id": "c6ed0599-6f1f-415a-a76a-f73db33ac972"
+            "id": "dd2f077f-d221-48a8-8157-be907ff75c67",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
         }
     ],
     "events": [
@@ -762,13 +701,34 @@
             "end": "2025-01-31T19:30:00"
         }
     ],
-    "project": [
-        {"title": "Asterisk", "color": "#1b498c"},
-        {"title": "Ultimate Nervous", "color": "#f68719"},
-        {"title": "Ultimate Plus+", "color": "#ffd900"},
-        {"title": "ZIPANG", "color": "#ff1111"},
-        {"title": "Project1", "color": "#45c715"},
-        {"title": "Project2", "color": "#2485c5"},
-        {"title": "Project3", "color": "#9c11ff"}
+    "projects": [
+        {
+            "title": "Asterisk",
+            "color": "#1b498c"
+        },
+        {
+            "title": "Ultimate Nervous",
+            "color": "#f68719"
+        },
+        {
+            "title": "Ultimate Plus+",
+            "color": "#ffd900"
+        },
+        {
+            "title": "ZIPANG",
+            "color": "#ff1111"
+        },
+        {
+            "title": "Project1",
+            "color": "#45c715"
+        },
+        {
+            "title": "Project2",
+            "color": "#2485c5"
+        },
+        {
+            "title": "Project3",
+            "color": "#9c11ff"
+        }
     ]
 }

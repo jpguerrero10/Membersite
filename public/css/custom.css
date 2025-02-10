@@ -177,7 +177,7 @@ textarea {
 }
 .assigned-user-icon-box .assigned-user-icon {
     width: 30px;
-    border: 1px solid #ffffff;
+    border: 3px solid #ffffff;
     margin-left: -7px;
 }
 .assigned-user-icon-box .assigned-user-icon:last-child {

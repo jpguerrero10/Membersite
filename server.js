@@ -111,9 +111,9 @@ app.delete('/users/:id', async (req, res) => {
     }
 });
 
-// rutas tareas --------------------------------------------------------------------------------------------
+// task route // rutas tareas --------------------------------------------------------------------------------------------
 
-// Obtener tareas
+// get task // Obtener tareas
 app.get('/tasks', async (req, res) => {
     try {
         const data = await readData();
@@ -219,7 +219,19 @@ app.get('/events/:userId', async (req, res) => {
     }
 });
 
-// Iniciar servidor
+// // project route --------------------------------------------------------------------------------------------
+
+// // get project
+// app.get('/projects', async (req, res) => {
+//     try {
+//         const data = await readData();
+//         res.json(data.projects);
+//     } catch (error) {
+//         res.status(500).json({ error: 'Error al leer los datos del archivo' });
+//     }
+// });
+
+// server init/Iniciar servidor
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
