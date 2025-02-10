@@ -183,14 +183,9 @@ textarea {
 }
 /* ---------------------------------- team ------------------------------------------ */
 
-/* ---------------------------------- dashboard -------------------------------------- */
-.fc a {
-    text-decoration: none;
-}
-
-h2.fc-toolbar-title {
-    font-size: 1.55em !important;
-    color: #052c65;
+/* ---------------------------------- reports styles ----------------------------------- */
+.period{
+    align-content: center;
 }
 
 /*----------------------------------- profile edition ----------------------------------- */
@@ -378,46 +373,28 @@ span.comment-alert {
 }
 
 /*----------------------------------- calendar styles ----------------------------------- */
-
-.calendar {
-    margin: 0 auto;
-}
-.day, .date {
-    width: 100%;
-    padding: 0.75rem 0;
-    text-align: center;
-}
-.day {
-    font-weight: bold;
-}
-.date {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    aspect-ratio: 1 / 1;
-    max-height: 65px;
-}
-.calendarLegends {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    padding: 2% 0;
-}
-.legendItem::before {
-    content: '';
-    width: 15px;
-    height: 5px;
-    display: inline-block;
-    border-radius: 25%;
-    transform: translate(-5px, -3px);
-}
-.completed::before {
-    background-color: #198754;
-}
-.added::before {
-    background-color: #0dcaf0;
-}
-.uncompleted::before {
-    background-color: #dc3545;
+.fc-day:hover {
+    cursor: pointer;
+    box-shadow: 1px 0px 0px inset #3789D8, 0px 1px 0px inset #3789D8, -1px 0px 0px inset #3789D8, 0px -1px 0px inset #3789D8;
 }
 
+.fc a {
+    text-decoration: none;
+}
+
+h2.fc-toolbar-title {
+    font-size: 1.55em !important;
+    color: #052c65;
+}
+
+#calendar {
+    height: 90vh;
+}
+
+.modal .choices__list--dropdown, .choices__list[aria-expanded]{
+    z-index: 999;
+}
+.modal .choices__input{
+    width: fit-content !important;
+}
 /* -------------------------------chart------------------------------------ */

@@ -244,11 +244,11 @@ function dashboard(){
         const reportRow = addElement("div", { class: "row"});
         const reportCol = addElement("div", { class: "col-12 align-content-center d-flex"});
         const reportType = addElement("p", {class:"type text-dark-emphasis m-0"}, `<strong>${switchbtn}</strong>`);
-        const reportDeadline = addElement("p", {class:"deadline text-dark-emphasis m-0 ms-2"}, `<strong>${dateStart}　～　${dateEnd}</strong>`);
+        const reportperiod = addElement("p", {class:"period text-dark-emphasis m-0 ms-2"}, `<strong>${dateStart}　～　${dateEnd}</strong>`);
         const reportBtn = addElement("button", { role: "button", class: "btn btn-primary text-right ms-auto px-4" }, "詳細")
         
         reportCol.appendChild(reportType);
-        reportCol.appendChild(reportDeadline);
+        reportCol.appendChild(reportperiod);
         reportCol.appendChild(reportBtn);
         reportRow.appendChild(reportCol);
         newReportItem.appendChild(reportRow);
