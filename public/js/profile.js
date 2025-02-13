@@ -5,7 +5,6 @@ function profile() {
     const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    console.log(userID);
     const userDescription = localStorage.getItem('userDescription');
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
@@ -13,7 +12,6 @@ function profile() {
         fetch(`http://localhost:3000/tasks/${userID}`)
             .then(response => response.json())
             .then(tasks => {
-                console.log(tasks);
                 localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
             })
             .catch(error => console.error('Error al obtener las tareas:', error));
@@ -27,7 +25,6 @@ function profile() {
         })
         .catch(error => console.error('Error al obtener las tareas:', error));
     const projects = JSON.parse(localStorage.getItem('projects'));
-    console.log(projects);
 
     // ----------------------------------------- displaying data on screen ------------------------------------------------------
     document.querySelector('#userName').textContent = userName;
@@ -61,7 +58,7 @@ function profile() {
             return v.toString(16);
         });
     }
-        
+
     //notifications start
     const notificationContainer = addElement("div", { class:"toast-container position-fixed top-0 end-0 p-3" });
 
@@ -81,7 +78,7 @@ function profile() {
         
         
         // form creation -------------------------------------------------------------
-        const createFormInputs = (action) => {
+        const createFormInputs = (action, taskId) => {
             formContainer.innerHTML = "";
             
             const formCard = addElement("div", { class: "card cardForm shadow p-4 my-3" });
@@ -131,16 +128,29 @@ function profile() {
             }, "✙ チェックリストを追加");
             const checkListGroup = addElement("div", {id: "check-list-group"});
             const btnGroup = addElement("div", { class: "btn-group"});
-            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, `${action === "add" ? "タスク追加" : "タスク保存"}`); //20250124gen
+            const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, `${action === "add" ? "タスク追加" : "タスク保存"}`);
             const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
-            
+            const containerRow2 = addElement("div", {class: "row"});
+            const assignedUser = addElement("div", {class: "col"}, "アサインユーザー")
+            const formAssignedUserIconBox = addElement("div", {id: "form-assigned-user-icon-box", class: "d-flex mb-3"});
+            const label = addElement("div", {class: "col"})
+            const formLabelBox = addElement("div", {id: "form-label-box", class: "label-box d-flex mb-2"});
+            const formLabelAddDropdown = addElement("div", {class: "dropdown"}, `<a id="form-label-add-dropdown" class="btn btn-primary dropdown-toggle w-100 mb-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">ラベル選択</a>`);
+            const dropdownBodyCollapse = addElement("ul", {id: "dropdown-body-collapse", class: "dropdown-menu px-2"});
             formContainer.parentNode.insertBefore(formCard, formContainer);
             formCard.appendChild(formContainer);
+            formContainer.appendChild(formLabelBox);
             formContainer.appendChild(containerRow);
             containerRow.appendChild(containerCol1);
             containerCol1.appendChild(titleInput);
             containerRow.appendChild(containerCol2);
             containerCol2.appendChild(deadlineInput);
+            assignedUser.appendChild(formAssignedUserIconBox);
+            containerRow2.appendChild(assignedUser);
+            label.appendChild(formLabelAddDropdown);
+            formLabelAddDropdown.appendChild(dropdownBodyCollapse);
+            containerRow2.appendChild(label);
+            formContainer.appendChild(containerRow2);
             formContainer.appendChild(descriptionInput);
             checkList.appendChild(checkListProgress);
             checkListProgress.appendChild(progressBar);
@@ -155,14 +165,53 @@ function profile() {
             }, 20);
             addButton.hidden = true;
             //タスクのフォームが開いている時、フィルターボタンと他のタスクのエディットボタンを押せなくする処理
-            document.getElementById('filterButton').disabled = true; //20250127gen
+            document.getElementById('filterButton').disabled = true;
             const btnEditAll = document.querySelectorAll('.btn-edit');
-            if (btnEditAll.length > 0) {
-                btnEditAll.forEach(btn => btn.disabled = true);
-            }
+            if (btnEditAll.length > 0) {btnEditAll.forEach(btn => btn.disabled = true);}
             //add CheckList Item Button
             addCheckListItemButton.addEventListener('click', createCheckItemElm);
             renderProgressbar();
+            //アサインユーザーとラベルの表示
+            let checkLabelCount = 0;
+            projects.forEach(project => {
+                const projectCheckItem = addElement("div", {class: "project-check-item d-flex align-aitems-center"});
+                const projectCheckBox = addElement("input", {class:"project-check-box m-1", type:"checkbox"});
+                const projectPill = addElement("div", {class:"project-check-box px-3 m-1 text-light rounded-pill", style: `background: ${project.color};`}, project.title);
+                projectCheckItem.appendChild(projectCheckBox);
+                projectCheckItem.appendChild(projectPill);
+                dropdownBodyCollapse.appendChild(projectCheckItem);
+                if (action === 'edit') {
+                    thisTask = tasks.find(task => task.id === taskId);
+                    if (thisTask.project === undefined) {thisTask.project = [];}
+                    if (thisTask.project.indexOf(project.title) !== -1) {projectCheckBox.checked = true;} 
+                }
+                projectCheckBox.addEventListener('change', function() {
+                    const checkElmAll = dropdownBodyCollapse.querySelectorAll('.project-check-box');
+                    let newProjects = [];
+                    checkElmAll.forEach(checkElm => {
+                        if (checkElm.checked) {
+                            const projectTitle = checkElm.nextElementSibling.textContent;
+                            newProjects.push(projectTitle);
+                        }
+                    });
+                    projectCheckBox.checked ? checkLabelCount++ : checkLabelCount--;
+                    if (checkLabelCount < 5) {
+                        checkElmAll.forEach(checkElm => checkElm.disabled = false);
+                    } else {
+                        checkElmAll.forEach(checkElm => {
+                            checkElm.checked === false ? checkElm.disabled = true : checkElm.disabled = false;
+                        });
+                    }
+                    renderLabel(formCard, newProjects);
+                });
+            });
+            if (action === 'edit') {
+                renderAssignedUserIcon(formContainer, thisTask.assignedUsers, 'form');
+                renderLabel(formCard, thisTask.project);
+            } else if (action === 'add') {
+                const myUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
+                formAssignedUserIconBox.appendChild(myUserIcon);
+            }
         };
 
         // task creation submit -----------------------------------------------------------------------
@@ -171,11 +220,14 @@ function profile() {
             const title = document.querySelector("#title").value;
             const description = document.querySelector("#description").value;
             const deadline = document.querySelector("#deadline").value;
+            const label = document.querySelector("#form-label-box");
+            let projects = [];
+            Array.from(label.children).forEach(project => projects.push(project.textContent));
             let isChecked = false;
             let checkList = [];
-            const checkListGroup = document.querySelector('#check-list-group');
-            const checkListInputAll = document.querySelectorAll('.check-list-input');
-            const formTitleTextAll = document.querySelectorAll('.form-title-text');
+            const checkListGroup = document.querySelector("#check-list-group");
+            const checkListInputAll = document.querySelectorAll(".check-list-input");
+            const formTitleTextAll = document.querySelectorAll(".form-title-text");
             for (let i = 0; i < checkListGroup.children.length; i++) {
                 const checkListItem = {
                     listCompleted: checkListInputAll[i].checked,
@@ -191,10 +243,11 @@ function profile() {
                     isChecked = true;
                 }
             }
+            let assignedUsers = [userID.replace(/\W+/g, '')];
             if (title && description && deadline) {
                 achievements.tasksAdded++;
                 checkAchievements(achievements);
-                addTask(title, description, deadline, isChecked, checkList);
+                addTask(title, description, deadline, isChecked, checkList, null, projects, assignedUsers);
                 closeForm();
             } else {
                 console.error("Please fill all the fields");
@@ -226,7 +279,6 @@ function profile() {
         
         // load previous data ------------------------------------------------------------------------
         const loadSavedTasks = () => {
-            console.log(tasks);
             tasks.forEach((task) => addTask(task.title, task.description, task.deadline, task.isChecked, task.checkList, task.id, task.project, task.assignedUsers));
         };
         
@@ -283,7 +335,6 @@ function profile() {
             taskContainer.insertBefore(newTaskItem, taskContainer.firstChild);
 
             if (project) {
-                console.log(project);
                 renderLabel(newTaskItem, project);
             }
             
@@ -331,37 +382,33 @@ function profile() {
             
             //assign user to task
             let assignedUser = [];
-            console.log(assignedUsers);
             if (!assignedUsers) {
-                console.log('aaaa')
                 assignedUser.push(userID.replace(/\W+/g, ''));
             } else {
-                console.log('eeee')
                 let oldussers = assignedUsers
                 assignedUser = oldussers
             }
-            console.log(assignedUser);
-            renderAssignedUserIcon(newTaskItem, assignedUser);
+            renderAssignedUserIcon(newTaskItem, assignedUser, 'card');
             
             // task existence verification
             const tasksExist = tasks.some(t => t.title == title && t.description == description);
             if(!tasksExist){
                 const id = generateUUID();
-                tasks.push({title, description, deadline, isChecked, assignedUser, checkList, id});
-                let task = {title, description, deadline, isChecked, assignedUser, checkList, id};
+                const assignedUsers = assignedUser;
+                tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id, project});
+                let task = {title, description, deadline, isChecked, assignedUsers, checkList, id, project};
                 saveTask("add", task, title);
                 taskId = id;
-                console.log(tasks);
             }
             //check button
-            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId));
+            checkInput.addEventListener("change", () => toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId, project));
     
             //edit task button
-            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList));
+            btnEdit.addEventListener('click', () => taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList, project));
         };
 
         // checked status function ------------------------------------------------------------------------
-        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId){
+        function toggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId, project){
             //タスクのチェックボタンが押された時、チェックリストが完了していないもがあったら全て完了にする処理
             let incomplete = false;
             const taskIndex = tasks.findIndex(task => task.id === taskId);
@@ -370,7 +417,7 @@ function profile() {
             }
             checkList = tasks[taskIndex].checkList;
             if (!incomplete) {
-                saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+                saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId, project);
             } else {
                 const toggleConfirm = confirm('チェックリストに未完了の項目がありますが、このタスクを完了にしますか。');
                 if  (toggleConfirm) {
@@ -385,7 +432,7 @@ function profile() {
                     }
                     newTaskItem.querySelector('.checklistPill small').innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checkList.length}/${checkList.length}`;
                     checkList = tasks[taskIndex].checkList;
-                    saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId);
+                    saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId, project);
                 } else {
                     tasks[taskIndex].isChecked = false;
                     checkInput.checked = false;
@@ -395,11 +442,12 @@ function profile() {
         }
 
         function saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, checkList, taskId) {
-            console.log('saveToggleTaskStatus: checkList', checkList);
-            console.log('saveToggleTaskStatus: checkInput', checkInput.checked);
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
+            const label = newTaskItem.querySelector(".label-box");
+            const projects = [];
+            Array.from(label.children).forEach(project => projects.push(project.textContent));
             const id = taskId;
             if(checkInput.checked){
                 newTaskItem.querySelector('h3').classList.remove("text-primary-emphasis");
@@ -422,21 +470,26 @@ function profile() {
                 achievements.tasksCompleted--;
                 checkAchievements(achievements);
             }
+            const project = projects;
+            console.log(project);
             const isChecked = checkInput.checked;
             tasks = tasks.filter(task => task.title !== title || task.description !== description);
-            tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id});
-            let task = {title, description, deadline, isChecked, assignedUsers, checkList, id};
+            tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id, project});
+            let task = {title, description, deadline, isChecked, assignedUsers, checkList, id, project};
             saveTask("edition", task, title);
         }
 
         // Task edition function ------------------------------------------------------------------------
-        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList){
+        function taskEdition(taskContainer, newTaskItem, checkInput, assignedUsers, taskId, btnEdit, btnCloseTask, paragraphDeadline, checkList, project){
             newTaskItem.hidden = true;
-            createFormInputs('edit');
+            createFormInputs('edit', taskId);
 
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
+            const label = newTaskItem.querySelector(".label-box");
+            // const projects = [];
+            // Array.from(label.children).forEach(project => projects.push(project.textContent));
             const id = taskId;
 
             document.querySelector("#title").value = title;
@@ -462,6 +515,9 @@ function profile() {
                 const currentTitle = document.querySelector("#title").value;
                 const currentDescription = document.querySelector("#description").value;
                 const currentDeadline = document.querySelector("#deadline").value;
+                const label = document.querySelector("#form-label-box");
+                const currentProjects = [];
+                Array.from(label.children).forEach(project => currentProjects.push(project.textContent));
                 const currentCheckList = [];
                 const checkListGroup = document.querySelector('#check-list-group');
                 const checkListInputAll = document.querySelectorAll('.check-list-input');
@@ -474,7 +530,7 @@ function profile() {
                     currentCheckList.push(checkListItem);
                 }
                 
-                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline || JSON.stringify(currentCheckList) !== JSON.stringify(checkList)){
+                if(currentTitle !== title || currentDescription !== description || currentDeadline !== deadline || JSON.stringify(currentCheckList) !== JSON.stringify(checkList) || JSON.stringify(currentProjects) !== JSON.stringify(project)){
                     submitButton.disabled = false;
                 } else{
                     submitButton.disabled = true; 
@@ -488,6 +544,7 @@ function profile() {
                 document.querySelectorAll('.check-list-input').forEach(checkListInput => checkListInput.addEventListener('change', validateInputs));
                 document.querySelectorAll('.form-title-text').forEach(checkListInput => checkListInput.addEventListener('input', validateInputs));
                 document.querySelectorAll('.check-list-item-remove-button').forEach(checkListInput => checkListInput.addEventListener('click', validateInputs));
+                document.querySelectorAll('.project-check-box').forEach(projectCheckInput => projectCheckInput.addEventListener('change', validateInputs));
             }, 0);
             
             const addListeners = () =>{
@@ -502,14 +559,16 @@ function profile() {
                     event.preventDefault();
                     let currentCheckList = [];
                     const checkListItems = document.querySelectorAll('.check-list-item');
-
                     checkListItems.forEach(item => {
                         const listCompleted = item.querySelector(".check-list-input").checked;
                         const listName = item.querySelector(".form-title-text").value;
-
                         const checkListItem = {listCompleted, listName};
                         currentCheckList.push({listCompleted: checkListItem.listCompleted, listName: checkListItem.listName});
                     });
+
+                    const label = document.querySelector("#form-label-box");
+                    const currentProjects = [];
+                    Array.from(label.children).forEach(project => currentProjects.push(project.textContent));
 
                     const newEditTask = {
                         title: document.querySelector("#title").value,
@@ -518,7 +577,8 @@ function profile() {
                         isChecked: checkInput.checked,
                         assignedUsers: assignedUsers,
                         checkList: currentCheckList,
-                        id: id
+                        id: id,
+                        project: currentProjects
                     };
 
                     if (title && description && deadline) {
@@ -539,29 +599,23 @@ function profile() {
                         tasks.push(newEditTask); // Si por alguna razón la tarea no existe, agrégala
                     }
                     saveTask("edition", newEditTask, newEditTask.title);
+                    renderLabel(newTaskItem, currentProjects);
                     const checklistLength = currentCheckList.length;
                     const checklistCompletedCount = currentCheckList.filter(completed => completed.listCompleted).length;
                     newTaskItem.querySelector(".checklistPill small").innerHTML = `<strong><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 625" width="16px" fill="#ffffff"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zM0 96C0 60.7 28.7 32 64 32l320 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg></strong> ${checklistCompletedCount}/${checklistLength}`;
-                    console.log(newEditTask.isChecked);
-                    console.log(checkInput.checked);
-                    console.log('currentCheckList', currentCheckList);
                     if (checklistLength === 0) {
                         if (!newTaskItem.querySelector(".checklistPill").classList.contains("opacity-0")) {
                             newTaskItem.querySelector(".checklistPill").classList.add("opacity-0");
                         }
                     } else {
                         newTaskItem.querySelector(".checklistPill").classList.remove("opacity-0");
-                        console.log(newEditTask.isChecked);
                         if (checklistCompletedCount === checklistLength) {
                             if(!newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
                                 newTaskItem.querySelector(".checklistPill").classList.add("bg-success");
                             }
                             if (!newEditTask.isChecked) {
-                                console.log('checkList', checkList);
                                 newEditTask.isChecked = true;
-                                // checkInput.checked = true;
                                 checkInput.click();
-                                // saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, currentCheckList, taskId);
                             }
                         } else {
                             if(newTaskItem.querySelector(".checklistPill").classList.contains("bg-success")) {
@@ -569,9 +623,7 @@ function profile() {
                             }
                             if (newEditTask.isChecked) {
                                 newEditTask.isChecked = false;
-                                // checkInput.checked = false;
                                 checkInput.click();
-                                // saveToggleTaskStatus(newTaskItem, checkInput, btnEdit, btnCloseTask, paragraphDeadline, assignedUsers, currentCheckList, taskId);
                             }
                         }
                     }
@@ -796,11 +848,12 @@ function profile() {
         }
 
         //label create
-        function renderLabel(taskElm, project) {
-            console.log(project);
-            const labelBox = taskElm.querySelector('.label-box');
-            while(labelBox.firstChild){
-                labelBox.removeChild(labelBox.firstChild)
+        function renderLabel(elm, project) {
+            const labelBox = elm.querySelector('.label-box');
+            if (project) {
+                while(labelBox.firstChild){
+                    labelBox.removeChild(labelBox.firstChild)
+                }
             }
             project.forEach(taskProject => {
                 const taskProjectData = projects.find(projectData => projectData.title === taskProject);
@@ -810,23 +863,29 @@ function profile() {
         }
 
         //assigned user icon create
-        function renderAssignedUserIcon(taskElm, assignedUsers) {
+        function renderAssignedUserIcon(elm, assignedUsers, type) {
             console.log(assignedUsers);
-            assignedUsers.splice(assignedUsers.indexOf(userID.replace(/\W+/g, '')), 1);
-            const assignedUserIconBox = taskElm.querySelector('.assigned-user-icon-box');
-            while(assignedUserIconBox.firstChild){
-                assignedUserIconBox.removeChild(assignedUserIconBox.firstChild)
+            // assignedUsers.splice(assignedUsers.indexOf(userID.replace(/\W+/g, '')), 1);
+            let assignedUserIconBox;
+            if (type === "card") {
+                assignedUserIconBox = elm.querySelector('.assigned-user-icon-box');
+                while(assignedUserIconBox.firstChild){
+                    assignedUserIconBox.removeChild(assignedUserIconBox.firstChild)
+                }
+            } else if (type === "form") {
+                assignedUserIconBox = elm.querySelector('#form-assigned-user-icon-box');
             }
-            const myUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
-            assignedUserIconBox.appendChild(myUserIcon);
             assignedUsers.forEach(assignedUser => {
                 assignedUser = '@' + assignedUser;
                 fetch(`http://localhost:3000/users/${assignedUser}`)
                     .then(response => response.json())
                     .then(users => {
-                        console.log(users.image);
                         const assignedUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${users.image}`});
+                        assignedUserIcon.setAttribute("data-bs-toggle", "tooltip");
+                        assignedUserIcon.setAttribute("data-bs-placement", "bottom");
+                        assignedUserIcon.setAttribute("title", `${users.id.replace(/\W+/g, '')}`);
                         assignedUserIconBox.appendChild(assignedUserIcon);
+                        new bootstrap.Tooltip(assignedUserIcon);
                     })
                     .catch(error => console.error('Error al obtener las tareas:', error));
             });

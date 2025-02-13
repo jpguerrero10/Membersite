@@ -125,8 +125,8 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 8,
-                "tasksCompleted": 2,
+                "tasksAdded": 14,
+                "tasksCompleted": 8,
                 "tasksShared": 2,
                 "milestones": {
                     "tasksAdded": [
@@ -517,17 +517,15 @@
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
-                "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
-                "marodriguez",
-                "genchan"
+                "johnD"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
-            "checkList": []
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "テスト"
+                }
+            ]
         },
         {
             "title": "タスクのチェックリストを作成",
@@ -548,7 +546,10 @@
                     "listName": "これやる2"
                 }
             ],
-            "id": "2565ba70-7404-4525-baf6-5b55750e9781"
+            "id": "2565ba70-7404-4525-baf6-5b55750e9781",
+            "project": [
+                "Asterisk"
+            ]
         },
         {
             "title": "スケジュール表示を作成",
@@ -558,7 +559,8 @@
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "genchan"
+                "genchan",
+                "moongirl"
             ],
             "checkList": [
                 {
@@ -578,7 +580,11 @@
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
                 }
             ],
-            "id": "f523f13d-0aac-4795-88b2-16093826d75b"
+            "id": "f523f13d-0aac-4795-88b2-16093826d75b",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
         },
         {
             "title": "データベースをIndexedDBからNodeJSに変換",
@@ -592,13 +598,15 @@
         },
         {
             "title": "タスクにラベルを付与する機能を追加",
-            "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに誰が参画しているかわかるようにユーザーを表示する",
+            "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに参画しているかわかるようにユーザーを表示する",
             "deadline": "2025-02-07",
             "isChecked": false,
             "assignedUsers": [
+                "genchan",
                 "neeman",
                 "marodriguez",
-                "johnD"
+                "johnD",
+                "moongirl"
             ],
             "checkList": [
                 {
@@ -606,7 +614,7 @@
                     "listName": "ラベル機能の追加用にタスクカードのデザインを考える"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "タスク追加時にラベルを付与できるようにする"
                 },
                 {
@@ -622,6 +630,57 @@
             "project": [
                 "Asterisk",
                 "Ultimate Nervous"
+            ]
+        },
+        {
+            "title": "test61",
+            "description": "test61444",
+            "deadline": "2025-02-13",
+            "isChecked": true,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "test"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "test2"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "test3"
+                }
+            ],
+            "id": "3fac0bb3-f53d-444f-9bc0-f16b1ac775e9",
+            "project": [
+                "Ultimate Nervous",
+                "Ultimate Plus+",
+                "ZIPANG",
+                "Project3"
+            ]
+        },
+        {
+            "title": "test62",
+            "description": "test62",
+            "deadline": "2025-02-13",
+            "isChecked": false,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "test1"
+                }
+            ],
+            "id": "f9a739ec-40d7-4c33-8ea5-a2caee576913",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous",
+                "ZIPANG"
             ]
         }
     ],

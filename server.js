@@ -219,17 +219,17 @@ app.get('/events/:userId', async (req, res) => {
     }
 });
 
-// // project route --------------------------------------------------------------------------------------------
+// project route --------------------------------------------------------------------------------------------
 
-// // get project
-// app.get('/projects', async (req, res) => {
-//     try {
-//         const data = await readData();
-//         res.json(data.projects);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Error al leer los datos del archivo' });
-//     }
-// });
+// get project
+app.get('/projects', async (req, res) => {
+    try {
+        const data = await readData();
+        res.json(data.projects);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al leer los datos del archivo' });
+    }
+});
 
 // server init/Iniciar servidor
 app.listen(port, () => {
