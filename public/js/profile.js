@@ -59,6 +59,16 @@ function profile() {
         });
     }
 
+    //要素に自動的にスクロールする処理
+    function scrollToElm(elm) {
+        var rect = elm.getBoundingClientRect();
+        var position = rect.top + window.scrollY; 
+        window.scrollTo({
+            top: position,
+            behavior: "smooth"
+        });
+    }
+
     //notifications start
     const notificationContainer = addElement("div", { class:"toast-container position-fixed top-0 end-0 p-3" });
 
@@ -212,6 +222,7 @@ function profile() {
                 const myUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${userImage}`});
                 formAssignedUserIconBox.appendChild(myUserIcon);
             }
+            scrollToElm(formContainer) // 一番上からの位置を取得
         };
 
         // task creation submit -----------------------------------------------------------------------
@@ -421,7 +432,6 @@ function profile() {
             } else {
                 const toggleConfirm = confirm('チェックリストに未完了の項目がありますが、このタスクを完了にしますか。');
                 if  (toggleConfirm) {
-                    console.log( tasks[taskIndex]);
                     tasks[taskIndex].checkList.forEach(list => {
                         if (list.listCompleted === false) {
                             list.listCompleted = true;

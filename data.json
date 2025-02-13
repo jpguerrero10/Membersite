@@ -125,8 +125,8 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 15,
-                "tasksCompleted": 8,
+                "tasksAdded": 18,
+                "tasksCompleted": 9,
                 "tasksShared": 2,
                 "milestones": {
                     "tasksAdded": [
@@ -531,7 +531,7 @@
             "title": "タスクのチェックリストを作成",
             "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
             "deadline": "2025-01-31",
-            "isChecked": true,
+            "isChecked": false,
             "assignedUsers": [
                 "genchan",
                 "neeman"
@@ -542,7 +542,7 @@
                     "listName": "これやる1w"
                 },
                 {
-                    "listCompleted": true,
+                    "listCompleted": false,
                     "listName": "これやる2"
                 }
             ],
@@ -600,7 +600,7 @@
             "title": "タスクにラベルを付与する機能を追加",
             "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに参画しているかわかるようにユーザーを表示する",
             "deadline": "2025-02-07",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "genchan",
                 "neeman",
@@ -618,11 +618,11 @@
                     "listName": "タスク追加時にラベルを付与できるようにする"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "タスク編集時にラベルを編集できるようにする"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "タスクのフォームに参画しているユーザーがわかるように表示する"
                 }
             ],
