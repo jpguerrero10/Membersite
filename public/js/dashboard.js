@@ -62,7 +62,7 @@ function dashboard(){
         loadView("login");
     });
     
-    const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `よこそう、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
+    const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `ようこそ、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
     aisatsu.style.transition = ".5s ease-in-out";
     aisatsu.style.opacity = "0";
     aisatsu.style.transform = "translateY(-80px)";
@@ -114,7 +114,11 @@ function dashboard(){
             end: event.end || event.start,
             // url: event.url || null, // if exists add url
             color: 'cff4fc', // Color diferente para distinguir eventos normales
-            extendedProps: { type: 'event' }
+            extendedProps: { 
+                type: 'event', 
+                place: event.place,
+                content: event.content
+            }
         }));
 
         const allEvents = [...taskEvents, ...calendarEvents];
@@ -134,19 +138,17 @@ function dashboard(){
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: allEvents,
+            events: allEvents,           
             dateClick: function(info) {
-                // document.getElementById('eventStart').value = info.dateStr;
-                console.log(info.dateStr);
-                generateEventForm(info.dateStr);//go to app.js
-            },
+                generateEventForm(info.dateStr, users, events);//go to app.js
+            },                  
             eventClick: function(info) {
-            if (info.event.extendedProps.type === 'task') {
-                alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
-            } else {
-                alert(`Evento: ${info.event.title}`);
+                if (info.event.extendedProps.type === 'task') {
+                    alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
+                } else {
+                    alert(`Evento: ${info.event.title}\nContenido: ${info.event.extendedProps.content}`);
+                }
             }
-        }
         });
     
         calendar.render();
@@ -155,6 +157,262 @@ function dashboard(){
     setTimeout(() => {
         fadeIn(card, 20); // Hace un fade in en 1 segundo
     }, 150);
+
+    //event modal view creation ------------------------------------------------------------------------------
+    const generateEventForm = (dateInfo, usersInfo, eventsInfo) => {
+        modalDialog.innerHTML = "";
+
+        const modalContent = addElement("div",{class: "modal-content"});
+        const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">${dateInfo}の予定を追加</h3><button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
+        const modalBody = addElement("div", { class: "modal-body" });
+        const eventFormContainer = addElement("form", { id: "eventForm" });
+
+        const fragment = document.createDocumentFragment();
+        
+        const checkcontainer1 = addElement("div");
+        const checkcontainer2 = addElement("div");
+        const allDayCheck = addElement("input",{
+            type: "checkbox",
+            id: "allDay-checkbox",
+            name: "allDay-checkbox"
+        });
+        const repeatCheck = addElement("input",{
+            type: "checkbox",
+            id: "repeat-checkbox",
+            name: "repeat-checkbox"
+        });
+        const hourStartInput = addElement("select", {
+            type: "date",
+            id: "hourStartDate",
+            class: "form-select mb-3",
+            name: "hourStartDate",
+            required: true
+        });
+        const minStartInput = addElement("select", {
+            type: "date",
+            id: "minStartDate",
+            class: "form-select mb-3",
+            name: "minStartDate",
+            required: true
+        });
+        const hourEndInput = addElement("select", {
+            type: "date",
+            id: "hourEndDate",
+            class: "form-select mb-3",
+            name: "hourEndDate",
+            required: true
+        });
+        const minEndInput = addElement("select", {
+            type: "date",
+            id: "minEndDate",
+            class: "form-select mb-3",
+            name: "minEndDate",
+            required: true
+        });
+        for (let h = 0; h < 24; h++) {
+            const hourformat = h.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+            const optionEnd = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+
+            hourStartInput.appendChild(optionStart);
+            hourEndInput.appendChild(optionEnd);
+        }
+        for (let m = 0; m < 60; m += 5) {
+            const minuteformat = m.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            const optionEnd = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            
+            minStartInput.appendChild(optionStart);
+            minEndInput.appendChild(optionEnd);
+        }
+
+        const separatorTime = addElement("span", {class:"input-group-text mb-3"}, "～");
+        const eventTitleInput = addElement("input", {
+            type: "text",
+            id: "eventTitle",
+            class: "form-control mb-3",
+            name: "eventTitle",
+            placeholder: "タイトル",
+            required: true
+        });
+        const eventPlaceInput = addElement("input", {
+            type: "text",
+            id: "eventPlace",
+            class: "form-control mb-3",
+            name: "eventPlace",
+            placeholder: "場所"
+        });
+        const contentInput = addElement("textarea", {
+            id: "content",
+            class: "form-control mb-3",
+            name: "completedTask",
+            placeholder: "内容",
+            style: "height: 150px;"
+        });
+        const participantsInput = addElement("select", {
+            id: "participants",
+            class: "form-select mb-3",
+            name: "participants",
+            multiple: ''
+        });
+        usersInfo.forEach(u => {
+            const option = addElement("option", { value: `${ (u.id).replace(/\W+/g, '') }` }, `${u.name}`);
+            participantsInput.appendChild(option);
+        });
+        
+        const btnGroup = addElement("div", { class: "btn-group" });
+        const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "報告書追加");
+        const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
+        
+        // Col and row containers
+        const containerRow1 = addElement("div", { class: "row" });
+        const containerRow2 = addElement("div", { class: "row" });
+        const containerRow3 = addElement("div", { class: "row" });
+        const containerCol1 = addElement("div", { class: "col input-group" });
+        const containerCol3 = addElement("div", { class: "col-12 col-md-3 align-content-center mb-3" });
+        const containerCol4 = addElement("div", { class: "col-12 form-floating" });
+        const containerCol5 = addElement("div", { class: "col-12 form-floating" });
+        const containerCol6 = addElement("div", { class: "col-12 form-floating" });
+        const container9 = addElement("div", { class: "mb-3" });
+
+        //labels
+        const allDayLabel = addElement("label", {
+            for: "allDay-checkbox",
+            class: "form-label fs-6 m-0 me-2"
+        }, "<small>終日</small>");
+        const repeatLabel = addElement("label", {
+            for: "allDay-checkbox",
+            class: "form-label fs-6 m-0 me-2"
+        }, "<small>繰り返し</small>");
+        const startLabel = addElement("label", {
+            for: "hourStartDate",
+            class: "form-label fs-6"
+        }, "<small>日時</small>");
+        const eventTitleLabel = addElement("label", {
+            for: "eventTitle",
+            class: "form-label ms-2"
+        }, "タイトル");
+        const contentLabel = addElement("label", {
+            for: "content",
+            class: "form-label ms-2"
+        }, "内容");
+        const placeLabel = addElement("label", {
+            for: "eventPlace",
+            class: "form-label ms-2"
+        }, "場所");
+        const participantsLabel = addElement("label", {
+            for: "participants",
+            class: "form-label ms-2"
+        }, "参加ユーザー"); 
+
+        // Structure
+        containerRow1.append(startLabel,containerCol1, containerCol3, containerCol4);
+        containerRow2.append(containerCol5);
+        containerRow3.append(containerCol6);
+        
+        containerCol1.append(hourStartInput, minStartInput, separatorTime, hourEndInput, minEndInput );
+        containerCol3.append(checkcontainer1, checkcontainer2);
+        containerCol4.append(eventTitleInput, eventTitleLabel);
+        containerCol5.append(eventPlaceInput, placeLabel);
+        containerCol6.append(contentInput, contentLabel);
+        container9.append(participantsLabel, participantsInput);
+        checkcontainer1.append(allDayLabel, allDayCheck);
+        checkcontainer2.append(repeatLabel, repeatCheck);
+
+        fragment.append(containerRow1, containerRow2, containerRow3, container9, btnGroup);
+        btnGroup.append(submitButton, cancelButton);
+        
+        // Insert the fragment into the form's container
+        eventFormContainer.appendChild(fragment);
+
+        // Insert form's card
+        modalBody.appendChild(eventFormContainer);
+        modalContent.append(modalHeader, modalBody)
+        
+        modalDialog.appendChild(modalContent);
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+
+        // choices select multiple
+        var element = document.getElementById('participants');
+        var choices = new Choices(element, {
+            removeItemButton: true,   // Permite eliminar elementos seleccionados
+            searchEnabled: true,      // Activa la búsqueda en el dropdown
+            itemSelectText: '',       // Quita el texto predeterminado en el selector
+            placeholder: true,        // Activa el texto de placeholder
+            placeholderValue: 'ユーザー追加',
+            // maxItemCount: 5,          // Límite de opciones seleccionables
+            allowHTML: true,          // Permite HTML en las opciones
+        });
+
+        eventFormContainer.addEventListener('submit', (event) => {
+            event.preventDefault();
+            handleFormSubmit(eventsInfo, dateInfo, exampleModal, choices);
+        });
+        exampleModal.show();
+    };
+
+    // submit button -----------------------------------------------------------------------
+    const handleFormSubmit = (eventsInfo, dateInfo, modal, choices) => {
+        const hourStart = document.getElementById('hourStartDate').value;
+        const minuteStart = document.getElementById('minStartDate').value;
+        const hourEnd = document.getElementById('hourEndDate').value;
+        const minuteEnd = document.getElementById('minEndDate').value;
+        const eventTitle = document.getElementById('eventTitle').value;
+        const eventPlace = document.getElementById('eventPlace').value;
+        const eventContent = document.getElementById('content').value;
+        const eventUsers = choices.getValue(true);
+        if(eventUsers.length === 0){
+            const actualUser = (userID).replace(/\W+/g, '');
+            eventUsers.push(actualUser); 
+        }
+        
+        eventsInfo = eventsInfo.filter(event => event.title !== eventTitle);
+        eventsInfo.push({ assignedUsers: eventUsers, title: eventTitle, start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00", end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00", place: eventPlace, content: eventContent, assignedUsers: eventUsers});
+        const singleEvent = { assignedUsers: eventUsers, title: eventTitle, start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00", end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00", place: eventPlace, content: eventContent, assignedUsers: eventUsers}
+        if (eventsInfo) {
+            saveEvent(singleEvent, eventsInfo);
+            closeForm(modal);                
+            loadView('dashboard');
+        } else {
+            alert("Please fill all the fields");
+        }
+    };
+    
+    // report saving function ------------------------------------------------------------------------
+    function saveEvent(singleEvent, eventsInfo){
+        localStorage.setItem(`userEvents_${userID}`, JSON.stringify(eventsInfo));
+        
+        fetch('http://localhost:3000/events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(singleEvent)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('イベントは作成された:', data);
+        })
+        .catch(err => console.error('Error al agregar el evento:', err));
+    };
+
+    // cancel button ---------------------------------------------------------------
+    const handleCancel = () => {   
+        fadeOut(document.querySelector(".cardForm"), 150); // 1s fadeout
+        setTimeout(() => {
+            closeForm();
+        }, 200);
+    };
+
+    // reset add task form -----------------------------------------------------------------------
+    const closeForm = (modal) => {
+        const eventFormContainer = document.getElementById("eventForm");
+        eventFormContainer.removeEventListener('submit', handleFormSubmit);
+        eventFormContainer.reset();
+        eventFormContainer.innerHTML = "";
+        modal.innerHTML = "";
+        modal.hide();
+    };
     
     // create dashboard trophy card ----------------------------------------------------------------------------------
     const cardBody = addElement('div', { class: 'card-body text-primary-emphasis d-flex flex-wrap align-content-center' });

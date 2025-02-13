@@ -284,9 +284,9 @@
             "description": "Admin/test",
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
-                "tasksAdded": 1,
+                "tasksAdded": 2,
                 "tasksCompleted": 1,
-                "tasksShared": 17,
+                "tasksShared": 18,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -518,11 +518,6 @@
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
-                "johnD",
                 "marodriguez",
                 "genchan"
             ],
@@ -589,6 +584,18 @@
                 "neeman"
             ],
             "id": "8687a2ed-ff17-45f9-b65c-10a484dd10e1"
+        },
+        {
+            "title": "タスクフォームのコードをリファクタリング",
+            "description": "refactorizar el codigo que genera el formulario de las tasks",
+            "deadline": "2025-02-28",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ],
+            "checkList": [],
+            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3"
         }
     ],
     "events": [
@@ -601,22 +608,24 @@
         },
         {
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD"
             ],
-            "title": "Long Event",
-            "start": "2025-01-07",
-            "end": "2025-01-10"
+            "title": "Evento test",
+            "content": "Lorem ipsum dolor sit amet",
+            "start": "2025-02-07T16:00:00",
+            "end": "2025-02-07T20:00:00",
+            "place": "test"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],
             "title": "Repeating Event",
-            "start": "2025-01-09T16:00:00"
+            "start": "2025-02-07T12:00:00",
+            "end": "2025-02-07T20:00:00"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],
@@ -675,6 +684,47 @@
             "title": "帰社日",
             "start": "2025-01-31T15:00:00",
             "end": "2025-01-31T19:30:00"
+        },
+        {
+            "title": "test1",
+            "start": "2025-02-13T09:00:00",
+            "end": "2025-02-13T13:00:00",
+            "assignedUsers": [
+                "neeman",
+                "johnD"
+            ],
+            "extendedProps": {
+                "place": "",
+                "content": ""
+            }
+        },
+        {
+            "title": "test1",
+            "start": "2025-02-20T09:00:00",
+            "end": "2025-02-20T13:00:00",
+            "assignedUsers": [
+                "neeman"
+            ],
+            "extendedProps": {
+                "place": "",
+                "content": ""
+            }
+        },
+        {
+            "title": "test2",
+            "start": "2025-02-21T09:00:00",
+            "end": "2025-02-21T16:00:00",
+            "assignedUsers": [
+                "breezthy",
+                "neeman",
+                "emiD",
+                "genchan",
+                "johnD"
+            ],
+            "extendedProps": {
+                "place": "test",
+                "content": "test"
+            }
         }
     ]
 }
