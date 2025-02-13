@@ -125,9 +125,9 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 1,
-                "tasksCompleted": 1,
-                "tasksShared": 0,
+                "tasksAdded": 18,
+                "tasksCompleted": 9,
+                "tasksShared": 2,
                 "milestones": {
                     "tasksAdded": [
                         100
@@ -522,13 +522,18 @@
                 "genchan"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
-            "checkList": []
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "テスト"
+                }
+            ]
         },
         {
             "title": "タスクのチェックリストを作成",
             "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
             "deadline": "2025-01-31",
-            "isChecked": true,
+            "isChecked": false,
             "assignedUsers": [
                 "genchan",
                 "neeman"
@@ -539,11 +544,14 @@
                     "listName": "これやる1w"
                 },
                 {
-                    "listCompleted": true,
+                    "listCompleted": false,
                     "listName": "これやる2"
                 }
             ],
-            "id": "2565ba70-7404-4525-baf6-5b55750e9781"
+            "id": "2565ba70-7404-4525-baf6-5b55750e9781",
+            "project": [
+                "Asterisk"
+            ]
         },
         {
             "title": "スケジュール表示を作成",
@@ -553,7 +561,8 @@
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "genchan"
+                "genchan",
+                "moongirl"
             ],
             "checkList": [
                 {
@@ -573,7 +582,11 @@
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
                 }
             ],
-            "id": "f523f13d-0aac-4795-88b2-16093826d75b"
+            "id": "f523f13d-0aac-4795-88b2-16093826d75b",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
         },
         {
             "title": "データベースをIndexedDBからNodeJSに変換",
@@ -586,16 +599,40 @@
             "id": "8687a2ed-ff17-45f9-b65c-10a484dd10e1"
         },
         {
-            "title": "タスクフォームのコードをリファクタリング",
-            "description": "refactorizar el codigo que genera el formulario de las tasks",
-            "deadline": "2025-02-28",
-            "isChecked": false,
+            "title": "タスクにラベルを付与する機能を追加",
+            "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに参画しているかわかるようにユーザーを表示する",
+            "deadline": "2025-02-07",
+            "isChecked": true,
             "assignedUsers": [
+                "genchan",
                 "neeman",
-                "genchan"
+                "marodriguez",
+                "johnD",
+                "moongirl"
             ],
-            "checkList": [],
-            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3"
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "ラベル機能の追加用にタスクカードのデザインを考える"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスク追加時にラベルを付与できるようにする"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスク編集時にラベルを編集できるようにする"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスクのフォームに参画しているユーザーがわかるように表示する"
+                }
+            ],
+            "id": "dd2f077f-d221-48a8-8157-be907ff75c67",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
         }
     ],
     "events": [
@@ -684,47 +721,36 @@
             "title": "帰社日",
             "start": "2025-01-31T15:00:00",
             "end": "2025-01-31T19:30:00"
+        }
+    ],
+    "projects": [
+        {
+            "title": "Asterisk",
+            "color": "#1b498c"
         },
         {
-            "title": "test1",
-            "start": "2025-02-13T09:00:00",
-            "end": "2025-02-13T13:00:00",
-            "assignedUsers": [
-                "neeman",
-                "johnD"
-            ],
-            "extendedProps": {
-                "place": "",
-                "content": ""
-            }
+            "title": "Ultimate Nervous",
+            "color": "#f68719"
         },
         {
-            "title": "test1",
-            "start": "2025-02-20T09:00:00",
-            "end": "2025-02-20T13:00:00",
-            "assignedUsers": [
-                "neeman"
-            ],
-            "extendedProps": {
-                "place": "",
-                "content": ""
-            }
+            "title": "Ultimate Plus+",
+            "color": "#ffd900"
         },
         {
-            "title": "test2",
-            "start": "2025-02-21T09:00:00",
-            "end": "2025-02-21T16:00:00",
-            "assignedUsers": [
-                "breezthy",
-                "neeman",
-                "emiD",
-                "genchan",
-                "johnD"
-            ],
-            "extendedProps": {
-                "place": "test",
-                "content": "test"
-            }
+            "title": "ZIPANG",
+            "color": "#ff1111"
+        },
+        {
+            "title": "Project1",
+            "color": "#45c715"
+        },
+        {
+            "title": "Project2",
+            "color": "#2485c5"
+        },
+        {
+            "title": "Project3",
+            "color": "#9c11ff"
         }
     ]
 }
