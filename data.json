@@ -285,7 +285,7 @@
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
                 "tasksAdded": 2,
-                "tasksCompleted": 1,
+                "tasksCompleted": 3,
                 "tasksShared": 18,
                 "milestones": {
                     "tasksAdded": [
@@ -533,7 +533,7 @@
             "title": "タスクのチェックリストを作成",
             "description": "Generar funcionalidad de checklist para objetivos espeficicos de cada tarea.",
             "deadline": "2025-01-31",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "genchan",
                 "neeman"
@@ -544,7 +544,7 @@
                     "listName": "これやる1w"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "これやる2"
                 }
             ],
@@ -633,6 +633,18 @@
                 "Asterisk",
                 "Ultimate Nervous"
             ]
+        },
+        {
+            "title": "タスクフォームのコードをリファクタリング",
+            "description": "refactorizar el codigo que genera el formulario de las tasks",
+            "deadline": "2025-02-28",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ],
+            "checkList": [],
+            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3"
         }
     ],
     "events": [
@@ -721,6 +733,24 @@
             "title": "帰社日",
             "start": "2025-01-31T15:00:00",
             "end": "2025-01-31T19:30:00"
+        },
+        {
+            "title": "帰社日",
+            "start": "2025-02-14T15:30:00",
+            "end": "2025-02-14T18:30:00",
+            "assignedUsers": [
+                "marodriguez",
+                "moongirl",
+                "johnD",
+                "genchan",
+                "neeman",
+                "breezthy",
+                "emiD"
+            ],
+            "extendedProps": {
+                "place": "本社",
+                "content": ""
+            }
         }
     ],
     "projects": [
