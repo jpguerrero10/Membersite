@@ -284,9 +284,9 @@
             "description": "Admin/test",
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
-                "tasksAdded": 1,
+                "tasksAdded": 2,
                 "tasksCompleted": 1,
-                "tasksShared": 17,
+                "tasksShared": 18,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -517,7 +517,9 @@
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
-                "johnD"
+                "johnD",
+                "marodriguez",
+                "genchan"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
             "checkList": [
@@ -643,22 +645,24 @@
         },
         {
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD"
             ],
-            "title": "Long Event",
-            "start": "2025-01-07",
-            "end": "2025-01-10"
+            "title": "Evento test",
+            "content": "Lorem ipsum dolor sit amet",
+            "start": "2025-02-07T16:00:00",
+            "end": "2025-02-07T20:00:00",
+            "place": "test"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],
             "title": "Repeating Event",
-            "start": "2025-01-09T16:00:00"
+            "start": "2025-02-07T12:00:00",
+            "end": "2025-02-07T20:00:00"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],

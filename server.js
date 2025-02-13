@@ -218,6 +218,45 @@ app.get('/events/:userId', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener las tareas' });
     }
 });
+// ruta para crear eventos
+app.post('/events', async (req, res) => {
+    try {
+        const { 
+            assignedUsers, 
+            title, 
+            start, 
+            end, 
+            place, 
+            content 
+        } = req.body;
+
+        if (!title) {
+            return res.status(400).json({ error: 'El título, la fecha de inicio y la fecha de fin son obligatorios.' });
+        }
+
+        const data = await readData(); // Leer eventos actuales
+
+        // Crear el nuevo evento con todos los posibles datos
+        const newEvent = {
+            title,
+            start,
+            end,
+            assignedUsers: assignedUsers || [],
+            extendedProps: {
+                place: place || "",
+                content: content || ""
+            }
+        };
+
+        data.events.push(newEvent); // Agregar el evento
+
+        await writeData(data); // Guardar cambios en JSON
+
+        res.status(201).json({ message: 'Evento creado con éxito', event: newEvent });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear el evento' });
+    }
+});
 
 // project route --------------------------------------------------------------------------------------------
 
