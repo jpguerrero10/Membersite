@@ -471,7 +471,6 @@ function profile() {
                 checkAchievements(achievements);
             }
             const project = projects;
-            console.log(project);
             const isChecked = checkInput.checked;
             tasks = tasks.filter(task => task.title !== title || task.description !== description);
             tasks.push({title, description, deadline, isChecked, assignedUsers, checkList, id, project});
@@ -487,9 +486,6 @@ function profile() {
             const title = newTaskItem.querySelector(".taskTitle strong").textContent;
             const description = newTaskItem.querySelector("p").textContent;
             const deadline = newTaskItem.querySelector(".deadlinePill small").textContent.trim();
-            const label = newTaskItem.querySelector(".label-box");
-            // const projects = [];
-            // Array.from(label.children).forEach(project => projects.push(project.textContent));
             const id = taskId;
 
             document.querySelector("#title").value = title;
@@ -864,8 +860,6 @@ function profile() {
 
         //assigned user icon create
         function renderAssignedUserIcon(elm, assignedUsers, type) {
-            console.log(assignedUsers);
-            // assignedUsers.splice(assignedUsers.indexOf(userID.replace(/\W+/g, '')), 1);
             let assignedUserIconBox;
             if (type === "card") {
                 assignedUserIconBox = elm.querySelector('.assigned-user-icon-box');
