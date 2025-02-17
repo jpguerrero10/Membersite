@@ -10,13 +10,32 @@
     background: linear-gradient(180deg, rgba(248, 249, 250, 0.9501050420168067) 0%, rgba(248, 249, 250, 0) 10%, rgba(248, 249, 250, 0) 90%, rgba(248, 249, 250, 0.9529061624649859) 100%);
 }
 
+.container {
+    padding: 70px 0 50px;
+}
+
+#asterisk-members-header {
+    padding: 10px 10px 15px;
+    z-index: 99;
+    backdrop-filter: blur(3px);
+}
 .custom-nav-tabs{
+    padding: 10px 0 5px;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: clip;
     white-space: nowrap;
+    width: fit-content;
 }
-
+.user-image-name-id {
+    width: fit-content;
+}
+.dropdown-item svg {
+    margin-right: 10px;
+}
+.dropdown-item:hover {
+    cursor: pointer;
+}
 #taskList.list-group .list-group-item{
     transition: .5s;
 }
@@ -29,18 +48,28 @@
     aspect-ratio: 1 / 1;
     background-color: whitesmoke;
 }
+#userImage {
+    width: 45px;
+    height: 45px;
+}
 .teamImage{
     width: 50%;
     margin: 0 auto;
 }
-.edit{
+#userID {
+    font-size: 0.8rem;
+}
+.no-arrow::after {
+    display: none !important;
+}
+/* .edit{
     border-radius: 50%;
     aspect-ratio: 1/1;
     padding: .5% 2% 1%;
 }
 .edit svg{
     fill: #052c65;
-}
+} */
 input[type="file"]{
     display: none;
 }
@@ -233,10 +262,13 @@ textarea {
     max-width: 85%;
     margin: 0 auto;
 }
+.user-image-name-id {
+    
+}
 .profileContainer{
-    position: fixed;
+    /* position: fixed;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%); */
     width: min(315px, 29vw);
 }
 .task{
@@ -330,17 +362,27 @@ span.comment-alert {
         transform: translateY(0%);
         margin-top: 10%;
     }
-    #userImage, .teamImage {
+    .teamImage {
         width: 115px;
     }
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .profileContainer {
         margin-top: 15%;
     }
+    .custom-nav-tabs{
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99;
+        backdrop-filter: blur(3px);
+        width: 100%;
+        justify-content: center;
+    }
 }
 @media (max-width: 480px) {
-    #userImage, .teamImage {
+    .teamImage {
         width: 95px;
     }
 }
