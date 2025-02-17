@@ -10,9 +10,7 @@ function dashboard(){
 
     // ---------------------------------------- displaying data on screen ---------------------------------------------------------------
     document.querySelector('#userName').textContent = userName;
-    document.querySelector('#userEmail').textContent = userEmail;
     document.querySelector('#userID').textContent = userID;
-    document.querySelector('#userDescription').textContent = userDescription;
     document.querySelector('#userImage').src = userImage;
 
     // ----------------------------------------- handling the logout -------------------------------------------------------------------

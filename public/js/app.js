@@ -35,6 +35,7 @@ const hideLoader = () => {
                         if(view !== 'login' && view !== 'register'){
                             tabCreation(view);
                             responsiveSize();
+                            moveNav();
                         }
                     }, 0);
                 });
@@ -110,12 +111,12 @@ const addElement = (tag, attributes, children) => {
 //tabs creation
 function tabCreation(view){
     const currentView = view;
-    const tabsContainer = document.querySelector(".nav-tabs");
+    const tabsContainer = document.querySelector(".nav-underline");
     const views = [
-        { name: 'Dashboard', displayName: 'ダッシュボード' },
-        { name: 'Profile', displayName: 'タスク' },
-        { name: 'Team', displayName: 'チーム' },
-        { name: 'Reports', displayName: '作業報告書' }
+        { name: 'Dashboard', displayName: 'ダッシュボード', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272z"/></svg>' },
+        { name: 'Profile', displayName: 'タスク', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>' },
+        { name: 'Team', displayName: 'チーム', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192l42.7 0c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0L21.3 320C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7l42.7 0C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3l-213.3 0zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352l117.3 0C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7l-330.7 0c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>' },
+        { name: 'Reports', displayName: '作業報告書', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM112 256l160 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-160 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64l160 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-160 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64l160 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-160 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>' }
     ];
 
     //confirm admin user
@@ -126,7 +127,7 @@ function tabCreation(view){
 
     views.forEach((view) => {
         const li = addElement("li", { class: "nav-item" }, `
-            <a class="nav-link tab${view.name} ${currentView === view.name.toLowerCase() ? 'active' : ''}" ${currentView === view.name.toLowerCase() ? 'aria-current="page"' : ''} href="#" role="button" data-view="${view.name.toLowerCase()}">${view.displayName}</a>
+            <a class="nav-link text-primary-emphasis tab${view.name} ${currentView === view.name.toLowerCase() ? 'active' : ''} custom-active" ${currentView === view.name.toLowerCase() ? 'aria-current="page"' : ''} href="#" role="button" data-view="${view.name.toLowerCase()}">${view.icon} ${view.displayName}</a>
         `);
         tabsContainer.appendChild(li);
     });
@@ -641,46 +642,47 @@ function responsiveSize() {
     const screenSize = window.innerWidth;
     const mobileArrow = addElement("div", {class: "arrow-sm", id: "infoArrow"}, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>`);
     const profileContainer = document.getElementById("profileInfo");
+    moveNav();
     
-    if (screenSize <= 600) {
-        smallSize(mobileArrow, profileContainer);
-    } else if (screenSize > 600 && screenSize <= 1024) {
-        midSize();
-    } else {
-        bigSize();
-    }
+    // if (screenSize <= 600) {
+    //     smallSize(mobileArrow, profileContainer);
+    // } else if (screenSize > 600 && screenSize <= 1024) {
+    //     midSize();
+    // } else {
+    //     bigSize();
+    // }
 }
 
-function smallSize(mobileArrow, profileContainer) {
-    const userDescription = document.getElementById("userDescription");
-    const logoutBtn = document.getElementById("btn-logout");
+// function smallSize(mobileArrow, profileContainer) {
+//     const userDescription = document.getElementById("userDescription");
+//     const logoutBtn = document.getElementById("btn-logout");
 
-    const oldArrow = document.getElementById("infoArrow");
-    if(oldArrow){
-        oldArrow.remove();
-    } 
-    profileContainer.appendChild(mobileArrow);
+//     const oldArrow = document.getElementById("infoArrow");
+//     if(oldArrow){
+//         oldArrow.remove();
+//     } 
+//     profileContainer.appendChild(mobileArrow);
 
-    userDescription.classList.add("opacity-0");
-    logoutBtn.classList.add("opacity-0");
+//     userDescription.classList.add("opacity-0");
+//     logoutBtn.classList.add("opacity-0");
 
-    mobileArrow.addEventListener('click', () => {
-        userDescription.classList.toggle("d-none");
-        logoutBtn.classList.toggle("d-none");
+//     mobileArrow.addEventListener('click', () => {
+//         userDescription.classList.toggle("d-none");
+//         logoutBtn.classList.toggle("d-none");
 
-        setTimeout(() => {
-            userDescription.classList.toggle("opacity-0");
-            logoutBtn.classList.toggle("opacity-0");
-        }, 10);
-    });
-}
+//         setTimeout(() => {
+//             userDescription.classList.toggle("opacity-0");
+//             logoutBtn.classList.toggle("opacity-0");
+//         }, 10);
+//     });
+// }
 
 function midSize() {
     const userDescription = document.getElementById("userDescription");
-    const logoutBtn = document.getElementById("btn-logout");
+    // const logoutBtn = document.getElementById("btn-logout");
 
     userDescription.classList.remove("opacity-0");
-    logoutBtn.classList.remove("opacity-0");
+    // logoutBtn.classList.remove("opacity-0");
 
     const oldArrow = document.getElementById("infoArrow");
     if(oldArrow){
@@ -690,10 +692,10 @@ function midSize() {
 
 function bigSize() {
     const userDescription = document.getElementById("userDescription");
-    const logoutBtn = document.getElementById("btn-logout");
+    // const logoutBtn = document.getElementById("btn-logout");
 
     userDescription.classList.remove("opacity-0");
-    logoutBtn.classList.remove("opacity-0");
+    // logoutBtn.classList.remove("opacity-0");
     
     const oldArrow = document.getElementById("infoArrow");
     if(oldArrow){
@@ -705,6 +707,21 @@ let userType;
 if(localStorage.getItem('userType') !== ""){
     userType = localStorage.getItem('userType');
 }
+
+function moveNav() {
+    const nav = document.querySelector(".custom-nav-tabs");
+    const header = document.querySelector("#asterisk-members-header");
+    if (window.innerWidth <= 768) {
+        if (nav.parentElement !== header.parentElement) {
+            header.after(nav);
+        }
+    } else {
+        if (nav.parentElement !== header) {
+            header.firstElementChild.appendChild(nav);
+        }
+    }
+}
+
 
 // if size change
 window.addEventListener('resize', responsiveSize);
