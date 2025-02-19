@@ -513,7 +513,7 @@
         {
             "title": "社内資料セクションを作成",
             "description": "Crear la seccion de archivos y enciclopedia.",
-            "deadline": "2025-02-28",
+            "deadline": "2025-03-07",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
@@ -522,12 +522,8 @@
                 "genchan"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
-            "checkList": [
-                {
-                    "listCompleted": false,
-                    "listName": "テスト"
-                }
-            ]
+            "checkList": [],
+            "project": []
         },
         {
             "title": "タスクのチェックリストを作成",
@@ -556,7 +552,7 @@
         {
             "title": "スケジュール表示を作成",
             "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
-            "deadline": "2025-02-14",
+            "deadline": "2025-02-21",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
@@ -578,8 +574,16 @@
                     "listName": "Convertir eventos y tareas al formato de fullCalendar"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear la funcion de repeticion de eventos"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear la funcion de \"todo el dia\""
                 }
             ],
             "id": "f523f13d-0aac-4795-88b2-16093826d75b",
@@ -644,7 +648,10 @@
                 "genchan"
             ],
             "checkList": [],
-            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3"
+            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
+            "project": [
+                "Asterisk"
+            ]
         }
     ],
     "events": [
@@ -727,14 +734,6 @@
             "start": "2025-01-28"
         },
         {
-            "assignedUsers": [
-                "neeman"
-            ],
-            "title": "帰社日",
-            "start": "2025-01-31T15:00:00",
-            "end": "2025-01-31T19:30:00"
-        },
-        {
             "title": "帰社日",
             "start": "2025-02-14T15:30:00",
             "end": "2025-02-14T18:30:00",
@@ -747,9 +746,36 @@
                 "breezthy",
                 "emiD"
             ],
-            "extendedProps": {
-                "place": "本社",
-                "content": ""
+            "place": "本社",
+            "content": "test",
+            "recurrence": {
+                "type": "monthly",
+                "interval": "1",
+                "endDate": "2025-04-30"
+            }
+        },
+        {
+            "title": "OAKサイトの打ち合わせ",
+            "start": "2025-02-18T15:30:00",
+            "end": "2025-02-18T18:30:00",
+            "assignedUsers": [
+                "neeman",
+                "emiD",
+                "johnD"
+            ],
+            "place": "埼玉県"
+        },
+        {
+            "title": "recurrence test",
+            "start": "2025-02-19T09:00:00",
+            "end": "2025-02-19T20:00:00",
+            "assignedUsers": [
+                "neeman"
+            ],
+            "recurrence": {
+                "type": "weekly",
+                "interval": "1",
+                "endDate": "2025-04-19"
             }
         }
     ],
