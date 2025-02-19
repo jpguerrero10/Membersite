@@ -111,7 +111,7 @@ const addElement = (tag, attributes, children) => {
 //tabs creation
 function tabCreation(view){
     const currentView = view;
-    const tabsContainer = document.querySelector(".nav-underline");
+    const tabsContainer = document.querySelector(".navbar");
     const views = [
         { name: 'Dashboard', displayName: 'ダッシュボード', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M96 32l0 32L48 64C21.5 64 0 85.5 0 112l0 48 448 0 0-48c0-26.5-21.5-48-48-48l-48 0 0-32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 32L160 64l0-32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192L0 192 0 464c0 26.5 21.5 48 48 48l352 0c26.5 0 48-21.5 48-48l0-272z"/></svg>' },
         { name: 'Profile', displayName: 'タスク', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>' },
@@ -122,13 +122,16 @@ function tabCreation(view){
     //confirm admin user
     const isAdmin = userType;
     if (isAdmin) {
-        views.push({ name: 'Admin', displayName: '管理者画面' });
+        views.push({ name: 'Admin', displayName: '管理者画面', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 612" fill="#566d83" width="15"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7l131.7 0c0 0 0 0 .1 0l5.5 0 112 0 5.5 0c0 0 0 0 .1 0l131.7 0c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2L224 304l-19.7 0c-12.4 0-20.1 13.6-13.7 24.2z"/></svg>' });
     }
 
     views.forEach((view) => {
         const li = addElement("li", { class: "nav-item" }, `
-            <a class="nav-link text-primary-emphasis tab${view.name} ${currentView === view.name.toLowerCase() ? 'active' : ''} custom-active" ${currentView === view.name.toLowerCase() ? 'aria-current="page"' : ''} href="#" role="button" data-view="${view.name.toLowerCase()}">${view.icon} ${view.displayName}</a>
+            <a class="nav-link d-flex align-items-center text-primary-emphasis tab${view.name} ${currentView === view.name.toLowerCase() ? 'active' : ''} custom-active" ${currentView === view.name.toLowerCase() ? 'aria-current="page"' : ''} href="#" role="button" data-view="${view.name.toLowerCase()}">
+                <span class="nav-item-icon">${view.icon}</span><span class="nav-item-text">${view.displayName}</span>
+            </a>
         `);
+        console.log(tabsContainer);
         tabsContainer.appendChild(li);
     });
     tabController(tabsContainer);
@@ -643,46 +646,12 @@ function responsiveSize() {
     const mobileArrow = addElement("div", {class: "arrow-sm", id: "infoArrow"}, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>`);
     const profileContainer = document.getElementById("profileInfo");
     moveNav();
-    
-    // if (screenSize <= 600) {
-    //     smallSize(mobileArrow, profileContainer);
-    // } else if (screenSize > 600 && screenSize <= 1024) {
-    //     midSize();
-    // } else {
-    //     bigSize();
-    // }
 }
-
-// function smallSize(mobileArrow, profileContainer) {
-//     const userDescription = document.getElementById("userDescription");
-//     const logoutBtn = document.getElementById("btn-logout");
-
-//     const oldArrow = document.getElementById("infoArrow");
-//     if(oldArrow){
-//         oldArrow.remove();
-//     } 
-//     profileContainer.appendChild(mobileArrow);
-
-//     userDescription.classList.add("opacity-0");
-//     logoutBtn.classList.add("opacity-0");
-
-//     mobileArrow.addEventListener('click', () => {
-//         userDescription.classList.toggle("d-none");
-//         logoutBtn.classList.toggle("d-none");
-
-//         setTimeout(() => {
-//             userDescription.classList.toggle("opacity-0");
-//             logoutBtn.classList.toggle("opacity-0");
-//         }, 10);
-//     });
-// }
 
 function midSize() {
     const userDescription = document.getElementById("userDescription");
-    // const logoutBtn = document.getElementById("btn-logout");
 
     userDescription.classList.remove("opacity-0");
-    // logoutBtn.classList.remove("opacity-0");
 
     const oldArrow = document.getElementById("infoArrow");
     if(oldArrow){
@@ -692,10 +661,8 @@ function midSize() {
 
 function bigSize() {
     const userDescription = document.getElementById("userDescription");
-    // const logoutBtn = document.getElementById("btn-logout");
 
     userDescription.classList.remove("opacity-0");
-    // logoutBtn.classList.remove("opacity-0");
     
     const oldArrow = document.getElementById("infoArrow");
     if(oldArrow){
@@ -709,7 +676,7 @@ if(localStorage.getItem('userType') !== ""){
 }
 
 function moveNav() {
-    const nav = document.querySelector(".custom-nav-tabs");
+    const nav = document.querySelector(".navbar");
     const header = document.querySelector("#asterisk-members-header");
     if (window.innerWidth <= 768) {
         if (nav.parentElement !== header.parentElement) {

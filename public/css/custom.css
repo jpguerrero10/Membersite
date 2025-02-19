@@ -27,6 +27,21 @@
     white-space: nowrap;
     width: fit-content;
 }
+.nav-item-text {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition : all 1s;
+    opacity: 0;
+}
+.nav-item:hover .nav-item-text {
+    max-width: var(--text-width, 150px);
+    opacity: 1;
+}
+.nav-link {
+    gap: 5px;
+}
 .user-image-name-id {
     width: fit-content;
 }
@@ -62,14 +77,6 @@
 .no-arrow::after {
     display: none !important;
 }
-/* .edit{
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-    padding: .5% 2% 1%;
-}
-.edit svg{
-    fill: #052c65;
-} */
 input[type="file"]{
     display: none;
 }
