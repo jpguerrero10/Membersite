@@ -10,13 +10,68 @@
     background: linear-gradient(180deg, rgba(248, 249, 250, 0.9501050420168067) 0%, rgba(248, 249, 250, 0) 10%, rgba(248, 249, 250, 0) 90%, rgba(248, 249, 250, 0.9529061624649859) 100%);
 }
 
+.container {
+    padding: 70px 0 50px;
+}
+.header-title {
+    font-size: 20px;
+}
+#asterisk-members-header {
+    padding: 10px 10px 15px;
+    z-index: 999;
+    backdrop-filter: blur(3px);
+}
 .custom-nav-tabs{
+    padding: 10px 0 5px;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: clip;
     white-space: nowrap;
+    width: fit-content;
 }
-
+.active .nav-item-icon {
+    width: 27px;
+    height: 27px;
+    background: #ffffff;
+    padding: 2px 0 0 6px;
+}
+.nav-item-text {
+    display: inline-block;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition : all 0.5s;
+    opacity: 0;
+    color: #ffffff;
+}
+.nav-item:hover .nav-item-text {
+    max-width: var(--text-width, 150px);
+    opacity: 1;
+    color: #566d83;
+}
+.nav-item:hover .active .nav-item-text {
+    color: #ffffff;
+}
+.active .nav-item-text {
+    max-width: var(--text-width, 150px);
+    opacity: 1;
+}
+.nav-link {
+    gap: 5px;
+    padding: 5px 10px !important;
+}
+.active {
+    background: #566d83;
+}
+.user-image-name-id {
+    width: fit-content;
+}
+.dropdown-item svg {
+    margin-right: 10px;
+}
+.dropdown-item:hover {
+    cursor: pointer;
+}
 #taskList.list-group .list-group-item{
     transition: .5s;
 }
@@ -29,17 +84,19 @@
     aspect-ratio: 1 / 1;
     background-color: whitesmoke;
 }
+#userImage {
+    width: 45px;
+    height: 45px;
+}
 .teamImage{
     width: 50%;
     margin: 0 auto;
 }
-.edit{
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-    padding: .5% 2% 1%;
+#userID {
+    font-size: 0.8rem;
 }
-.edit svg{
-    fill: #052c65;
+.no-arrow::after {
+    display: none !important;
 }
 input[type="file"]{
     display: none;
@@ -234,9 +291,6 @@ textarea {
     margin: 0 auto;
 }
 .profileContainer{
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
     width: min(315px, 29vw);
 }
 .task{
@@ -330,17 +384,28 @@ span.comment-alert {
         transform: translateY(0%);
         margin-top: 10%;
     }
-    #userImage, .teamImage {
+    .teamImage {
         width: 115px;
     }
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .profileContainer {
         margin-top: 15%;
     }
+    .custom-nav-tabs{
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        backdrop-filter: blur(3px);
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+    }
 }
 @media (max-width: 480px) {
-    #userImage, .teamImage {
+    .teamImage {
         width: 95px;
     }
 }
