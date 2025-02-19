@@ -602,7 +602,7 @@ const modalForm = () => {
         const confirmNewPassword = document.querySelector("#confirmNewPassword").value;
         if (newUserName === currentName && newDescription === currentDescription && newImage === currentImage && currentPassword === '' && newPassword === '' && confirmNewPassword === '') {
             editSubmitButton.disabled = true;
-        } else{
+        } else {
             editSubmitButton.disabled = false;
         }
     };
