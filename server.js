@@ -121,9 +121,19 @@ app.patch('/users/:id', async(req, res) => {
     }
 });
 
-// rutas tareas --------------------------------------------------------------------------------------------
+//ユーザー情報の特定のプロパティのみを更新
+app.patch('/users/:id', async(req, res) => {
+    try {
+        const updatedUser = await updateItem('users', req.params.id, req.body);
+        res.json({message: 'Usuario actualizado', user: updatedUser});
+    } catch (error) {
+        res.status(404).json({error: error.message});
+    }
+});
 
-// Obtener tareas
+// task route // rutas tareas --------------------------------------------------------------------------------------------
+
+// get task // Obtener tareas
 app.get('/tasks', async (req, res) => {
     try {
         const data = await readData();
@@ -228,8 +238,67 @@ app.get('/events/:userId', async (req, res) => {
         res.status(500).json({ error: 'Error al obtener las tareas' });
     }
 });
+// ruta para crear eventos
+app.post('/events', async (req, res) => {
+    try {
+        const { 
+            assignedUsers, 
+            title, 
+            start, 
+            end,
+            recurrence, 
+            place, 
+            content,
+            type,
+            interval,
+            endDate 
+        } = req.body;
 
-// Iniciar servidor
+        if (!title) {
+            return res.status(400).json({ error: 'El título, la fecha de inicio y la fecha de fin son obligatorios.' });
+        }
+
+        const data = await readData(); // Leer eventos actuales
+
+        // Crear el nuevo evento con todos los posibles datos
+        const newEvent = {
+            title,
+            start,
+            end,
+            ...(recurrence && { recurrence }),
+            assignedUsers: assignedUsers || [],
+            ...(place && { place }),
+            ...(content && { content }),
+            recurrence: {
+                type,
+                interval,
+                endDate
+            }
+        };
+
+        data.events.push(newEvent); // Agregar el evento
+
+        await writeData(data); // Guardar cambios en JSON
+
+        res.status(201).json({ message: 'Evento creado con éxito', event: newEvent });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al crear el evento' });
+    }
+});
+
+// project route --------------------------------------------------------------------------------------------
+
+// get project
+app.get('/projects', async (req, res) => {
+    try {
+        const data = await readData();
+        res.json(data.projects);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al leer los datos del archivo' });
+    }
+});
+
+// server init/Iniciar servidor
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });

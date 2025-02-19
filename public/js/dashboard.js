@@ -40,9 +40,7 @@ function dashboard(){
 
     // ---------------------------------------- displaying data on screen ---------------------------------------------------------------
     document.querySelector('#userName').textContent = userName;
-    document.querySelector('#userEmail').textContent = userEmail;
     document.querySelector('#userID').textContent = userID;
-    document.querySelector('#userDescription').textContent = userDescription;
     document.querySelector('#userImage').src = userImage;
 
     // ----------------------------------------- handling the logout -------------------------------------------------------------------
@@ -57,12 +55,13 @@ function dashboard(){
         localStorage.removeItem(`userTask_${userID}`);
         localStorage.removeItem(`achievements_${userID}`);
         localStorage.removeItem(`userReports_${userID}`);
+        localStorage.removeItem(`userEvents_${userID}`);
         localStorage.removeItem('userType');
         
         loadView("login");
     });
     
-    const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `よこそう、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
+    const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `ようこそ、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
     aisatsu.style.transition = ".5s ease-in-out";
     aisatsu.style.opacity = "0";
     aisatsu.style.transform = "translateY(-80px)";
@@ -95,37 +94,77 @@ function dashboard(){
                 textColor = '#0d6efd';
             } else {
                 taskColor = '#f8d7da'; // expired task (bg-danger)
-                textColor = 'white';
+                textColor = 'red';
             }
 
-        return {
-            title: `${task.title}`,  
-            start: task.deadline,       
-            color: taskColor, 
-            textColor: textColor,
-            extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
-        };
-    });
+            return {
+                title: `${task.title}`,  
+                start: task.deadline,       
+                color: taskColor, 
+                textColor: textColor,
+                extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
+            };
+        });
 
         // events to calendar
-        const calendarEvents = events.map(event => ({
-            title: event.title,
-            start: event.start,
-            end: event.end || event.start,
-            // url: event.url || null, // if exists add url
-            color: 'cff4fc', // Color diferente para distinguir eventos normales
-            extendedProps: { type: 'event' }
-        }));
+        const calendarEvents = events.map(event => {
+            const eventObj = {
+                title: event.title,
+                start: event.start,
+                end: event.end || event.start,
+                color: '#0d6efd', // Color para eventos normales
+                extendedProps: { 
+                    type: 'event', 
+                    place: event.place,
+                    content: event.content
+                }
+            };
+        
+            // Si el evento tiene recurrencia, la agregamos a extendedProps
+            if (event.recurrence) {
+                eventObj.extendedProps.recurrence = {
+                    type: event.recurrence.type,
+                    interval: parseInt(event.recurrence.interval),
+                    endDate: event.recurrence.endDate
+                };
+            }
+        
+            return eventObj;
+        });
 
-        const allEvents = [...taskEvents, ...calendarEvents];
+        const generateRecurringEvents = (event) => {
+            if (!event.extendedProps.recurrence) return [event];
+        
+            const { type, interval, endDate } = event.extendedProps.recurrence;
+            let generatedEvents = [];
+            let currentDate = new Date(event.start);
+            let finalDate = new Date(endDate);
+        
+            while (currentDate <= finalDate) {
+                let newEvent = { ...event, start: new Date(currentDate).toISOString() };
+                generatedEvents.push(newEvent);
+        
+                // Avanzamos según el tipo de recurrencia
+                if (type === "daily") currentDate.setDate(currentDate.getDate() + interval);
+                if (type === "weekly") currentDate.setDate(currentDate.getDate() + 7 * interval);
+                if (type === "monthly") currentDate.setMonth(currentDate.getMonth() + interval);
+            }
+        
+            return generatedEvents;
+        };
+        
+        // Generamos todos los eventos recurrentes
+        const allRecurringEvents = calendarEvents.flatMap(generateRecurringEvents);
+
+        const allEvents = [...taskEvents, ...allRecurringEvents];
     
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             height: '90vh',
-            initialDate: '2025-01-07',
+            initialDate: today,
             locale: 'ja',
-            buttonIcons: false, // show the prev/next text
-            weekNumbers: true,
+            buttonIcons: true, // show the prev/next text
+            weekNumbers: false,
             navLinks: true, // can click day/week names to navigate views
             editable: true,
             dayMaxEvents: true, // allow "more" link when too many events
@@ -134,286 +173,384 @@ function dashboard(){
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: allEvents,
+            events: allEvents,           
+            dateClick: function(info) {
+                generateEventForm(info.dateStr, users, events);//go to app.js
+            },                  
             eventClick: function(info) {
-            if (info.event.extendedProps.type === 'task') {
-                alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
-            } else {
-                alert(`Evento: ${info.event.title}`);
+                if (info.event.extendedProps.type === 'task') {
+                    alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
+                } else {
+                    alert(`Evento: ${info.event.title}\nContenido: ${info.event.extendedProps.content}`);
+                }
             }
-        }
         });
     
         calendar.render();
     });
 
-    //load tasks
-    // const loadTasks = (container, year, month, day) => {
-    //     loadUsersFromDB(function ({ users, tasks }) {
-    //         let firstElement = true;
-    //         tasks.forEach((task, index) => {
-    //             if (!task.isChecked) {
-    //                 const [deadlineYear, deadlineMonth, deadlineDay] = task.deadline.split("-").map(Number);
-    //                 if (Number(year) === deadlineYear && (Number(month) + 1) === deadlineMonth && Number(day) === deadlineDay){
-    //                     const taskTitle = addElement("div", { class: `tasks card flex-row bg-primary align-items-center mt-1 p-2 border-bottom border-info border-top shadow text-white`, id: `task${index}-${task.deadline}`, style: "cursor: pointer;"}, `
-    //                     <p class="text-start m-0" style="font-size: 0.8rem">${task.title}</p>
-    //                     `);
-                        
-    //                     if (firstElement) {
-    //                         taskTitle.classList.add("border-top");
-    //                         firstElement = false; 
-    //                     }
-    //                     container.appendChild(taskTitle);
+    setTimeout(() => {
+        fadeIn(card, 20); // Hace un fade in en 1 segundo
+    }, 150);
 
-    //                     container.querySelectorAll(".tasks").forEach(btnTask => {
-    //                         btnTask.addEventListener('click', () => {
-    //                             loadView('profile');
-    //                         });
-    //                     });
-    //                 }
+    //event modal view creation ------------------------------------------------------------------------------
+    const generateEventForm = (dateInfo, usersInfo, eventsInfo) => {
+        modalDialog.innerHTML = "";
 
-    //             }
-    //             if (task.deadline) {
-    //                 const [year, month, day] = task.deadline.split("-").map(Number);
-    //                 const checkController = task.isChecked;
-    //                 markDeadlineOnCalendar(year, month, day, checkController);
-    //             }
-    //         });
-    //     });
-    // }
-    // // Calendar's main container
-    // const currentDay = `${currentDate.getDate()}`;
-    // const currentMonth = `${currentDate.getMonth()}`;
-    // const currentYear = `${currentDate.getFullYear()}`;
+        const modalContent = addElement("div",{class: "modal-content"});
+        const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">${dateInfo}の予定を追加</h3><button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
+        const modalBody = addElement("div", { class: "modal-body" });
+        const eventFormContainer = addElement("form", { id: "eventForm" });
 
-    // const createCalendar = () => {
-    //     // Main calendar row
-    //     const cardBody = addElement("div", { class: "card-body" });
-    //     const calendarRow = addElement("div", { class: "row calendar" });
-    //     cardBody.appendChild(calendarRow);
-
-    //     //calendar Legends
-    //     const legendsContainer = addElement("div", {class: "calendarLegends"},[
-    //         addElement("div", { class: "legendItem text-info added" }, "追加タスク"),
-    //         addElement("div", { class: "legendItem text-success completed" }, "完了タスク"),
-    //         addElement("div", { class: "legendItem text-danger uncompleted" }, "未完了タスク")
-    //     ]);
-    //     cardBody.appendChild(legendsContainer);
-
-
-
-    //     // Left side (dates and controls)
-    //     const leftCol = addElement("div", { class: "col-12 col-md-7" });
-    //     calendarRow.appendChild(leftCol);
-
-    //     // Month/Year selectors
-    //     const monthYearRow = addElement("div", { class: "row text-center" });
-    //     const monthYearCol = addElement("div", { class: "col month-year fs-5 fw-bolder text-primary-emphasis" });
-
-    //     const yearSelect = addElement("select", { class: "form-select d-inline w-auto mx-2", id: "yearSelect", "aria-label": "Select Year" });
-    //     const currentYear = new Date().getFullYear();
-    //     for (let year = currentYear - 4; year <= currentYear + 2; year++) {
-    //         const option = addElement("option", null, `${year}年`);
-    //         option.value = year;
-    //         if (year === currentYear) option.selected = true;
-    //         yearSelect.appendChild(option);
-    //     }
-
-    //     const monthSelect = addElement("select", { class: "form-select d-inline w-auto mx-2", id: "monthSelect", "aria-label": "Select Month" });
-    //     const months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-    //     months.forEach((month, index) => {
-    //         const option = addElement("option", { value: index + 1 }, month);
-    //         if (index === new Date().getMonth()) option.selected = true;
-    //         monthSelect.appendChild(option);
-    //     });
-
-    //     monthYearCol.appendChild(yearSelect);
-    //     monthYearCol.appendChild(monthSelect);
-    //     monthYearRow.appendChild(monthYearCol);
-    //     leftCol.appendChild(monthYearRow);
-
-    //     // Weekday headers
-    //     const weekHeaderRow = addElement("div", { class: "row text-center text-primary-emphasis" });
-    //     const days = ["日", "月", "火", "水", "木", "金", "土"];
-    //     days.forEach(day => {
-    //         const dayCol = addElement("div", { class: "col day" }, day);
-    //         weekHeaderRow.appendChild(dayCol);
-    //     });
-    //     leftCol.appendChild(weekHeaderRow);
-
-    //     // Dates rows 
-    //     const datesContainer = addElement("div", { class: "dates-container" });
-    //     leftCol.appendChild(datesContainer);
+        const fragment = document.createDocumentFragment();
         
+        const hourStartInput = addElement("select", {
+            id: "hourStartDate",
+            class: "form-select mb-3",
+            name: "hourStartDate",
+            required: true
+        });
+        const minStartInput = addElement("select", {
+            id: "minStartDate",
+            class: "form-select mb-3",
+            name: "minStartDate",
+            required: true
+        });
+        const hourEndInput = addElement("select", {
+            id: "hourEndDate",
+            class: "form-select mb-3",
+            name: "hourEndDate",
+            required: true
+        });
+        const minEndInput = addElement("select", {
+            id: "minEndDate",
+            class: "form-select mb-3",
+            name: "minEndDate",
+            required: true
+        });
+        for (let h = 0; h < 24; h++) {
+            const hourformat = h.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+            const optionEnd = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+            
+            hourStartInput.appendChild(optionStart);
+            hourEndInput.appendChild(optionEnd);
+        }
+        for (let m = 0; m < 60; m += 5) {
+            const minuteformat = m.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            const optionEnd = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            
+            minStartInput.appendChild(optionStart);
+            minEndInput.appendChild(optionEnd);
+        }
+        const separatorTime = addElement("span", {class:"input-group-text mb-3"}, "～");
 
-    //     // Right side (day details)
-    //     const rightCol = addElement("div", { class: "col-12 col-md-5" });
-    //     calendarRow.appendChild(rightCol);
-
-    //     const dayInfoRow = addElement("div", { class: "row text-info-emphasis text-center h-100 bg-info-subtle bg-gradient pt-3" });
-    //     const dayInfo = addElement("div", { class: "day-info d-flex flex-column p-0" });
-    //     const dayTask = addElement("div", { class: "day-tasks d-flex flex-column p-1 mt-2 shadow-sm"});
-
-    //     // schedule container
-    //     const daySchedule = addElement("div", { class: "day-schedule d-flex flex-column" });
+        const checkcontainer1 = addElement("div");
+        const checkcontainer2 = addElement("div");
+        const allDayCheck = addElement("input",{
+            type: "checkbox",
+            id: "allDay-checkbox",
+            name: "allDay-checkbox"
+        });
+        const repeatCheck = addElement("input",{
+            type: "checkbox",
+            id: "repeat-checkbox",
+            name: "repeat-checkbox"
+        });
         
-    //     // tasks container
-    //     const dayNumber = addElement("p", { class: "m-0" },`
-    //         <span class="d-block fs-2 fw-bolder" id="dayNumber"></span>
-    //         <span id="dayName"></span>
-    //     `);
-
-    //     dayInfo.appendChild(dayNumber);
-    //     dayInfo.appendChild(dayTask);
-    //     dayInfo.appendChild(daySchedule);
-    //     dayInfoRow.appendChild(dayInfo);
-    //     rightCol.appendChild(dayInfoRow);
-
-    //     // Add Event Listeners
-    //     yearSelect.addEventListener("change", updateCalendar);
-    //     monthSelect.addEventListener("change", updateCalendar);
+        const recurrenceType = addElement("select", {
+            id: "recurrence",
+            class: "form-select",
+            name: "recurrence",
+            required: true,
+            disabled: ""
+        },`
+        <option value="daily">毎日</option>
+        <option value="weekly">毎週</option>
+        <option value="monthly">毎月</option>
+        `);
+        const interval = addElement("select", {
+            id: "interval",
+            name: "interval",
+            class: "form-select",
+            disabled: ""
+        },`
+        <option value="1">無し</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        `);
+        const finalDate = addElement("input",{
+            type: "date",
+            id: "finalDate",
+            name: "finalDate",
+            class: "form-control",
+            disabled: ""
+        });
+        const eventTitleInput = addElement("input", {
+            type: "text",
+            id: "eventTitle",
+            class: "form-control mb-3",
+            name: "eventTitle",
+            placeholder: "タイトル",
+            required: true
+        });
+        const eventPlaceInput = addElement("input", {
+            type: "text",
+            id: "eventPlace",
+            class: "form-control mb-3",
+            name: "eventPlace",
+            placeholder: "場所"
+        });
+        const contentInput = addElement("textarea", {
+            id: "content",
+            class: "form-control mb-3",
+            name: "completedTask",
+            placeholder: "内容",
+            style: "height: 150px;"
+        });
+        const participantsInput = addElement("select", {
+            id: "participants",
+            class: "form-select mb-3",
+            name: "participants",
+            multiple: ''
+        });
+        usersInfo.forEach(u => {
+            const option = addElement("option", { value: `${ (u.id).replace(/\W+/g, '') }` }, `${u.name}`);
+            participantsInput.appendChild(option);
+        });
         
-    //     return cardBody;
-    // };
+        const btnGroup = addElement("div", { class: "btn-group" });
+        const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "報告書追加");
+        const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
+        
+        // Col and row containers
+        const containerRow1 = addElement("div", { class: "row" });
+        const containerRow2 = addElement("div", { class: "row hiddenContainer" });
+        const containerRow3 = addElement("div", { class: "row" });
+        const containerRow4 = addElement("div", { class: "row" });
+        const containerCol1 = addElement("div", { class: "col input-group" });
+        const containerCol2 = addElement("div", { class: "col-12 col-md-3 align-content-center mb-3" });
+        const containerColhidden1 = addElement("div", { class: "col-4 mb-3" });
+        const containerColhidden2 = addElement("div", { class: "col-4 mb-3" });
+        const containerColhidden3 = addElement("div", { class: "col-4 mb-3" });
+        const containerCol3 = addElement("div", { class: "col-12 form-floating" });
+        const containerCol5 = addElement("div", { class: "col-12 form-floating" });
+        const containerCol6 = addElement("div", { class: "col-12 form-floating" });
+        const container9 = addElement("div", { class: "mb-3" });
+
+        //labels
+        const allDayLabel = addElement("label", {
+            for: "allDay-checkbox",
+            class: "form-label fs-6 m-0 me-2"
+        }, "<small>終日</small>");
+        const repeatLabel = addElement("label", {
+            for: "allDay-checkbox",
+            class: "form-label fs-6 m-0 me-2"
+        }, "<small>繰り返し</small>");
+        const startLabel = addElement("label", {
+            for: "hourStartDate",
+            class: "form-label fs-6"
+        }, "<small>日時</small>");
+        const recurrencelabel = addElement("label",{
+            for: "recurrence",
+            class: "form-label ms-2"
+        }, "繰り返しパターン");
+        const intervallabel = addElement("label",{
+            for: "interval",
+            class: "form-label ms-2"
+        }, "インターバル");
+        const finaldatelabel = addElement("label",{
+            for: "finalDate",
+            class: "form-label ms-2"
+        }, "最終日");
+        const eventTitleLabel = addElement("label", {
+            for: "eventTitle",
+            class: "form-label ms-2"
+        }, "タイトル");
+        const contentLabel = addElement("label", {
+            for: "content",
+            class: "form-label ms-2"
+        }, "内容");
+        const placeLabel = addElement("label", {
+            for: "eventPlace",
+            class: "form-label ms-2"
+        }, "場所");
+        const participantsLabel = addElement("label", {
+            for: "participants",
+            class: "form-label ms-2"
+        }, "参加ユーザー"); 
+        
+        // Structure
+        containerRow1.append(startLabel,containerCol1, containerCol2);
+        containerRow2.append(containerColhidden1, containerColhidden2, containerColhidden3);
+        containerRow3.append(containerCol3, containerCol5);
+        containerRow4.append(containerCol6);
+        
+        containerCol1.append(hourStartInput, minStartInput, separatorTime, hourEndInput, minEndInput );
+        containerCol2.append(checkcontainer1, checkcontainer2);
+        containerColhidden1.append(recurrencelabel, recurrenceType);
+        containerColhidden2.append(intervallabel, interval);
+        containerColhidden3.append(finaldatelabel, finalDate);
+        containerCol3.append(eventTitleInput, eventTitleLabel);
+        containerCol5.append(eventPlaceInput, placeLabel);
+        containerCol6.append(contentInput, contentLabel);
+        container9.append(participantsLabel, participantsInput);
+        checkcontainer1.append(allDayLabel, allDayCheck);
+        checkcontainer2.append(repeatLabel, repeatCheck);
+
+        fragment.append(containerRow1, containerRow2, containerRow3, containerRow4, container9, btnGroup);
+        btnGroup.append(submitButton, cancelButton);
+        
+        // Insert the fragment into the form's container
+        eventFormContainer.appendChild(fragment);
+        
+        // Insert form's card
+        modalBody.appendChild(eventFormContainer);
+        modalContent.append(modalHeader, modalBody)
+        
+        modalDialog.appendChild(modalContent);
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        
+        // choices select multiple
+        var element = document.getElementById('participants');
+        var choices = new Choices(element, {
+            removeItemButton: true,   // Permite eliminar elementos seleccionados
+            searchEnabled: true,      // Activa la búsqueda en el dropdown
+            itemSelectText: '',       // Quita el texto predeterminado en el selector
+            placeholder: true,        // Activa el texto de placeholder
+            placeholderValue: 'ユーザー追加',
+            // maxItemCount: 5,          // Límite de opciones seleccionables
+            allowHTML: true,          // Permite HTML en las opciones
+        });
+        
+        repeatCheck.addEventListener('click', () => {
+            if(repeatCheck.checked === true){
+                containerRow2.classList.add("show");
+                recurrenceType.removeAttribute("disabled", "")
+                interval.removeAttribute("disabled", "")
+                finalDate.removeAttribute("disabled", "")
+            }else{
+                containerRow2.classList.remove("show");
+                recurrenceType.setAttribute("disabled", "")
+                interval.setAttribute("disabled", "")
+                finalDate.setAttribute("disabled", "")
+            }
+        });
+        allDayCheck.addEventListener('click', () => {
+            if(allDayCheck.checked === true){
+                hourStartInput.setAttribute("disabled", "");
+                minStartInput.setAttribute("disabled", "");
+                hourEndInput.setAttribute("disabled", "");
+                minEndInput.setAttribute("disabled", "");
+            }else{
+                hourStartInput.removeAttribute("disabled", "");
+                minStartInput.removeAttribute("disabled", "");
+                hourEndInput.removeAttribute("disabled", "");
+                minEndInput.removeAttribute("disabled", "");
+            }
+        });
+
+        eventFormContainer.addEventListener('submit', (event) => {
+            event.preventDefault();
+            handleFormSubmit(eventsInfo, dateInfo, exampleModal, choices);
+        });
+        exampleModal.show();
+    };
+
+    // submit button -----------------------------------------------------------------------
+    const handleFormSubmit = (eventsInfo, dateInfo, modal, choices) => {
+        const hourStart = document.getElementById('hourStartDate').value;
+        const minuteStart = document.getElementById('minStartDate').value;
+        const hourEnd = document.getElementById('hourEndDate').value;
+        const minuteEnd = document.getElementById('minEndDate').value;
+        const repeatcheck = document.getElementById('repeat-checkbox').checked;
+        let repeatType;
+        let repeatInterval;
+        let repeatfinalDate;
+        if(repeatcheck === true){
+            repeatType = document.getElementById('recurrence').value;
+            repeatInterval = document.getElementById('interval').value;
+            repeatfinalDate = document.getElementById('finalDate').value;
+        }
+        const eventTitle = document.getElementById('eventTitle').value;
+        const eventPlace = document.getElementById('eventPlace').value;
+        const eventContent = document.getElementById('content').value;
+        const eventUsers = choices.getValue(true);
+        if(eventUsers.length === 0){
+            const actualUser = (userID).replace(/\W+/g, '');
+            eventUsers.push(actualUser); 
+        }
+        
+        eventsInfo = eventsInfo.filter(event => event.title !== eventTitle);
+        eventsInfo.push({ 
+            assignedUsers: eventUsers,
+            title: eventTitle,
+            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
+            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            place: eventPlace, 
+            content: eventContent,
+            type: repeatType ? repeatType : "",
+            interval: repeatInterval ? repeatInterval : "",
+            endDate: repeatfinalDate ? repeatfinalDate : ""
+        });
+        const singleEvent = { 
+            assignedUsers: eventUsers,
+            title: eventTitle,
+            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
+            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            place: eventPlace, 
+            content: eventContent,
+            type: repeatType ? repeatType : "",
+            interval: repeatInterval ? repeatInterval : "",
+            endDate: repeatfinalDate ? repeatfinalDate : ""
+        }
+        if (eventsInfo) {
+            saveEvent(singleEvent, eventsInfo);
+            closeForm(modal);                
+            loadView('dashboard');
+        } else {
+            alert("Please fill all the fields");
+        }
+    };
     
-    // // Function to calculate the calendar depending of selected year/month
-    // const updateCalendar = () => {
-    //     const year = parseInt(document.getElementById("yearSelect").value);
-    //     const month = parseInt(document.getElementById("monthSelect").value) - 1;
-    //     const datesContainer = document.querySelector(".dates-container");
-    //     datesContainer.innerHTML = "";
-    //     const removeTask = document.querySelectorAll(".tasks");
-    //     if(removeTask.length > 0){
-    //         removeTask.forEach(task => {
-    //             task.remove();
-    //         });
-    //     }
+    // report saving function ------------------------------------------------------------------------
+    function saveEvent(singleEvent, eventsInfo){
+        localStorage.setItem(`userEvents_${userID}`, JSON.stringify(eventsInfo));
         
-    //     const firstDay = new Date(year, month, 1).getDay();
-    //     const lastDate = new Date(year, month + 1, 0).getDate();
-        
-    //     let dayCount = 1;
-    //     for (let week = 0; week < 6; week++) {
-    //         const weekRow = addElement("div", { class: "row text-center text-body-secondary" });
-    //         for (let day = 0; day < 7; day++) {
-    //             const dateCol = addElement("div", { class: "col date", style: "cursor: pointer" });
-    //             const dotContainer = addElement("div", { class: "dotContainer" });
-    //             if ((week === 0 && day < firstDay) || dayCount > lastDate) {
-    //                 dateCol.classList.add("bg-dark-subtle");
-    //                 weekRow.appendChild(dateCol);
-    //             } else {
-    //                 dateCol.textContent = dayCount;
-    //                 dateCol.dataset.date = dayCount; 
-    //                 dateCol.appendChild(dotContainer);
-    //                 if(dateCol.textContent === currentDay && year.toString()  === currentYear && month.toString()  === currentMonth){
-    //                     dateCol.classList.add("bg-primary-subtle", "text-primary-emphasis");
-    //                 }
-    //                 dateCol.addEventListener("click", (event) => {
-    //                     const removeTask = document.querySelectorAll(".tasks");
-    //                     const blueDot = document.querySelectorAll(".blue-dot");
-    //                     if(removeTask.length > 0){
-    //                         removeTask.forEach(task => {
-    //                             task.remove();
-    //                         });
-    //                     }
-    //                     if(blueDot.length > 0){
-    //                         blueDot.forEach(dot => {
-    //                             dot.remove();
-    //                         });
-    //                     }
-    //                     showDayInfo(year, month, parseInt(event.target.dataset.date));
-    //                 });
-    //                 weekRow.appendChild(dateCol);
-    //                 dayCount++;
-    //             }
-    //         }
-    //         datesContainer.appendChild(weekRow);
-    //     }
-    //     showDayInfo(currentYear , currentMonth, currentDay)
-    // };
+        fetch('http://localhost:3000/events', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(singleEvent)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('イベントは作成された:', data);
+        })
+        .catch(err => console.error('Error al agregar el evento:', err));
+    };
 
-    // const createScheduleGrid = (container) => {
-    //     container.innerHTML = ''; // Limpiar contenido previo
-    
-    //     for (let hour = 0; hour < 24; hour++) {
-    //         const hourRow = addElement("div", { class: "hour-row d-flex align-items-center border-bottom p-1", "data-hour": hour }, `
-    //             <span class="hour-label text-primary fw-bold">${hour}:00</span>
-    //             <input type="text" class="form-control ms-2 reminder-input" placeholder="予定を追加...">
-    //         `);
-    
-    //         // Evento para guardar recordatorio
-    //         hourRow.querySelector('.reminder-input').addEventListener('change', (event) => {
-    //             const reminder = event.target.value;
-    //             const selectedDay = document.getElementById("dayNumber").textContent;
-    //             saveReminder(selectedDay, hour, reminder);
-    //         });
-    
-    //         container.appendChild(hourRow);
-    //     }
-    // };
+    // cancel button ---------------------------------------------------------------
+    const handleCancel = () => {   
+        fadeOut(document.querySelector(".cardForm"), 150); // 1s fadeout
+        setTimeout(() => {
+            closeForm();
+        }, 200);
+    };
 
-    // // Add calendar to DOM
-    // card.appendChild(createCalendar());
-    // const dayInfo = document.querySelector(".day-tasks");
-    
-    // // Show day details (tasks, date, day of week)
-    // const showDayInfo = (year, month, day) => {
-    //     const date = new Date(year, month, day);
-    //     document.getElementById("dayNumber").textContent = `${day}日`;
-    //     document.getElementById("dayName").textContent = date.toLocaleDateString("ja-JP", { weekday: 'long' });
-
-    //     const scheduleContainer = document.querySelector(".day-schedule");
-    //     createScheduleGrid(scheduleContainer);
-        
-    //     loadTasks(dayInfo, year, month, day);
-    // }; 
-
-    // const markDeadlineOnCalendar = (year, month, day, checkController) => {
-    //     const selectedYear = parseInt(document.getElementById("yearSelect").value);
-    //     const selectedMonth = parseInt(document.getElementById("monthSelect").value);
-        
-    //     // Verify if the year/month coincide with the actual date
-    //     if (year === selectedYear && month === selectedMonth) {
-    //         const dateElements = document.querySelectorAll(".dates-container .col.date");
-
-    //         dateElements.forEach(dateElement => {
-    //             if (parseInt(dateElement.textContent) === day) {
-    //                 if(year === Number(currentYear) && month === (Number(currentMonth) + 1) && day >= Number(currentDay)){
-    //                     const dotContainer = dateElement.querySelector(".dotContainer");
-    //                     const blueDot = addElement("span", { class: "blue-dot" });
-    //                     blueDot.classList.add("bg-info");
-    //                     dotContainer.appendChild(blueDot);
-    //                     if(checkController){
-    //                         blueDot.classList.remove("bg-info");
-    //                         blueDot.classList.add("bg-success");
-    //                     }
-    //                 } else{
-    //                     const dotContainer = dateElement.querySelector(".dotContainer");
-    //                     const blueDot = addElement("span", { class: "blue-dot" });
-    //                     blueDot.classList.add("bg-danger");
-    //                     dotContainer.appendChild(blueDot);
-    //                     if(checkController){
-    //                         blueDot.classList.remove("bg-danger");
-    //                         blueDot.classList.add("bg-success");
-    //                     }
-    //                 }
-    //             }
-                
-    //         });
-    //     }
-    // };
-    
-    // // Función para guardar recordatorio en localStorage
-    // const saveReminder = (day, hour, reminder) => {
-    //     const key = `reminder_${day}_${hour}`;
-    //     localStorage.setItem(key, reminder);
-    //     alert(`Recordatorio guardado para ${day} a las ${hour}:00`);
-    // };
-
-    // updateCalendar();
-    // setTimeout(() => {
-    //     fadeIn(card, 20); // Hace un fade in en 1 segundo
-    // }, 150);
+    // reset add task form -----------------------------------------------------------------------
+    const closeForm = (modal) => {
+        const eventFormContainer = document.getElementById("eventForm");
+        eventFormContainer.removeEventListener('submit', handleFormSubmit);
+        eventFormContainer.reset();
+        eventFormContainer.innerHTML = "";
+        modal.innerHTML = "";
+        modal.hide();
+    };
     
     // create dashboard trophy card ----------------------------------------------------------------------------------
     const cardBody = addElement('div', { class: 'card-body text-primary-emphasis d-flex flex-wrap align-content-center' });

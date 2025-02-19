@@ -8,8 +8,8 @@
             "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
-                "tasksAdded": 55,
-                "tasksCompleted": -15,
+                "tasksAdded": 5,
+                "tasksCompleted": 6,
                 "tasksShared": 5,
                 "milestones": {
                     "tasksAdded": [
@@ -284,9 +284,9 @@
             "description": "Admin/test",
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
-                "tasksAdded": 1,
-                "tasksCompleted": 1,
-                "tasksShared": 7,
+                "tasksAdded": 2,
+                "tasksCompleted": 3,
+                "tasksShared": 18,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -513,14 +513,17 @@
         {
             "title": "社内資料セクションを作成",
             "description": "Crear la seccion de archivos y enciclopedia.",
-            "deadline": "2025-01-31",
+            "deadline": "2025-03-07",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "moongirl"
+                "marodriguez",
+                "genchan"
             ],
-            "id": "a51372b1-4f6b-4537-ae61-a7572789f00e"
+            "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
+            "checkList": [],
+            "project": []
         },
         {
             "title": "タスクのチェックリストを作成",
@@ -528,7 +531,8 @@
             "deadline": "2025-01-31",
             "isChecked": true,
             "assignedUsers": [
-                "genchan"
+                "genchan",
+                "neeman"
             ],
             "checkList": [
                 {
@@ -540,15 +544,21 @@
                     "listName": "これやる2"
                 }
             ],
-            "id": "2565ba70-7404-4525-baf6-5b55750e9781"
+            "id": "2565ba70-7404-4525-baf6-5b55750e9781",
+            "project": [
+                "Asterisk"
+            ]
         },
         {
             "title": "スケジュール表示を作成",
             "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
-            "deadline": "2025-01-31",
+            "deadline": "2025-02-21",
             "isChecked": false,
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD",
+                "genchan",
+                "moongirl"
             ],
             "checkList": [
                 {
@@ -564,11 +574,23 @@
                     "listName": "Convertir eventos y tareas al formato de fullCalendar"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear la funcion de repeticion de eventos"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "Crear la funcion de \"todo el dia\""
                 }
             ],
-            "id": "f523f13d-0aac-4795-88b2-16093826d75b"
+            "id": "f523f13d-0aac-4795-88b2-16093826d75b",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
         },
         {
             "title": "データベースをIndexedDBからNodeJSに変換",
@@ -579,6 +601,57 @@
                 "neeman"
             ],
             "id": "8687a2ed-ff17-45f9-b65c-10a484dd10e1"
+        },
+        {
+            "title": "タスクにラベルを付与する機能を追加",
+            "description": "どのプロジェクトに関するタスクなのかがわかるようにラベルを表示する\nどのユーザーがタスクに参画しているかわかるようにユーザーを表示する",
+            "deadline": "2025-02-07",
+            "isChecked": true,
+            "assignedUsers": [
+                "genchan",
+                "neeman",
+                "marodriguez",
+                "johnD",
+                "moongirl"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": true,
+                    "listName": "ラベル機能の追加用にタスクカードのデザインを考える"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスク追加時にラベルを付与できるようにする"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスク編集時にラベルを編集できるようにする"
+                },
+                {
+                    "listCompleted": true,
+                    "listName": "タスクのフォームに参画しているユーザーがわかるように表示する"
+                }
+            ],
+            "id": "dd2f077f-d221-48a8-8157-be907ff75c67",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
+            ]
+        },
+        {
+            "title": "タスクフォームのコードをリファクタリング",
+            "description": "refactorizar el codigo que genera el formulario de las tasks",
+            "deadline": "2025-02-28",
+            "isChecked": false,
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ],
+            "checkList": [],
+            "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
+            "project": [
+                "Asterisk"
+            ]
         }
     ],
     "events": [
@@ -591,22 +664,24 @@
         },
         {
             "assignedUsers": [
-                "neeman"
+                "neeman",
+                "johnD"
             ],
-            "title": "Long Event",
-            "start": "2025-01-07",
-            "end": "2025-01-10"
+            "title": "Evento test",
+            "content": "Lorem ipsum dolor sit amet",
+            "start": "2025-02-07T16:00:00",
+            "end": "2025-02-07T20:00:00",
+            "place": "test"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],
             "title": "Repeating Event",
-            "start": "2025-01-09T16:00:00"
+            "start": "2025-02-07T12:00:00",
+            "end": "2025-02-07T20:00:00"
         },
         {
-            "groupId": "999",
             "assignedUsers": [
                 "neeman"
             ],
@@ -659,12 +734,79 @@
             "start": "2025-01-28"
         },
         {
+            "title": "帰社日",
+            "start": "2025-02-14T15:30:00",
+            "end": "2025-02-14T18:30:00",
+            "assignedUsers": [
+                "marodriguez",
+                "moongirl",
+                "johnD",
+                "genchan",
+                "neeman",
+                "breezthy",
+                "emiD"
+            ],
+            "place": "本社",
+            "content": "test",
+            "recurrence": {
+                "type": "monthly",
+                "interval": "1",
+                "endDate": "2025-04-30"
+            }
+        },
+        {
+            "title": "OAKサイトの打ち合わせ",
+            "start": "2025-02-18T15:30:00",
+            "end": "2025-02-18T18:30:00",
+            "assignedUsers": [
+                "neeman",
+                "emiD",
+                "johnD"
+            ],
+            "place": "埼玉県"
+        },
+        {
+            "title": "recurrence test",
+            "start": "2025-02-19T09:00:00",
+            "end": "2025-02-19T20:00:00",
             "assignedUsers": [
                 "neeman"
             ],
-            "title": "帰社日",
-            "start": "2025-01-31T15:00:00",
-            "end": "2025-01-31T19:30:00"
+            "recurrence": {
+                "type": "weekly",
+                "interval": "1",
+                "endDate": "2025-04-19"
+            }
+        }
+    ],
+    "projects": [
+        {
+            "title": "Asterisk",
+            "color": "#1b498c"
+        },
+        {
+            "title": "Ultimate Nervous",
+            "color": "#f68719"
+        },
+        {
+            "title": "Ultimate Plus+",
+            "color": "#ffd900"
+        },
+        {
+            "title": "ZIPANG",
+            "color": "#ff1111"
+        },
+        {
+            "title": "Project1",
+            "color": "#45c715"
+        },
+        {
+            "title": "Project2",
+            "color": "#2485c5"
+        },
+        {
+            "title": "Project3",
+            "color": "#9c11ff"
         }
     ]
 }
