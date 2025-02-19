@@ -225,9 +225,13 @@ app.post('/events', async (req, res) => {
             assignedUsers, 
             title, 
             start, 
-            end, 
+            end,
+            recurrence, 
             place, 
-            content 
+            content,
+            type,
+            interval,
+            endDate 
         } = req.body;
 
         if (!title) {
@@ -241,10 +245,14 @@ app.post('/events', async (req, res) => {
             title,
             start,
             end,
+            ...(recurrence && { recurrence }),
             assignedUsers: assignedUsers || [],
-            extendedProps: {
-                place: place || "",
-                content: content || ""
+            ...(place && { place }),
+            ...(content && { content }),
+            recurrence: {
+                type,
+                interval,
+                endDate
             }
         };
 
