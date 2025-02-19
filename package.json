@@ -4,6 +4,7 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
+    "cors": "^2.8.5",
     "express": "^4.21.2"
   }
 }

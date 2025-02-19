@@ -1,6 +1,6 @@
 function register(){
     const loadUsersFromDB = (callback) => {
-        fetch('http://localhost:3000/users') // Cambia esta URL según la configuración de tu servidor
+        fetch('http://192.168.11.42:3000/users') // Cambia esta URL según la configuración de tu servidor
             .then(response => response.json())
             .then(users => {
                 callback(users);
@@ -45,7 +45,7 @@ function register(){
                 };
                 
                 // Enviamos los datos al servidor para guardar el nuevo usuario
-                fetch('http://localhost:3000/users', {
+                fetch('http://192.168.11.42:3000/users', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
