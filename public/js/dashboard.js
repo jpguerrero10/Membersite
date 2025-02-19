@@ -57,6 +57,7 @@ function dashboard(){
         localStorage.removeItem(`userTask_${userID}`);
         localStorage.removeItem(`achievements_${userID}`);
         localStorage.removeItem(`userReports_${userID}`);
+        localStorage.removeItem(`userEvents_${userID}`);
         localStorage.removeItem('userType');
         
         loadView("login");
@@ -98,30 +99,66 @@ function dashboard(){
                 textColor = 'red';
             }
 
-        return {
-            title: `${task.title}`,  
-            start: task.deadline,       
-            color: taskColor, 
-            textColor: textColor,
-            extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
-        };
-    });
+            return {
+                title: `${task.title}`,  
+                start: task.deadline,       
+                color: taskColor, 
+                textColor: textColor,
+                extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
+            };
+        });
 
         // events to calendar
-        const calendarEvents = events.map(event => ({
-            title: event.title,
-            start: event.start,
-            end: event.end || event.start,
-            // url: event.url || null, // if exists add url
-            color: 'cff4fc', // Color diferente para distinguir eventos normales
-            extendedProps: { 
-                type: 'event', 
-                place: event.place,
-                content: event.content
+        const calendarEvents = events.map(event => {
+            const eventObj = {
+                title: event.title,
+                start: event.start,
+                end: event.end || event.start,
+                color: '#0d6efd', // Color para eventos normales
+                extendedProps: { 
+                    type: 'event', 
+                    place: event.place,
+                    content: event.content
+                }
+            };
+        
+            // Si el evento tiene recurrencia, la agregamos a extendedProps
+            if (event.recurrence) {
+                eventObj.extendedProps.recurrence = {
+                    type: event.recurrence.type,
+                    interval: parseInt(event.recurrence.interval),
+                    endDate: event.recurrence.endDate
+                };
             }
-        }));
+        
+            return eventObj;
+        });
 
-        const allEvents = [...taskEvents, ...calendarEvents];
+        const generateRecurringEvents = (event) => {
+            if (!event.extendedProps.recurrence) return [event];
+        
+            const { type, interval, endDate } = event.extendedProps.recurrence;
+            let generatedEvents = [];
+            let currentDate = new Date(event.start);
+            let finalDate = new Date(endDate);
+        
+            while (currentDate <= finalDate) {
+                let newEvent = { ...event, start: new Date(currentDate).toISOString() };
+                generatedEvents.push(newEvent);
+        
+                // Avanzamos según el tipo de recurrencia
+                if (type === "daily") currentDate.setDate(currentDate.getDate() + interval);
+                if (type === "weekly") currentDate.setDate(currentDate.getDate() + 7 * interval);
+                if (type === "monthly") currentDate.setMonth(currentDate.getMonth() + interval);
+            }
+        
+            return generatedEvents;
+        };
+        
+        // Generamos todos los eventos recurrentes
+        const allRecurringEvents = calendarEvents.flatMap(generateRecurringEvents);
+
+        const allEvents = [...taskEvents, ...allRecurringEvents];
     
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -169,6 +206,48 @@ function dashboard(){
 
         const fragment = document.createDocumentFragment();
         
+        const hourStartInput = addElement("select", {
+            id: "hourStartDate",
+            class: "form-select mb-3",
+            name: "hourStartDate",
+            required: true
+        });
+        const minStartInput = addElement("select", {
+            id: "minStartDate",
+            class: "form-select mb-3",
+            name: "minStartDate",
+            required: true
+        });
+        const hourEndInput = addElement("select", {
+            id: "hourEndDate",
+            class: "form-select mb-3",
+            name: "hourEndDate",
+            required: true
+        });
+        const minEndInput = addElement("select", {
+            id: "minEndDate",
+            class: "form-select mb-3",
+            name: "minEndDate",
+            required: true
+        });
+        for (let h = 0; h < 24; h++) {
+            const hourformat = h.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+            const optionEnd = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
+            
+            hourStartInput.appendChild(optionStart);
+            hourEndInput.appendChild(optionEnd);
+        }
+        for (let m = 0; m < 60; m += 5) {
+            const minuteformat = m.toString().padStart(2, '0');
+            const optionStart = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            const optionEnd = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
+            
+            minStartInput.appendChild(optionStart);
+            minEndInput.appendChild(optionEnd);
+        }
+        const separatorTime = addElement("span", {class:"input-group-text mb-3"}, "～");
+
         const checkcontainer1 = addElement("div");
         const checkcontainer2 = addElement("div");
         const allDayCheck = addElement("input",{
@@ -181,52 +260,37 @@ function dashboard(){
             id: "repeat-checkbox",
             name: "repeat-checkbox"
         });
-        const hourStartInput = addElement("select", {
+        
+        const recurrenceType = addElement("select", {
+            id: "recurrence",
+            class: "form-select",
+            name: "recurrence",
+            required: true,
+            disabled: ""
+        },`
+        <option value="daily">毎日</option>
+        <option value="weekly">毎週</option>
+        <option value="monthly">毎月</option>
+        `);
+        const interval = addElement("select", {
+            id: "interval",
+            name: "interval",
+            class: "form-select",
+            disabled: ""
+        },`
+        <option value="1">無し</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        `);
+        const finalDate = addElement("input",{
             type: "date",
-            id: "hourStartDate",
-            class: "form-select mb-3",
-            name: "hourStartDate",
-            required: true
+            id: "finalDate",
+            name: "finalDate",
+            class: "form-control",
+            disabled: ""
         });
-        const minStartInput = addElement("select", {
-            type: "date",
-            id: "minStartDate",
-            class: "form-select mb-3",
-            name: "minStartDate",
-            required: true
-        });
-        const hourEndInput = addElement("select", {
-            type: "date",
-            id: "hourEndDate",
-            class: "form-select mb-3",
-            name: "hourEndDate",
-            required: true
-        });
-        const minEndInput = addElement("select", {
-            type: "date",
-            id: "minEndDate",
-            class: "form-select mb-3",
-            name: "minEndDate",
-            required: true
-        });
-        for (let h = 0; h < 24; h++) {
-            const hourformat = h.toString().padStart(2, '0');
-            const optionStart = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
-            const optionEnd = addElement("option", { value: `${hourformat.toString()}` }, `${hourformat}時`);
-
-            hourStartInput.appendChild(optionStart);
-            hourEndInput.appendChild(optionEnd);
-        }
-        for (let m = 0; m < 60; m += 5) {
-            const minuteformat = m.toString().padStart(2, '0');
-            const optionStart = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
-            const optionEnd = addElement("option", { value: `${minuteformat.toString()}` }, `${minuteformat}分`);
-            
-            minStartInput.appendChild(optionStart);
-            minEndInput.appendChild(optionEnd);
-        }
-
-        const separatorTime = addElement("span", {class:"input-group-text mb-3"}, "～");
         const eventTitleInput = addElement("input", {
             type: "text",
             id: "eventTitle",
@@ -266,11 +330,15 @@ function dashboard(){
         
         // Col and row containers
         const containerRow1 = addElement("div", { class: "row" });
-        const containerRow2 = addElement("div", { class: "row" });
+        const containerRow2 = addElement("div", { class: "row hiddenContainer" });
         const containerRow3 = addElement("div", { class: "row" });
+        const containerRow4 = addElement("div", { class: "row" });
         const containerCol1 = addElement("div", { class: "col input-group" });
-        const containerCol3 = addElement("div", { class: "col-12 col-md-3 align-content-center mb-3" });
-        const containerCol4 = addElement("div", { class: "col-12 form-floating" });
+        const containerCol2 = addElement("div", { class: "col-12 col-md-3 align-content-center mb-3" });
+        const containerColhidden1 = addElement("div", { class: "col-4 mb-3" });
+        const containerColhidden2 = addElement("div", { class: "col-4 mb-3" });
+        const containerColhidden3 = addElement("div", { class: "col-4 mb-3" });
+        const containerCol3 = addElement("div", { class: "col-12 form-floating" });
         const containerCol5 = addElement("div", { class: "col-12 form-floating" });
         const containerCol6 = addElement("div", { class: "col-12 form-floating" });
         const container9 = addElement("div", { class: "mb-3" });
@@ -288,6 +356,18 @@ function dashboard(){
             for: "hourStartDate",
             class: "form-label fs-6"
         }, "<small>日時</small>");
+        const recurrencelabel = addElement("label",{
+            for: "recurrence",
+            class: "form-label ms-2"
+        }, "繰り返しパターン");
+        const intervallabel = addElement("label",{
+            for: "interval",
+            class: "form-label ms-2"
+        }, "インターバル");
+        const finaldatelabel = addElement("label",{
+            for: "finalDate",
+            class: "form-label ms-2"
+        }, "最終日");
         const eventTitleLabel = addElement("label", {
             for: "eventTitle",
             class: "form-label ms-2"
@@ -304,34 +384,38 @@ function dashboard(){
             for: "participants",
             class: "form-label ms-2"
         }, "参加ユーザー"); 
-
+        
         // Structure
-        containerRow1.append(startLabel,containerCol1, containerCol3, containerCol4);
-        containerRow2.append(containerCol5);
-        containerRow3.append(containerCol6);
+        containerRow1.append(startLabel,containerCol1, containerCol2);
+        containerRow2.append(containerColhidden1, containerColhidden2, containerColhidden3);
+        containerRow3.append(containerCol3, containerCol5);
+        containerRow4.append(containerCol6);
         
         containerCol1.append(hourStartInput, minStartInput, separatorTime, hourEndInput, minEndInput );
-        containerCol3.append(checkcontainer1, checkcontainer2);
-        containerCol4.append(eventTitleInput, eventTitleLabel);
+        containerCol2.append(checkcontainer1, checkcontainer2);
+        containerColhidden1.append(recurrencelabel, recurrenceType);
+        containerColhidden2.append(intervallabel, interval);
+        containerColhidden3.append(finaldatelabel, finalDate);
+        containerCol3.append(eventTitleInput, eventTitleLabel);
         containerCol5.append(eventPlaceInput, placeLabel);
         containerCol6.append(contentInput, contentLabel);
         container9.append(participantsLabel, participantsInput);
         checkcontainer1.append(allDayLabel, allDayCheck);
         checkcontainer2.append(repeatLabel, repeatCheck);
 
-        fragment.append(containerRow1, containerRow2, containerRow3, container9, btnGroup);
+        fragment.append(containerRow1, containerRow2, containerRow3, containerRow4, container9, btnGroup);
         btnGroup.append(submitButton, cancelButton);
         
         // Insert the fragment into the form's container
         eventFormContainer.appendChild(fragment);
-
+        
         // Insert form's card
         modalBody.appendChild(eventFormContainer);
         modalContent.append(modalHeader, modalBody)
         
         modalDialog.appendChild(modalContent);
         const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
-
+        
         // choices select multiple
         var element = document.getElementById('participants');
         var choices = new Choices(element, {
@@ -342,6 +426,33 @@ function dashboard(){
             placeholderValue: 'ユーザー追加',
             // maxItemCount: 5,          // Límite de opciones seleccionables
             allowHTML: true,          // Permite HTML en las opciones
+        });
+        
+        repeatCheck.addEventListener('click', () => {
+            if(repeatCheck.checked === true){
+                containerRow2.classList.add("show");
+                recurrenceType.removeAttribute("disabled", "")
+                interval.removeAttribute("disabled", "")
+                finalDate.removeAttribute("disabled", "")
+            }else{
+                containerRow2.classList.remove("show");
+                recurrenceType.setAttribute("disabled", "")
+                interval.setAttribute("disabled", "")
+                finalDate.setAttribute("disabled", "")
+            }
+        });
+        allDayCheck.addEventListener('click', () => {
+            if(allDayCheck.checked === true){
+                hourStartInput.setAttribute("disabled", "");
+                minStartInput.setAttribute("disabled", "");
+                hourEndInput.setAttribute("disabled", "");
+                minEndInput.setAttribute("disabled", "");
+            }else{
+                hourStartInput.removeAttribute("disabled", "");
+                minStartInput.removeAttribute("disabled", "");
+                hourEndInput.removeAttribute("disabled", "");
+                minEndInput.removeAttribute("disabled", "");
+            }
         });
 
         eventFormContainer.addEventListener('submit', (event) => {
@@ -357,6 +468,15 @@ function dashboard(){
         const minuteStart = document.getElementById('minStartDate').value;
         const hourEnd = document.getElementById('hourEndDate').value;
         const minuteEnd = document.getElementById('minEndDate').value;
+        const repeatcheck = document.getElementById('repeat-checkbox').checked;
+        let repeatType;
+        let repeatInterval;
+        let repeatfinalDate;
+        if(repeatcheck === true){
+            repeatType = document.getElementById('recurrence').value;
+            repeatInterval = document.getElementById('interval').value;
+            repeatfinalDate = document.getElementById('finalDate').value;
+        }
         const eventTitle = document.getElementById('eventTitle').value;
         const eventPlace = document.getElementById('eventPlace').value;
         const eventContent = document.getElementById('content').value;
@@ -367,8 +487,28 @@ function dashboard(){
         }
         
         eventsInfo = eventsInfo.filter(event => event.title !== eventTitle);
-        eventsInfo.push({ assignedUsers: eventUsers, title: eventTitle, start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00", end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00", place: eventPlace, content: eventContent, assignedUsers: eventUsers});
-        const singleEvent = { assignedUsers: eventUsers, title: eventTitle, start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00", end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00", place: eventPlace, content: eventContent, assignedUsers: eventUsers}
+        eventsInfo.push({ 
+            assignedUsers: eventUsers,
+            title: eventTitle,
+            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
+            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            place: eventPlace, 
+            content: eventContent,
+            type: repeatType ? repeatType : "",
+            interval: repeatInterval ? repeatInterval : "",
+            endDate: repeatfinalDate ? repeatfinalDate : ""
+        });
+        const singleEvent = { 
+            assignedUsers: eventUsers,
+            title: eventTitle,
+            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
+            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            place: eventPlace, 
+            content: eventContent,
+            type: repeatType ? repeatType : "",
+            interval: repeatInterval ? repeatInterval : "",
+            endDate: repeatfinalDate ? repeatfinalDate : ""
+        }
         if (eventsInfo) {
             saveEvent(singleEvent, eventsInfo);
             closeForm(modal);                
