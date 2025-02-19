@@ -497,28 +497,135 @@ const modalForm = () => {
         </div>
 
         <!-- description input -->
-        <div class="mb-3 form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;">${userDescription}</textarea>
-            <label for="description">自己紹介</label>
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        名前・自己紹介
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editUserName" placeholder="Name">
+                            <label for="editUserName">名前</label>
+                        </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;">${userDescription}</textarea>
+                            <label for="description">自己紹介</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        パスワード
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control position-relative" id="currentPassword" placeholder="Current password">
+                            <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
+                            </div>
+                            <label for="currentPassword">現在のパスワード</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control position-relative" id="newPassword" placeholder="New password">
+                            <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
+                            </div>
+                            <label for="newPassword">新しいパスワード</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control position-relative" id="confirmNewPassword" placeholder=" Confirm new password">
+                            <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
+                            </div>
+                            <label for="confirmNewPassword">新しいパスワードを再入力</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     `);
-    const modalFooter = addElement("div", { class: "modal-footer"}, `<button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>`);
+    const modalFooter = addElement("div", { class: "modal-footer justify-content-start"},
+        `<div class="btn-group">
+            <button type="submit" id="edit-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
+            <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
+        </div>
+    `);
 
     modalDialog.innerHTML = ""; // Clear existing content
+    console.log(localStorage.getItem('userName'));
 
     modalDialog.appendChild(modalContent);
     modalContent.appendChild(modalHeader);
     modalContent.appendChild(modalBody);
     modalContent.appendChild(modalFooter);
-    document.querySelector("#profileImage").src = localStorage.getItem('userImage') || userImage;
-    document.querySelector('#description').textContent = localStorage.getItem('userDescription') || userDescription;
+    const currentImage = localStorage.getItem('userImage') || userImage;
+    const currentDescription = localStorage.getItem('userDescription') || userDescription;
+    const currentName = localStorage.getItem('userName') || userName;
+    const editSubmitButton = document.querySelector("#edit-submit-button");
+    editSubmitButton.disabled = true; 
+    document.querySelector("#profileImage").src = currentImage;
+    document.querySelector('#description').textContent = currentDescription;
+    document.querySelector('#editUserName').value = currentName;
     // modal close
     document.querySelectorAll(".btnModalClose").forEach(btn => {
         btn.addEventListener('click', () => {
             modalDialog.innerHTML = "";
         });
     });
+    document.querySelectorAll('.pass-word-eye').forEach(passWordEye => {
+        passWordEye.addEventListener('click', function() {
+            if (passWordEye.previousElementSibling.type === 'password') {
+                passWordEye.previousElementSibling.type = 'text';
+                passWordEye.removeChild(passWordEye.querySelector('svg'));
+                passWordEye.insertAdjacentHTML('beforeend', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/></svg>`);
+            } else {
+                passWordEye.previousElementSibling.type = 'password';
+                passWordEye.removeChild(passWordEye.querySelector('svg'));
+                passWordEye.insertAdjacentHTML('beforeend', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>`);
+            }
+        });
+    });
+
+    const validateInputs = () => {
+        const newImage = document.querySelector("#formFile").files[0];
+        const newUserName = document.querySelector("#editUserName").value;
+        const newDescription = document.querySelector("#description").value;
+        const currentPassword = document.querySelector("#currentPassword").value;
+        const newPassword = document.querySelector("#newPassword").value;
+        const confirmNewPassword = document.querySelector("#confirmNewPassword").value;
+        if (newUserName === currentName && newDescription === currentDescription && newImage === currentImage && currentPassword === '' && newPassword === '' && confirmNewPassword === '') {
+            editSubmitButton.disabled = true;
+        } else{
+            editSubmitButton.disabled = false;
+        }
+    };
+    setTimeout(() => {
+        document.querySelector("#editUserName").addEventListener('input', validateInputs);
+        document.querySelector("#description").addEventListener('input', validateInputs);
+        document.querySelector("#formFile").addEventListener('change', validateInputs);
+        document.querySelector("#currentPassword").addEventListener('input', validateInputs);
+        document.querySelector("#newPassword").addEventListener('input', validateInputs);
+        document.querySelector("#confirmNewPassword").addEventListener('input', validateInputs);
+        document.querySelector("#editUserName").addEventListener('focusout', function() {
+            const inputData = document.querySelector("#editUserName");
+            if (inputData.value === '') {
+                inputData.value = currentName;
+            }
+        });
+        document.querySelector("#description").addEventListener('focusout', function() {
+            const inputData = document.querySelector("#description");
+            if (inputData.value === '') {
+                inputData.value = currentDescription;
+            }
+        });
+    }, 0);
     modalLoaded();
 };
 
@@ -537,9 +644,9 @@ const modalLoaded = () =>{
     });
     modalContent.addEventListener('submit', (event) => {
         event.preventDefault();
+        let newDate = {};
         modalSubmit(imageInput, modalDialog, profileImage);
     });
-
 };
 
 //modal submit
@@ -555,7 +662,8 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
         if(description){
             localStorage.setItem('userDescription', description);
             document.querySelector('#userDescription').textContent = localStorage.getItem('userDescription') || userDescription;
-            
+
+            // saveUserInfo(localStorage.getItem('userID', newData);
             // save user description DB
             const dbRequest = indexedDB.open('userDatabase', 1);
             dbRequest.onsuccess = function(event){
@@ -563,7 +671,7 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
                 const transaction = db.transaction(["users"], "readwrite");
                 const objectStore = transaction.objectStore("users");
                 const getUserRequest = objectStore.get(userEmail);
-                
+
                 getUserRequest.onsuccess = function() {
                     const user = getUserRequest.result;
                     if(user){
@@ -625,13 +733,22 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
             reader.readAsDataURL(instantFile);
             document.querySelector('#userImage').src = URL.createObjectURL(instantFile);
         }
-        
-        
         modalDialog.innerHTML = "";
     } else {
         console.error('something went wrong'); // Mostramos una alerta si los datos son incorrectos
     }
 };
+
+function saveUserInfo(userID, newData) {
+    fetch(`/users/${userID}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(newData)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Usuario actualizado: ', data))
+    .catch(error => console.error('Error: ', error));
+}
 
 //------------------------------------------------------------------------------------------------------------------------
 
