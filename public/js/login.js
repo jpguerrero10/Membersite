@@ -42,6 +42,7 @@ function login(){
                 localStorage.setItem('userName', user.name);
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userDescription', user.description);
+                localStorage.setItem('userPassword', user.password);
                 const imagePath = user.image;
                 if(imagePath instanceof Blob){
                     const blob = URL.createObjectURL(imagePath);

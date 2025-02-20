@@ -517,7 +517,7 @@ const modalForm = () => {
                             <label for="description">自己紹介</label>
                         </div>
                         <div class="btn-group">
-                            <button type="submit" id="edit-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
+                            <button type="submit" id="image-name-description-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
                             <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
                         </div>
                     </form>
@@ -572,8 +572,8 @@ const modalForm = () => {
     const currentImage = localStorage.getItem('userImage') || userImage;
     const currentDescription = localStorage.getItem('userDescription') || userDescription;
     const currentName = localStorage.getItem('userName') || userName;
-    const editSubmitButton = document.querySelector("#edit-submit-button");
-    editSubmitButton.disabled = true; 
+    const imageNameDescriptionSubmitButton = document.querySelector("#image-name-description-submit-button");
+    imageNameDescriptionSubmitButton.disabled = true; 
     document.querySelector("#profileImage").src = currentImage;
     document.querySelector('#description').textContent = currentDescription;
     document.querySelector('#editUserName').value = currentName;
@@ -602,11 +602,21 @@ const modalForm = () => {
         const newUserName = document.querySelector("#editUserName").value;
         const newDescription = document.querySelector("#description").value;
         if (newUserName === currentName && newDescription === currentDescription && newImage === undefined) {
-            editSubmitButton.disabled = true;
+            imageNameDescriptionSubmitButton.disabled = true;
         } else {
-            editSubmitButton.disabled = false;
+            imageNameDescriptionSubmitButton.disabled = false;
         }
     };
+    const validateInputsPassword = () => {
+        const currentPassword = document.querySelector("#currentPassword");
+        const newPassword = document.querySelector("#newPassword");
+        const confirmNewPassword = document.querySelector("#confirmNewPassword");
+        if (currentPassword === 'ss'  && newDescription === currentDescription && newImage === undefined) {
+            imageNameDescriptionSubmitButton.disabled = true;
+        } else {
+            imageNameDescriptionSubmitButton.disabled = false;
+        }
+    }
     setTimeout(() => {
         document.querySelector("#editUserName").addEventListener('input', validateInputs);
         document.querySelector("#description").addEventListener('input', validateInputs);
@@ -822,6 +832,20 @@ function moveNav() {
             header.firstElementChild.appendChild(nav);
         }
     }
+}
+
+function localStorageRemoveItem(userID) {
+    // clean stored data
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('userID');
+    localStorage.removeItem('userDescription');
+    localStorage.removeItem(`userTask_${userID}`);
+    localStorage.removeItem(`achievements_${userID}`);
+    localStorage.removeItem(`userReports_${userID}`);
+    localStorage.removeItem('userType');
+    localStorage.removeItem('userPassword');
 }
 
 
