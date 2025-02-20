@@ -2,8 +2,23 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs/promises');
 const path = require('path');
+const os = require('os'); //
+
 const app = express();
 const port = 3000;
+
+// Función para obtener la IP local automáticamente
+const getLocalIP = () => {
+    const interfaces = os.networkInterfaces();
+    for (const iface of Object.values(interfaces)) {
+        for (const config of iface) {
+            if (config.family === 'IPv4' && !config.internal) {
+                return config.address; // Retorna la IP de la red local
+            }
+        }
+    }
+    return 'localhost'; // En caso de fallo, usa localhost
+};
 
 // Ruta al archivo JSON
 const filePath = path.join(__dirname, 'data.json');
@@ -296,7 +311,12 @@ app.get('/projects', async (req, res) => {
     }
 });
 
+//---------------------------------------------------------- server starts ------------------------------------------------------------------
+
+// Obtener IP al iniciar
+const localIP = getLocalIP();
+
 // server init/Iniciar servidor
 app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on http://192.168.11.42:${port}`);
+    console.log(`Server running on http://${localIP}:${port}`);
 });

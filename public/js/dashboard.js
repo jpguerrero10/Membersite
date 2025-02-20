@@ -187,7 +187,7 @@ function dashboard(){
             },
             events: allEvents,           
             dateClick: function(info) {
-                generateEventForm(info.dateStr, users, events);//go to app.js
+                generateEventForm(info.dateStr, users, events);
             },                  
             eventClick: function(info) {
                 if (info.event.extendedProps.type === 'task') {
