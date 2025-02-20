@@ -131,7 +131,6 @@ function tabCreation(view){
                 <span class="nav-item-icon rounded-circle">${view.icon}</span><span class="nav-item-text">${view.displayName}</span>
             </a>
         `);
-        console.log(tabsContainer);
         tabsContainer.appendChild(li);
     });
     tabController(tabsContainer);
