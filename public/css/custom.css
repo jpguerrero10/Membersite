@@ -12,6 +12,7 @@
 
 .container {
     padding: 70px 0 50px;
+    max-width: 90%;
 }
 .header-title {
     font-size: 20px;
@@ -66,6 +67,13 @@
 .user-image-name-id {
     width: fit-content;
 }
+.input-error-text {
+    color: #ff2121;
+    display: none;
+}
+.input-error-text-display {
+    display: block;
+}
 .dropdown-item svg {
     margin-right: 10px;
 }
@@ -105,8 +113,8 @@ label.custom-file-upload {
     background: #0d6efd;
     fill: #fff;
     border-radius: 50%;
-    top: 95px;
-    left: 46%;
+    top: 163px;
+    left: 47%;
     padding: .5% 2%;
     aspect-ratio: 1/1;
     cursor: pointer;

@@ -131,7 +131,6 @@ function tabCreation(view){
                 <span class="nav-item-icon rounded-circle">${view.icon}</span><span class="nav-item-text">${view.displayName}</span>
             </a>
         `);
-        console.log(tabsContainer);
         tabsContainer.appendChild(li);
     });
     tabController(tabsContainer);
@@ -489,36 +488,39 @@ const trophyModal = (achievements) => {
 
 //personalization modal start -----------------------------------------------------------------------------------------
 const modalForm = () => {
-    const modalContent = addElement("form",{class: "modal-content"});
+    const modalContent = addElement("div",{class: "modal-content"});
     const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">プロファイル設定</h3>
     <button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
     const modalBody = addElement("div", { class: "modal-body"},`
-        <img style="aspect-ratio: 1/1; object-fit: cover;" id="profileImage" class="rounded-circle border border-white border-4 d-block mx-auto" width="100" src="" />
-        <!-- profile image input -->
-        <div class="my-4">
-            <input class="form-control" type="file" id="formFile" aria-describedby="imageFileText">
-            <label for="formFile" class="custom-file-upload position-absolute"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="15" height="15"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg></label>
-        </div>
-
         <!-- description input -->
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                        名前・自己紹介
+                    画像・名前・自己紹介
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
+                    <form class="accordion-body">
+                        <img style="aspect-ratio: 1/1; object-fit: cover;" id="profileImage" class="rounded-circle border border-white border-4 d-block mx-auto" width="100" src="" />
+                        <!-- profile image input -->
+                        <div class="my-4">
+                            <input class="form-control" type="file" id="formFile" aria-describedby="imageFileText">
+                            <label for="formFile" class="custom-file-upload position-absolute"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="15" height="15"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg></label>
+                        </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="editUserName" placeholder="Name">
                             <label for="editUserName">名前</label>
                         </div>
-                        <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;">${userDescription}</textarea>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;"></textarea>
                             <label for="description">自己紹介</label>
                         </div>
-                    </div>
+                        <div class="btn-group">
+                            <button type="submit" id="edit-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
+                            <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="accordion-item">
@@ -529,12 +531,15 @@ const modalForm = () => {
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control position-relative" id="currentPassword" placeholder="Current password">
-                            <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control position-relative" id="currentPassword" placeholder="Current password">
+                                <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
+                                </div>
+                                <label for="currentPassword">現在のパスワード</label>
                             </div>
-                            <label for="currentPassword">現在のパスワード</label>
+                            <div class="input-error-text">test</div>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control position-relative" id="newPassword" placeholder="New password">
@@ -556,15 +561,10 @@ const modalForm = () => {
         </div>
     `);
     const modalFooter = addElement("div", { class: "modal-footer justify-content-start"},
-        `<div class="btn-group">
-            <button type="submit" id="edit-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
-            <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
-        </div>
+        `
     `);
 
     modalDialog.innerHTML = ""; // Clear existing content
-    console.log(localStorage.getItem('userName'));
-
     modalDialog.appendChild(modalContent);
     modalContent.appendChild(modalHeader);
     modalContent.appendChild(modalBody);
@@ -601,10 +601,7 @@ const modalForm = () => {
         const newImage = document.querySelector("#formFile").files[0];
         const newUserName = document.querySelector("#editUserName").value;
         const newDescription = document.querySelector("#description").value;
-        const currentPassword = document.querySelector("#currentPassword").value;
-        const newPassword = document.querySelector("#newPassword").value;
-        const confirmNewPassword = document.querySelector("#confirmNewPassword").value;
-        if (newUserName === currentName && newDescription === currentDescription && newImage === currentImage && currentPassword === '' && newPassword === '' && confirmNewPassword === '') {
+        if (newUserName === currentName && newDescription === currentDescription && newImage === undefined) {
             editSubmitButton.disabled = true;
         } else {
             editSubmitButton.disabled = false;
@@ -644,12 +641,19 @@ const modalLoaded = () =>{
         if (instantFile){
             const imageURL = URL.createObjectURL(instantFile);
             profileImage.src = imageURL;
+        } else {
+            profileImage.src = localStorage.getItem('userImage');
         }
     });
     modalContent.addEventListener('submit', (event) => {
-        event.preventDefault();
-        let newDate = {};
-        modalSubmit(imageInput, modalDialog, profileImage);
+        const flag = checkPaswordEdit(document.querySelector("#currentPassword").value, document.querySelector("#newPassword").value, document.querySelector("#confirmNewPassword").value);
+        if (flag) {
+            event.preventDefault();
+            let newDate = {};
+            modalSubmit(imageInput, modalDialog, profileImage);
+        } else {
+            return;
+        }
     });
 };
 
@@ -752,6 +756,20 @@ function saveUserInfo(userID, newData) {
     .then(response => response.json())
     .then(data => console.log('Usuario actualizado: ', data))
     .catch(error => console.error('Error: ', error));
+}
+
+function checkPaswordEdit(currentPassword, newPassword, confirmNewPassword) {
+    if (currentPassword !== '' || newPassword !== '' || confirmNewPassword !== '') {
+        const inputErrorText = document.querySelectorAll('.input-error-text');
+        const formFloating = document.querySelectorAll('.form-floating');
+        //現在のパスワードが間違っていた場合
+        if(currentPassword !== localStorage.getItem('userID')) {
+            inputErrorText[0].textContent = 'パスワードが一致しません';
+            inputErrorText[0].classList.add("input-error-text-display");
+            formFloating[0].style.borderColor = '#ff2121 !important';
+            return false;
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------

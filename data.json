@@ -125,7 +125,7 @@
                 }
             ],
             "achievements": {
-                "tasksAdded": 18,
+                "tasksAdded": 19,
                 "tasksCompleted": 9,
                 "tasksShared": 2,
                 "milestones": {
@@ -651,6 +651,34 @@
             "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
             "project": [
                 "Asterisk"
+            ]
+        },
+        {
+            "title": "設定の機能を修正",
+            "description": "設定の機能を修正する",
+            "deadline": "2025-02-20",
+            "isChecked": false,
+            "assignedUsers": [
+                "genchan"
+            ],
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "パスワードを変更できるようにする"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "設定のフォームのデザインを見直す"
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "ダークモードを実装する"
+                }
+            ],
+            "id": "5f993c68-b6eb-4cf6-a3ca-44b0146fa798",
+            "project": [
+                "Asterisk",
+                "Ultimate Nervous"
             ]
         }
     ],
