@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const fs = require('fs/promises');
 const path = require('path');
 const app = express();
@@ -8,6 +9,7 @@ const port = 3000;
 const filePath = path.join(__dirname, 'data.json');
 
 // Middleware para analizar cuerpos JSON
+app.use(cors());
 app.use(express.json());
 
 // Leer los datos del archivo JSON de manera asíncrona
@@ -246,7 +248,6 @@ app.post('/events', async (req, res) => {
             title, 
             start, 
             end,
-            recurrence, 
             place, 
             content,
             type,
@@ -260,20 +261,17 @@ app.post('/events', async (req, res) => {
 
         const data = await readData(); // Leer eventos actuales
 
+        const recurrenceData = (type || interval || endDate) ? { type, interval, endDate } : null;
+
         // Crear el nuevo evento con todos los posibles datos
         const newEvent = {
             title,
             start,
             end,
-            ...(recurrence && { recurrence }),
             assignedUsers: assignedUsers || [],
             ...(place && { place }),
             ...(content && { content }),
-            recurrence: {
-                type,
-                interval,
-                endDate
-            }
+            ...(recurrenceData && { recurrence: recurrenceData })
         };
 
         data.events.push(newEvent); // Agregar el evento
@@ -299,6 +297,6 @@ app.get('/projects', async (req, res) => {
 });
 
 // server init/Iniciar servidor
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on http://192.168.11.42:${port}`);
 });

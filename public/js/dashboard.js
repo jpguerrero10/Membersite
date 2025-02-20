@@ -2,17 +2,17 @@ function dashboard(){
     const loadUsersFromDB = (callback) => {
         const userID = localStorage.getItem('userID');
         Promise.all([
-            fetch('http://localhost:3000/users') // Cambia esta URL según tu configuración
+            fetch('http://192.168.11.42:3000/users') // Cambia esta URL según tu configuración
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
                 }),
-            fetch(`http://localhost:3000/tasks/${userID}`)
+            fetch(`http://192.168.11.42:3000/tasks/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
                 }),
-            fetch(`http://localhost:3000/events/${userID}`)
+            fetch(`http://192.168.11.42:3000/events/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
@@ -137,14 +137,26 @@ function dashboard(){
         
             const { type, interval, endDate } = event.extendedProps.recurrence;
             let generatedEvents = [];
-            let currentDate = new Date(event.start);
+            
+            let originalStart = new Date(event.start);
+            let originalEnd = event.end ? new Date(event.end) : null;
+            let currentDate = new Date(originalStart); 
             let finalDate = new Date(endDate);
+            finalDate.setHours(23, 59, 59, 999); // Asegurar comparación correcta
         
             while (currentDate <= finalDate) {
-                let newEvent = { ...event, start: new Date(currentDate).toISOString() };
+                let newStart = formatDateTime(event.start, currentDate);
+                let newEnd = originalEnd ? formatDateTime(event.end, currentDate) : null;
+        
+                let newEvent = {
+                    ...event,
+                    start: newStart,
+                    end: newEnd
+                };
+        
                 generatedEvents.push(newEvent);
         
-                // Avanzamos según el tipo de recurrencia
+                // Avanzamos según la recurrencia
                 if (type === "daily") currentDate.setDate(currentDate.getDate() + interval);
                 if (type === "weekly") currentDate.setDate(currentDate.getDate() + 7 * interval);
                 if (type === "monthly") currentDate.setMonth(currentDate.getMonth() + interval);
@@ -152,6 +164,18 @@ function dashboard(){
         
             return generatedEvents;
         };
+        
+        // 🛠 Formatea la fecha manteniendo la hora original si existe
+        const formatDateTime = (original, newDate) => {
+            let [datePart, timePart] = original.split("T");
+            
+            if (!timePart) {
+                return newDate.toISOString().split("T")[0]; // Evento de todo el día
+            } else {
+                let formattedDate = newDate.toISOString().split("T")[0]; 
+                return `${formattedDate}T${timePart}`; // Mantiene la hora original
+            }
+        };      
         
         // Generamos todos los eventos recurrentes
         const allRecurringEvents = calendarEvents.flatMap(generateRecurringEvents);
@@ -462,10 +486,10 @@ function dashboard(){
 
     // submit button -----------------------------------------------------------------------
     const handleFormSubmit = (eventsInfo, dateInfo, modal, choices) => {
-        const hourStart = document.getElementById('hourStartDate').value;
-        const minuteStart = document.getElementById('minStartDate').value;
-        const hourEnd = document.getElementById('hourEndDate').value;
-        const minuteEnd = document.getElementById('minEndDate').value;
+        const hourStart = document.getElementById('hourStartDate');
+        const minuteStart = document.getElementById('minStartDate');
+        const hourEnd = document.getElementById('hourEndDate');
+        const minuteEnd = document.getElementById('minEndDate');
         const repeatcheck = document.getElementById('repeat-checkbox').checked;
         let repeatType;
         let repeatInterval;
@@ -485,11 +509,12 @@ function dashboard(){
         }
         
         eventsInfo = eventsInfo.filter(event => event.title !== eventTitle);
+        console.log(hourStart.disabled);
         eventsInfo.push({ 
             assignedUsers: eventUsers,
             title: eventTitle,
-            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
-            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            start: hourStart.disabled !== true ? (dateInfo + "T" + hourStart.value + ":" + minuteStart.value + ":00") : (dateInfo),
+            end: hourEnd.disabled !== true ? (dateInfo + "T" + hourEnd.value + ":" + minuteEnd.value + ":00") : (dateInfo),
             place: eventPlace, 
             content: eventContent,
             type: repeatType ? repeatType : "",
@@ -499,8 +524,8 @@ function dashboard(){
         const singleEvent = { 
             assignedUsers: eventUsers,
             title: eventTitle,
-            start: dateInfo + "T" + hourStart + ":" + minuteStart + ":00",
-            end: dateInfo + "T" + hourEnd + ":" + minuteEnd + ":00",
+            start: hourStart.disabled !== true ? (dateInfo + "T" + hourStart.value + ":" + minuteStart.value + ":00") : (dateInfo),
+            end: hourEnd.disabled !== true ? (dateInfo + "T" + hourEnd.value + ":" + minuteEnd.value + ":00") : (dateInfo),
             place: eventPlace, 
             content: eventContent,
             type: repeatType ? repeatType : "",
@@ -520,7 +545,7 @@ function dashboard(){
     function saveEvent(singleEvent, eventsInfo){
         localStorage.setItem(`userEvents_${userID}`, JSON.stringify(eventsInfo));
         
-        fetch('http://localhost:3000/events', {
+        fetch('http://192.168.11.42:3000/events', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
