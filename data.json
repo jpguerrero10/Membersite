@@ -578,12 +578,16 @@
                     "listName": "Crear funcion para agregar nuevos eventos haciendo click en el calendario"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "Crear la funcion de repeticion de eventos"
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "Crear la funcion de \"todo el dia\""
+                },
+                {
+                    "listCompleted": false,
+                    "listName": "crear visualizacion modal solo lectura del evento"
                 }
             ],
             "id": "f523f13d-0aac-4795-88b2-16093826d75b",
@@ -766,20 +770,30 @@
             "place": "埼玉県"
         },
         {
-            "title": "test all day 4",
-            "start": "2025-02-19T00:00:00",
-            "end": "2025-02-19T00:00:00",
+            "title": "test all day/recurrence 1",
+            "start": "2025-02-18",
+            "end": "2025-02-18",
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "recurrence": {
+                "type": "daily",
+                "interval": "3",
+                "endDate": "2025-03-20"
+            }
         },
         {
-            "title": "test all day 6",
-            "start": "2025-02-19T00:00:00",
-            "end": "2025-02-19T00:00:00",
+            "title": "test not all day/recurrence 2",
+            "start": "2025-02-22T15:30:00",
+            "end": "2025-02-22T18:30:00",
             "assignedUsers": [
                 "neeman"
-            ]
+            ],
+            "recurrence": {
+                "type": "daily",
+                "interval": "3",
+                "endDate": "2025-03-20"
+            }
         }
     ],
     "projects": [
