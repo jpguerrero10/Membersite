@@ -9,7 +9,7 @@ function profile() {
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
     if (userID) {
-        fetch(`http://192.168.11.42:3000/tasks/${userID}`)
+        fetch(`http://${serverIP}:3000/tasks/${userID}`)
             .then(response => response.json())
             .then(tasks => {
                 localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
@@ -18,7 +18,7 @@ function profile() {
     }
     userTask = JSON.parse(localStorage.getItem(`userTask_${userID}`));
     //プロジェクトの読み込み
-    fetch('http://192.168.11.42:3000/projects')
+    fetch(`http://${serverIP}:3000/projects`)
         .then(response => response.json())
         .then(projects => {
             localStorage.setItem(('projects'), JSON.stringify(projects));
@@ -648,7 +648,7 @@ function profile() {
             localStorage.setItem(`achievements_${userID}`, JSON.stringify(achievements));
             
             if(action == "add"){
-                fetch('http://192.168.11.42:3000/tasks', {
+                fetch(`http://${serverIP}:3000/tasks`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -662,7 +662,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al agregar la tarea:', err));
             } else if( action == "edition"){
-                fetch(`http://192.168.11.42:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -676,7 +676,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
             } else if( action == "delete"){
-                fetch(`http://192.168.11.42:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
@@ -693,7 +693,7 @@ function profile() {
         };
         //user achievements DB update
         function updateAchievements(userID, achievements){
-            fetch(`http://192.168.11.42:3000/users/${userID}`, {
+            fetch(`http://${serverIP}:3000/users/${userID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -879,7 +879,7 @@ function profile() {
             }
             assignedUsers.forEach(assignedUser => {
                 assignedUser = '@' + assignedUser;
-                fetch(`http://192.168.11.42:3000/users/${assignedUser}`)
+                fetch(`http://${serverIP}:3000/users/${assignedUser}`)
                     .then(response => response.json())
                     .then(users => {
                         const assignedUserIcon = addElement("img", {class: "assigned-user-icon position-relative rounded-circle bg-secondary object-fit-cover shadow-sm", src: `${users.image}`});

@@ -2,17 +2,17 @@ function dashboard(){
     const loadUsersFromDB = (callback) => {
         const userID = localStorage.getItem('userID');
         Promise.all([
-            fetch('http://192.168.11.42:3000/users') // Cambia esta URL según tu configuración
+            fetch(`http://${serverIP}:3000/users`) // Cambia esta URL según tu configuración
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
                 }),
-            fetch(`http://192.168.11.42:3000/tasks/${userID}`)
+            fetch(`http://${serverIP}:3000/tasks/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
                 }),
-            fetch(`http://192.168.11.42:3000/events/${userID}`)
+            fetch(`http://${serverIP}:3000/events/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
@@ -206,6 +206,7 @@ function dashboard(){
                     alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
                 } else {
                     alert(`Evento: ${info.event.title}\nContenido: ${info.event.extendedProps.content}`);
+                    generateModalView();
                 }
             }
         });
@@ -545,7 +546,7 @@ function dashboard(){
     function saveEvent(singleEvent, eventsInfo){
         localStorage.setItem(`userEvents_${userID}`, JSON.stringify(eventsInfo));
         
-        fetch('http://192.168.11.42:3000/events', {
+        fetch(`http://${serverIP}:3000/events`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

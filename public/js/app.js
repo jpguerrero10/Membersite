@@ -9,17 +9,42 @@ const showLoader = () => {
         </div>
         `);
         document.body.appendChild(loader);
-};
-const encodedAdminType = btoa("administrator");
+    };
+    const encodedAdminType = btoa("administrator");
     
-const hideLoader = () => {
-    const loader = document.getElementById("loadingScreen");
-    if (loader) {
-        loader.remove();
-    }
-};
-
+    const hideLoader = () => {
+        const loader = document.getElementById("loadingScreen");
+        if (loader) {
+            loader.remove();
+        }
+    };
+    
 //------------------------------------------------------------------------------------------------------------------------
+// Primero obtenemos la IP del servidor y la almacenamos en localStorage
+fetch('http://192.168.11.42:3000/get-server-ip')
+    .then(response => response.json())
+    .then(data => {
+        // Guardamos la IP en localStorage
+        localStorage.setItem('serverIP', data.ip);
+    })
+    .catch(error => console.error('Error al obtener la IP del servidor:', error));
+
+// Luego recuperamos la IP desde localStorage cuando la necesitemos
+const serverIP = localStorage.getItem('serverIP');
+
+if (serverIP) {
+    console.log('La IP del servidor es:', serverIP);
+    // Ahora puedes usar `serverIP` en otras peticiones, como ejemplo:
+    // fetch(`http://${serverIP}:3000/projects`)
+    //     .then(response => response.json())
+    //     .then(projects => {
+    //         console.log('Proyectos obtenidos:', projects);
+    //         // Puedes hacer algo con los proyectos aquí
+    //     })
+    //     .catch(error => console.error('Error al obtener los proyectos:', error));
+} else {
+    console.log('La IP del servidor no está disponible en localStorage.');
+}
 
 // View controller Function
         const loadView = async (view) => {
