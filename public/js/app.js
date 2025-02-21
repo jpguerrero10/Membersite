@@ -20,94 +20,87 @@ const showLoader = () => {
     };
     
 //------------------------------------------------------------------------------------------------------------------------
-// Primero obtenemos la IP del servidor y la almacenamos en localStorage
+
+// get IP from server and put it at localStorage
 fetch('http://192.168.11.42:3000/get-server-ip')
     .then(response => response.json())
     .then(data => {
-        // Guardamos la IP en localStorage
         localStorage.setItem('serverIP', data.ip);
     })
     .catch(error => console.error('Error al obtener la IP del servidor:', error));
 
-// Luego recuperamos la IP desde localStorage cuando la necesitemos
 const serverIP = localStorage.getItem('serverIP');
 
-if (serverIP) {
-    console.log('La IP del servidor es:', serverIP);
-    // Ahora puedes usar `serverIP` en otras peticiones, como ejemplo:
-    // fetch(`http://${serverIP}:3000/projects`)
-    //     .then(response => response.json())
-    //     .then(projects => {
-    //         console.log('Proyectos obtenidos:', projects);
-    //         // Puedes hacer algo con los proyectos aquí
-    //     })
-    //     .catch(error => console.error('Error al obtener los proyectos:', error));
-} else {
-    console.log('La IP del servidor no está disponible en localStorage.');
+if (!serverIP) {
+    resetPage();
+}
+function resetPage(){
+    location.reload();
+    return;
 }
 
 // View controller Function
-        const loadView = async (view) => {
-            showLoader();
-            localStorage.setItem('currentView', view);
-            try {
-                const response = await fetch(`views/${view}.html`); // Archivo HTML
-                if (!response.ok) throw new Error('Page not found');
-                const html = await response.text();
-                document.getElementById('app').innerHTML = html; // Cargar contenido en el div con id 'app'
-                loadScript(`js/${view}.js`, () => {
-                    setTimeout(() => {
-                        if(view !== 'login' && view !== 'register'){
-                            tabCreation(view);
-                            responsiveSize();
-                            moveNav();
-                        }
-                    }, 0);
-                });
-            } catch (error) {
-                document.getElementById('app').innerHTML = `
-                <div class="row align-items-center justify-content-center vh-100">
-                    <div class="text-center">
-                        <h1>404</h1>
-                        <p>Page not found.</p>
-                        <button onclick="loadView('login')">Go to login</button>
-                    </div>
-                </div>
-                `;
-            } finally {
-                setTimeout(() => {
-                    hideLoader(); // Ocultar el loader una vez que la vista se ha cargado
-                }, 100);
-            }
-        };
-        function loadScript(scriptPath, callback){
-            // Eliminamos scripts previos
-            const oldScript = document.querySelector("#dynamicJS");
-            if(oldScript){
-                oldScript.remove();
-            }
-
-            // Creamos el nuevo script
-            const newScript = document.createElement("script");
-            newScript.id = "dynamicJS";
-            // newScript.type = "module";
-
-            newScript.src = scriptPath;
-
-            newScript.onload = () => {
-                // callback promise for responsive
-                if (callback) {
-                    callback();
+const loadView = async (view) => {
+    showLoader();
+    localStorage.setItem('currentView', view);
+    try {
+        const response = await fetch(`views/${view}.html`); // Archivo HTML
+        if (!response.ok) throw new Error('Page not found');
+        const html = await response.text();
+        document.getElementById('app').innerHTML = html; // Cargar contenido en el div con id 'app'
+        loadScript(`js/${view}.js`, () => {
+            setTimeout(() => {
+                if(view !== 'login' && view !== 'register'){
+                    tabCreation(view);
+                    responsiveSize();
+                    moveNav();
                 }
-            };
-            
-            document.body.appendChild(newScript);
-        };
-        // Cargar vista 
-        window.addEventListener('load', () => {
-            const currentView = localStorage.getItem('currentView') || 'login';
-            loadView(currentView);
+            }, 0);
         });
+    } catch (error) {
+        document.getElementById('app').innerHTML = `
+        <div class="row align-items-center justify-content-center vh-100">
+            <div class="text-center">
+                <h1>404</h1>
+                <p>Page not found.</p>
+                <button onclick="loadView('login')">Go to login</button>
+            </div>
+        </div>
+        `;
+    } finally {
+        setTimeout(() => {
+            hideLoader(); // Ocultar el loader una vez que la vista se ha cargado
+        }, 100);
+    }
+};
+function loadScript(scriptPath, callback){
+    // Eliminamos scripts previos
+    const oldScript = document.querySelector("#dynamicJS");
+    if(oldScript){
+        oldScript.remove();
+    }
+
+    // Creamos el nuevo script
+    const newScript = document.createElement("script");
+    newScript.id = "dynamicJS";
+    // newScript.type = "module";
+
+    newScript.src = scriptPath;
+
+    newScript.onload = () => {
+        // callback promise for responsive
+        if (callback) {
+            callback();
+        }
+    };
+    
+    document.body.appendChild(newScript);
+};
+// Cargar vista 
+window.addEventListener('load', () => {
+    const currentView = localStorage.getItem('currentView') || 'login';
+    loadView(currentView);
+});
 
 // -----------------------------------------------------------------------------------------------------------------------
 

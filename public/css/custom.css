@@ -20,6 +20,7 @@
     padding: 10px 10px 15px;
     z-index: 999;
     backdrop-filter: blur(3px);
+    box-shadow: 1px 1px 15px #00000015;
 }
 .custom-nav-tabs{
     padding: 10px 0 5px;

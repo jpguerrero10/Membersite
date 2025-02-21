@@ -859,6 +859,7 @@ function profile() {
                     labelBox.removeChild(labelBox.firstChild)
                 }
             }
+            console.log(project);
             project.forEach(taskProject => {
                 const taskProjectData = projects.find(projectData => projectData.title === taskProject);
                 const labelElm = addElement("div", {class: "labelPill px-3 m-0 rounded-pill col-auto", style: `background: ${taskProjectData.color};`}, taskProject);
