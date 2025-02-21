@@ -903,10 +903,6 @@ function profile() {
         let index = 0;
         if (userTask.length > 0) {
             let filteredTasks = userTask;
-            // userTask.forEach(task => {
-            //     task.id = `task${index}-${task.deadline}`;
-            //     index++;
-            // });
 
             //filter by keyword
             if(keyword){
