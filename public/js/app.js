@@ -31,13 +31,13 @@ fetch('http://192.168.11.42:3000/get-server-ip')
 
 const serverIP = localStorage.getItem('serverIP');
 
-if (!serverIP) {
-    resetPage();
-}
-function resetPage(){
-    location.reload();
-    return;
-}
+// if (!serverIP) {
+//     resetPage();
+// }
+// function resetPage(){
+//     location.reload();
+//     return;
+// }
 
 // View controller Function
 const loadView = async (view) => {
@@ -206,44 +206,6 @@ function fadeOut(element, duration = 500) {
     requestAnimationFrame(animate);
 }
 
-//------------------------------------------------------------------------------------------------------------------------
-
-// const headerCol = addElement("div", { class: "col-12 align-content-center", id: "contenedor" });
-// const reportType = addElement("p", { class: "type text-dark-emphasis", draggable:"true", id: "dragMe" }, `<strong>${singleReport.type}</strong>`);
-
-// drag and drop function (still in development...)
-// setTimeout(() => {
-//     const dragItem = document.getElementById('dragMe');
-//     const container = document.getElementById('contenedor');
-//         // Evento que se activa cuando se empieza a arrastrar
-//     dragItem.addEventListener('dragstart', function (event) {
-//         // Se guarda el elemento que estamos arrastrando
-//         event.dataTransfer.setData('text', dragItem.id);
-//         dragItem.style.opacity = '0.5'; // Cambiamos la apariencia mientras se arrastra
-//     });
-
-//     // Evento que se activa cuando se suelta el elemento
-//     container.addEventListener('dragover', function (event) {
-//         event.preventDefault(); // Necesario para permitir el drop
-//     });
-
-//     // Evento que se activa cuando se suelta el elemento sobre el contenedor
-//     container.addEventListener('drop', function (event) {
-//         event.preventDefault(); // Prevenimos el comportamiento por defecto
-//         const id = event.dataTransfer.getData('text'); // Recuperamos el id del elemento arrastrado
-//         const draggedElement = document.getElementById(id);
-//         const dropX = event.clientX;
-//         const dropY = event.clientY;
-
-//         // Movemos el elemento arrastrado a la nueva posición
-//         draggedElement.style.position = 'absolute';
-//         draggedElement.style.left = dropX - draggedElement.offsetWidth / 2 + 'px';
-//         draggedElement.style.top = dropY - draggedElement.offsetHeight / 2 + 'px';
-
-//         draggedElement.style.opacity = '1'; // Restauramos la opacidad
-//     });
-//     }, 100);
-
 // -----------------------------------------------------------------------------------------------------------------------
 
 //notifications
@@ -303,7 +265,7 @@ const generateReportView = (reports, reportData, reportUserID, loggedUserName, l
 
     // Header Section
     const headerRow = addElement("div", { class: "row mb-2 pb-2" });
-    const headerCol = addElement("div", { class: "col-12 align-content-center" });
+    const headerCol = addElement("div", { class: "col-12 align-content-center typeAndDate" });
     const reportType = addElement("p", { class: "type text-dark-emphasis" }, `<strong>${reportData.type}</strong>`);
     headerCol.appendChild(reportType);
     headerCol.appendChild(addElement("p", { class: "deadline text-dark-emphasis" }, `<strong>${reportData.dateStart}　～　${reportData.dateEnd}</strong>`));
