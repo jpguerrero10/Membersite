@@ -294,7 +294,7 @@ function profile() {
         // new task creation ------------------------------------------------------------------------
         let index = 0;
         const addTask = (title, description, deadline, isChecked, checkList, taskId, project, assignedUsers) => {
-            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative p-3`, id: `task-${taskId}` });
+            const newTaskItem = addElement( "li",{ class: `list-group-item position-relative p-3`, id: `${taskId}` });
             index++;
             let checklistLength = 0;
             let checklistCompletedCount = 0;
@@ -859,7 +859,6 @@ function profile() {
                     labelBox.removeChild(labelBox.firstChild)
                 }
             }
-            console.log(project);
             project.forEach(taskProject => {
                 const taskProjectData = projects.find(projectData => projectData.title === taskProject);
                 const labelElm = addElement("div", {class: "labelPill px-3 m-0 rounded-pill col-auto", style: `background: ${taskProjectData.color};`}, taskProject);
@@ -904,10 +903,10 @@ function profile() {
         let index = 0;
         if (userTask.length > 0) {
             let filteredTasks = userTask;
-            userTask.forEach(task => {
-                task.id = `task${index}-${task.deadline}`;
-                index++;
-            });
+            // userTask.forEach(task => {
+            //     task.id = `task${index}-${task.deadline}`;
+            //     index++;
+            // });
 
             //filter by keyword
             if(keyword){
