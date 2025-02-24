@@ -1,6 +1,6 @@
 function admin(){
     const loadUsersFromDB = (callback) => {
-        fetch('http://192.168.11.42:3000/users')
+        fetch(`http://${serverIP}:3000/users`)
             .then(response => response.json())
             .then(users => {
                 callback(users);
@@ -451,7 +451,7 @@ function admin(){
     // saving function ------------------------------------------------------------------------
     function saveFunction(userData, action){
         if (action === 'delete') {
-            fetch(`http://192.168.11.42:3000/users/${encodeURIComponent(userData.id)}`, {
+            fetch(`http://${serverIP}:3000/users/${encodeURIComponent(userData.id)}`, {
                 method: 'DELETE'
             })
             .then(response => {
@@ -467,7 +467,7 @@ function admin(){
             })
             .catch(err => console.error('Error al eliminar la tarea:', err));
         } else if (action === 'reset') {
-            fetch(`http://192.168.11.42:3000/users/${encodeURIComponent(userData.id)}`, {
+            fetch(`http://${serverIP}:3000/users/${encodeURIComponent(userData.id)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -485,7 +485,7 @@ function admin(){
             })
             .catch(err => console.error('Error actualizando los logros:', err));
         } else if (action === 'update') {
-            fetch(`http://192.168.11.42:3000/users/${encodeURIComponent(userData.id)}`, {
+            fetch(`http://${serverIP}:3000/users/${encodeURIComponent(userData.id)}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

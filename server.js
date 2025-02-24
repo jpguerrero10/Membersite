@@ -54,6 +54,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// ---------------------------------------------------------------- rutas/routes -----------------------------------------------------------
+// Ruta para obtener la IP local del servidor
+app.get('/get-server-ip', (req, res) => {
+    res.json({ ip: localIP });
+});
+
 // rutas usuarios -------------------------------------------------------------------------------------------
 
 // Obtener todos los usuarios

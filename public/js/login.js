@@ -6,7 +6,7 @@ function login(){
 
     const loadUsersFromDB = (callback) => {
 
-        fetch('http://192.168.11.42:3000/users')  // Usamos la ruta que has configurado en el servidor
+        fetch(`http://${serverIP}:3000/users`)  // Usamos la ruta que has configurado en el servidor
             .then(response => response.json())
             .then(users => {
                 if (users.length > 0) {
@@ -74,7 +74,7 @@ function login(){
 
                     // Actualizamos los logros en el servidor
                     if(achievements){
-                        fetch(`http://192.168.11.42:3000/users/${userID}`, {
+                        fetch(`http://${serverIP}:3000/users/${userID}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ function login(){
 
                     // Actualizamos los informes en el servidor
                     if(reports){
-                        fetch(`http://192.168.11.42:3000/users/${userID}`, {
+                        fetch(`http://${serverIP}:3000/users/${userID}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'

@@ -9,80 +9,98 @@ const showLoader = () => {
         </div>
         `);
         document.body.appendChild(loader);
-};
-const encodedAdminType = btoa("administrator");
+    };
+    const encodedAdminType = btoa("administrator");
     
-const hideLoader = () => {
-    const loader = document.getElementById("loadingScreen");
-    if (loader) {
-        loader.remove();
-    }
-};
-
+    const hideLoader = () => {
+        const loader = document.getElementById("loadingScreen");
+        if (loader) {
+            loader.remove();
+        }
+    };
+    
 //------------------------------------------------------------------------------------------------------------------------
 
+// get IP from server and put it at localStorage
+fetch('http://192.168.11.42:3000/get-server-ip')
+    .then(response => response.json())
+    .then(data => {
+        localStorage.setItem('serverIP', data.ip);
+    })
+    .catch(error => console.error('Error al obtener la IP del servidor:', error));
+
+const serverIP = localStorage.getItem('serverIP');
+
+// if (!serverIP) {
+//     resetPage();
+// }
+// function resetPage(){
+//     location.reload();
+//     return;
+// }
+
 // View controller Function
-        const loadView = async (view) => {
-            showLoader();
-            localStorage.setItem('currentView', view);
-            try {
-                const response = await fetch(`views/${view}.html`); // Archivo HTML
-                if (!response.ok) throw new Error('Page not found');
-                const html = await response.text();
-                document.getElementById('app').innerHTML = html; // Cargar contenido en el div con id 'app'
-                loadScript(`js/${view}.js`, () => {
-                    setTimeout(() => {
-                        if(view !== 'login' && view !== 'register'){
-                            tabCreation(view);
-                            responsiveSize();
-                            moveNav();
-                        }
-                    }, 0);
-                });
-            } catch (error) {
-                document.getElementById('app').innerHTML = `
-                <div class="row align-items-center justify-content-center vh-100">
-                    <div class="text-center">
-                        <h1>404</h1>
-                        <p>Page not found.</p>
-                        <button onclick="loadView('login')">Go to login</button>
-                    </div>
-                </div>
-                `;
-            } finally {
-                setTimeout(() => {
-                    hideLoader(); // Ocultar el loader una vez que la vista se ha cargado
-                }, 100);
-            }
-        };
-        function loadScript(scriptPath, callback){
-            // Eliminamos scripts previos
-            const oldScript = document.querySelector("#dynamicJS");
-            if(oldScript){
-                oldScript.remove();
-            }
-
-            // Creamos el nuevo script
-            const newScript = document.createElement("script");
-            newScript.id = "dynamicJS";
-            // newScript.type = "module";
-
-            newScript.src = scriptPath;
-
-            newScript.onload = () => {
-                // callback promise for responsive
-                if (callback) {
-                    callback();
+const loadView = async (view) => {
+    showLoader();
+    localStorage.setItem('currentView', view);
+    try {
+        const response = await fetch(`views/${view}.html`); // Archivo HTML
+        if (!response.ok) throw new Error('Page not found');
+        const html = await response.text();
+        document.getElementById('app').innerHTML = html; // Cargar contenido en el div con id 'app'
+        loadScript(`js/${view}.js`, () => {
+            setTimeout(() => {
+                if(view !== 'login' && view !== 'register'){
+                    tabCreation(view);
+                    responsiveSize();
+                    moveNav();
                 }
-            };
-            
-            document.body.appendChild(newScript);
-        };
-        // Cargar vista 
-        window.addEventListener('load', () => {
-            const currentView = localStorage.getItem('currentView') || 'login';
-            loadView(currentView);
+            }, 0);
         });
+    } catch (error) {
+        document.getElementById('app').innerHTML = `
+        <div class="row align-items-center justify-content-center vh-100">
+            <div class="text-center">
+                <h1>404</h1>
+                <p>Page not found.</p>
+                <button onclick="loadView('login')">Go to login</button>
+            </div>
+        </div>
+        `;
+    } finally {
+        setTimeout(() => {
+            hideLoader(); // Ocultar el loader una vez que la vista se ha cargado
+        }, 100);
+    }
+};
+function loadScript(scriptPath, callback){
+    // Eliminamos scripts previos
+    const oldScript = document.querySelector("#dynamicJS");
+    if(oldScript){
+        oldScript.remove();
+    }
+
+    // Creamos el nuevo script
+    const newScript = document.createElement("script");
+    newScript.id = "dynamicJS";
+    // newScript.type = "module";
+
+    newScript.src = scriptPath;
+
+    newScript.onload = () => {
+        // callback promise for responsive
+        if (callback) {
+            callback();
+        }
+    };
+    
+    document.body.appendChild(newScript);
+};
+// Cargar vista 
+window.addEventListener('load', () => {
+    const currentView = localStorage.getItem('currentView') || 'login';
+    loadView(currentView);
+});
 
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -188,44 +206,6 @@ function fadeOut(element, duration = 500) {
     requestAnimationFrame(animate);
 }
 
-//------------------------------------------------------------------------------------------------------------------------
-
-// const headerCol = addElement("div", { class: "col-12 align-content-center", id: "contenedor" });
-// const reportType = addElement("p", { class: "type text-dark-emphasis", draggable:"true", id: "dragMe" }, `<strong>${singleReport.type}</strong>`);
-
-// drag and drop function (still in development...)
-// setTimeout(() => {
-//     const dragItem = document.getElementById('dragMe');
-//     const container = document.getElementById('contenedor');
-//         // Evento que se activa cuando se empieza a arrastrar
-//     dragItem.addEventListener('dragstart', function (event) {
-//         // Se guarda el elemento que estamos arrastrando
-//         event.dataTransfer.setData('text', dragItem.id);
-//         dragItem.style.opacity = '0.5'; // Cambiamos la apariencia mientras se arrastra
-//     });
-
-//     // Evento que se activa cuando se suelta el elemento
-//     container.addEventListener('dragover', function (event) {
-//         event.preventDefault(); // Necesario para permitir el drop
-//     });
-
-//     // Evento que se activa cuando se suelta el elemento sobre el contenedor
-//     container.addEventListener('drop', function (event) {
-//         event.preventDefault(); // Prevenimos el comportamiento por defecto
-//         const id = event.dataTransfer.getData('text'); // Recuperamos el id del elemento arrastrado
-//         const draggedElement = document.getElementById(id);
-//         const dropX = event.clientX;
-//         const dropY = event.clientY;
-
-//         // Movemos el elemento arrastrado a la nueva posición
-//         draggedElement.style.position = 'absolute';
-//         draggedElement.style.left = dropX - draggedElement.offsetWidth / 2 + 'px';
-//         draggedElement.style.top = dropY - draggedElement.offsetHeight / 2 + 'px';
-
-//         draggedElement.style.opacity = '1'; // Restauramos la opacidad
-//     });
-//     }, 100);
-
 // -----------------------------------------------------------------------------------------------------------------------
 
 //notifications
@@ -285,7 +265,7 @@ const generateReportView = (reports, reportData, reportUserID, loggedUserName, l
 
     // Header Section
     const headerRow = addElement("div", { class: "row mb-2 pb-2" });
-    const headerCol = addElement("div", { class: "col-12 align-content-center" });
+    const headerCol = addElement("div", { class: "col-12 align-content-center typeAndDate" });
     const reportType = addElement("p", { class: "type text-dark-emphasis" }, `<strong>${reportData.type}</strong>`);
     headerCol.appendChild(reportType);
     headerCol.appendChild(addElement("p", { class: "deadline text-dark-emphasis" }, `<strong>${reportData.dateStart}　～　${reportData.dateEnd}</strong>`));

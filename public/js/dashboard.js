@@ -2,17 +2,17 @@ function dashboard(){
     const loadUsersFromDB = (callback) => {
         const userID = localStorage.getItem('userID');
         Promise.all([
-            fetch('http://192.168.11.42:3000/users') // Cambia esta URL según tu configuración
+            fetch(`http://${serverIP}:3000/users`) // Cambia esta URL según tu configuración
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
                 }),
-            fetch(`http://192.168.11.42:3000/tasks/${userID}`)
+            fetch(`http://${serverIP}:3000/tasks/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
                 }),
-            fetch(`http://192.168.11.42:3000/events/${userID}`)
+            fetch(`http://${serverIP}:3000/events/${userID}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
@@ -193,7 +193,7 @@ function dashboard(){
                 if (info.event.extendedProps.type === 'task') {
                     alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
                 } else {
-                    alert(`Evento: ${info.event.title}\nContenido: ${info.event.extendedProps.content}`);
+                    generateModalView(info.event);
                 }
             }
         });
@@ -202,8 +202,50 @@ function dashboard(){
     });
 
     setTimeout(() => {
-        fadeIn(card, 20); // Hace un fade in en 1 segundo
+        fadeIn(card, 20);
     }, 150);
+
+    //event modal view creation -----------------------------------------------------------------------------
+    const generateModalView = (infoEvent) => {
+        console.log(infoEvent);
+        const modalContent = addElement("div",{class: "modal-content"});
+        const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">イベント：${infoEvent.title}</h3><button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
+        const modalBody = addElement("div", { class: "modal-body" });
+        const eventViewContainer = addElement("div", { class: "eventViewContainer" });
+
+        // event Content Wrapper
+        const eventContent = addElement("div", { id: "eventView" });
+        eventViewContainer.appendChild(eventContent);
+
+        // Sections Mapping
+        const sections = [
+            { title: "日時", content: (infoEvent.endStr ? `${infoEvent.startStr}　～　${infoEvent.endStr}` : infoEvent.startStr) },
+            ...(infoEvent.extendedProps.content? [{ title: "内容", content: infoEvent.extendedProps.content }] : [{ title: "内容", content: "no content" }]),
+            ...(infoEvent.extendedProps.place ? [{ title: "場所", content: infoEvent.extendedProps.place }] : [])
+        ];
+        
+        // Generate Each Section
+        console.log(sections);
+        if(sections.length !== 0){
+            sections.forEach(section => {
+                const sectionRow = addElement("div", { class: "row border-bottom mb-2 pb-2" });
+                const sectionCol = addElement("div", { class: "col" });
+                sectionCol.appendChild(addElement("h3", { class: "reportType text-primary-emphasis fs-5 mt-4 mb-2" }, `<strong>${section.title}</strong>`));
+                sectionCol.appendChild(document.createTextNode(section.content));
+                sectionRow.appendChild(sectionCol);
+                eventContent.appendChild(sectionRow);
+            });
+        }
+
+        modalDialog.innerHTML = ""; // Clear existing content
+        modalBody.appendChild(eventViewContainer);
+        modalContent.appendChild(modalHeader);
+        modalContent.appendChild(modalBody);
+        modalDialog.appendChild(modalContent);
+
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        exampleModal.show();
+    }
 
     //event modal view creation ------------------------------------------------------------------------------
     const generateEventForm = (dateInfo, usersInfo, eventsInfo) => {
@@ -336,7 +378,6 @@ function dashboard(){
         
         const btnGroup = addElement("div", { class: "btn-group" });
         const submitButton = addElement("button", { type: "submit", class: "btn btn-primary" }, "報告書追加");
-        const cancelButton = addElement("button", { type: "button", id: "cancelBtn", class: "btn btn-secondary" }, "キャンセル");
         
         // Col and row containers
         const containerRow1 = addElement("div", { class: "row" });
@@ -414,7 +455,7 @@ function dashboard(){
         checkcontainer2.append(repeatLabel, repeatCheck);
 
         fragment.append(containerRow1, containerRow2, containerRow3, containerRow4, container9, btnGroup);
-        btnGroup.append(submitButton, cancelButton);
+        btnGroup.append(submitButton);
         
         // Insert the fragment into the form's container
         eventFormContainer.appendChild(fragment);
@@ -444,7 +485,7 @@ function dashboard(){
                 recurrenceType.removeAttribute("disabled", "")
                 interval.removeAttribute("disabled", "")
                 finalDate.removeAttribute("disabled", "")
-            }else{
+            } else{
                 containerRow2.classList.remove("show");
                 recurrenceType.setAttribute("disabled", "")
                 interval.setAttribute("disabled", "")
@@ -457,7 +498,7 @@ function dashboard(){
                 minStartInput.setAttribute("disabled", "");
                 hourEndInput.setAttribute("disabled", "");
                 minEndInput.setAttribute("disabled", "");
-            }else{
+            } else{
                 hourStartInput.removeAttribute("disabled", "");
                 minStartInput.removeAttribute("disabled", "");
                 hourEndInput.removeAttribute("disabled", "");
@@ -495,9 +536,8 @@ function dashboard(){
             const actualUser = (userID).replace(/\W+/g, '');
             eventUsers.push(actualUser); 
         }
-        
+
         eventsInfo = eventsInfo.filter(event => event.title !== eventTitle);
-        console.log(hourStart.disabled);
         eventsInfo.push({ 
             assignedUsers: eventUsers,
             title: eventTitle,
@@ -533,7 +573,7 @@ function dashboard(){
     function saveEvent(singleEvent, eventsInfo){
         localStorage.setItem(`userEvents_${userID}`, JSON.stringify(eventsInfo));
         
-        fetch('http://192.168.11.42:3000/events', {
+        fetch(`http://${serverIP}:3000/events`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -545,14 +585,6 @@ function dashboard(){
             console.log('イベントは作成された:', data);
         })
         .catch(err => console.error('Error al agregar el evento:', err));
-    };
-
-    // cancel button ---------------------------------------------------------------
-    const handleCancel = () => {   
-        fadeOut(document.querySelector(".cardForm"), 150); // 1s fadeout
-        setTimeout(() => {
-            closeForm();
-        }, 200);
     };
 
     // reset add task form -----------------------------------------------------------------------
@@ -572,7 +604,7 @@ function dashboard(){
     const trophyTitle = addElement('h3', { class: 'mb-3' }, 'Trophy');
     const noTrophyText = addElement('p', { class: 'trophyText align-content-center m-0 w-100'}, `There's no trophies yet.`);
     cardBody.appendChild(trophyTitle);
-    cardBody.appendChild(noTrophyText)
+    cardBody.appendChild(noTrophyText);
     
     // Función para agregar trofeos según el tipo de logro
     function addTrophy(type, milestones, shownMilestones) {

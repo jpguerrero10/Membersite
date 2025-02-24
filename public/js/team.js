@@ -1,12 +1,12 @@
 function team() {
     const loadUsersFromDB = (callback) => {
         Promise.all([
-            fetch('http://192.168.11.42:3000/users') // Cambia esta URL según tu configuración
+            fetch(`http://${serverIP}:3000/users`) // Cambia esta URL según tu configuración
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
                 }),
-            fetch('http://192.168.11.42:3000/tasks') // Cambia esta URL según tu configuración
+            fetch(`http://${serverIP}:3000/tasks`) // Cambia esta URL según tu configuración
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching tasks');
                     return response.json();
@@ -30,7 +30,7 @@ function team() {
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
     if (userID) {
-        fetch(`http://192.168.11.42:3000/tasks/${userID}`)
+        fetch(`http://${serverIP}:3000/tasks/${userID}`)
             .then(response => response.json())
             .then(tasks => {
                 localStorage.setItem((`userTask_${userID}`), JSON.stringify(tasks));
@@ -342,7 +342,7 @@ function team() {
                 }
             }
             function saveAtDB(task, title) {
-                fetch(`http://192.168.11.42:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -370,7 +370,7 @@ function team() {
             function updateAchievements(userID, achievements){
                 localStorage.setItem(`achievements_${userID}`, JSON.stringify(achievements));
 
-                fetch(`http://192.168.11.42:3000/users/${userID}`, {
+                fetch(`http://${serverIP}:3000/users/${userID}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

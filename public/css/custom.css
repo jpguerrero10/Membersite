@@ -21,6 +21,7 @@
     padding: 10px 10px 15px;
     z-index: 999;
     backdrop-filter: blur(3px);
+    box-shadow: 1px 1px 15px #00000015;
 }
 .custom-nav-tabs{
     padding: 10px 0 5px;
@@ -177,45 +178,6 @@ textarea {
 .form-check.form-switch {
     padding-left: 15%;
 }
-#reportList .type,
-#reportList .edit-close {
-    width: fit-content;
-    border-radius: 25px;
-    padding: 10px 15px;
-    display: inline-block;
-    align-content: center;
-    margin-right: 15px;
-}
-#reportList .type::before,
-#reportList .edit-close::before {
-    content: '';
-    display: inline-block;
-    background-position: center;
-    background-size: 45%;
-    background-repeat: no-repeat;
-    background-color: #fff9f0a6;
-    width: 30px;
-    aspect-ratio: 1 / 1;
-    margin-bottom: -10px;
-    margin-right: 10px;
-    border-radius: 50%;
-    transform: translateY(-2px);
-}
-#reportList .type.monthly {
-    background: #c3bcff;
-}
-#reportList .type.weekly {
-    background: #f4bcff;
-}
-#reportList .edit-close {
-    background: #bce7ff;
-}
-#reportList .type::before {
-    background-image: url(../img/monthly.svg);
-}
-#reportList .edit-close::before {
-    background-image: url(../img/bussiness-hours.svg);
-}
 .calendar .tasks:hover{
     background-color: #0b5ed7 !important;
 }
@@ -278,7 +240,49 @@ textarea {
 .period{
     align-content: center;
 }
+#reportList .typeAndDate p{
+    display: inline-block;
+}
 
+#reportList .type,
+#reportList .edit-close {
+    width: fit-content;
+    border-radius: 25px;
+    padding: 10px 15px;
+    display: inline-block;
+    align-content: center;
+    margin-right: 15px;
+}
+#reportList .type::before,
+#reportList .edit-close::before {
+    content: '';
+    display: inline-block;
+    background-position: center;
+    background-size: 45%;
+    background-repeat: no-repeat;
+    background-color: #fff9f0a6;
+    width: 30px;
+    aspect-ratio: 1 / 1;
+    margin-bottom: -10px;
+    margin-right: 10px;
+    border-radius: 50%;
+    transform: translateY(-2px);
+}
+#reportList .type.monthly {
+    background: #c3bcff;
+}
+#reportList .type.weekly {
+    background: #f4bcff;
+}
+#reportList .edit-close {
+    background: #bce7ff;
+}
+#reportList .type::before {
+    background-image: url(../img/monthly.svg);
+}
+#reportList .edit-close::before {
+    background-image: url(../img/bussiness-hours.svg);
+}
 /*----------------------------------- profile edition ----------------------------------- */
 .profileInfo img{
     aspect-ratio: 1/1;
