@@ -2,10 +2,8 @@ function dashboard(){
 
     // ---------------------------------------- Getting user's data from localStorage --------------------------------------------------
     const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     let reports = JSON.parse(localStorage.getItem(`userReports_${userID}`)) || [];
 
     // ---------------------------------------- displaying data on screen ---------------------------------------------------------------
@@ -15,19 +13,7 @@ function dashboard(){
 
     // ----------------------------------------- handling the logout -------------------------------------------------------------------
     document.querySelector('#logout').addEventListener('click', function() {
-        
-        // clean stored data
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userImage');
-        localStorage.removeItem('userID');
-        localStorage.removeItem('userDescription');
-        localStorage.removeItem(`userTask_${userID}`);
-        localStorage.removeItem(`achievements_${userID}`);
-        localStorage.removeItem(`userReports_${userID}`);
-        localStorage.removeItem('userType');
-        
-        loadView("login");
+        logout(userID);
     });
 
     //notifications start

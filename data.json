@@ -285,8 +285,8 @@
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
                 "tasksAdded": 2,
-                "tasksCompleted": 3,
-                "tasksShared": 18,
+                "tasksCompleted": 4,
+                "tasksShared": 19,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -321,6 +321,19 @@
                     "completedTask": "test",
                     "complain": "",
                     "nextTask": "test",
+                    "objective": "",
+                    "message": "",
+                    "commentsArray": []
+                },
+                {
+                    "id": "report2025-02-28",
+                    "type": "月報",
+                    "dateStart": "2025-02-01",
+                    "dateEnd": "2025-02-28",
+                    "skills": "HTML, CSS, JS, PHP, Adobe Suite",
+                    "completedTask": "JS project",
+                    "complain": "",
+                    "nextTask": "JS project",
                     "objective": "",
                     "message": "",
                     "commentsArray": []
@@ -377,7 +390,8 @@
             "assignedUsers": [
                 "neeman"
             ],
-            "id": "75569b35-c405-4ed3-8842-b12d8059071e"
+            "id": "75569b35-c405-4ed3-8842-b12d8059071e",
+            "project": []
         },
         {
             "title": "タスク共有システムを作成",
@@ -519,7 +533,8 @@
                 "neeman",
                 "johnD",
                 "marodriguez",
-                "genchan"
+                "genchan",
+                "emiD"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
             "checkList": [],
@@ -553,7 +568,7 @@
             "title": "スケジュール表示を作成",
             "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
             "deadline": "2025-02-21",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "neeman",
                 "johnD",
@@ -586,7 +601,7 @@
                     "listName": "Crear la funcion de \"todo el dia\""
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "crear visualizacion modal solo lectura del evento"
                 }
             ],
@@ -786,6 +801,8 @@
             "title": "test not all day/recurrence 2",
             "start": "2025-02-22T15:30:00",
             "end": "2025-02-22T18:30:00",
+            "place": "本社",
+            "content": "Lorem ipsum dolor sit amet",
             "assignedUsers": [
                 "neeman"
             ],
