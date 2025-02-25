@@ -24,10 +24,10 @@ const getLocalIP = () => {
 const filePath = path.join(__dirname, 'data.json');
 
 // Middleware para analizar cuerpos JSON
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-// Leer los datos del archivo JSON de manera asíncrona
+// read and rewrite json
 const readData = async () => {
     try {
         const rawData = await fs.readFile(filePath, 'utf-8');
@@ -37,7 +37,6 @@ const readData = async () => {
     }
 };
 
-// Escribir datos en el archivo JSON de manera asíncrona
 const writeData = async (data) => {
     try {
         await fs.writeFile(filePath, JSON.stringify(data, null, 4));
