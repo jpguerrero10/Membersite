@@ -69,7 +69,7 @@
     width: fit-content;
 }
 .input-error-text {
-    color: #ff2121;
+    /* color: #ff2121; */
     display: none;
 }
 .input-error-text-display {

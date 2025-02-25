@@ -22,7 +22,7 @@ const showLoader = () => {
 //------------------------------------------------------------------------------------------------------------------------
 
 // get IP from server and put it at localStorage
-fetch('http://192.168.11.42:3000/get-server-ip')
+fetch('http://192.168.11.38:3000/get-server-ip')
     .then(response => response.json())
     .then(data => {
         localStorage.setItem('serverIP', data.ip);
@@ -481,7 +481,7 @@ const modalForm = () => {
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                    <form class="accordion-body">
+                    <form id="edit-form1" class="accordion-body">
                         <img style="aspect-ratio: 1/1; object-fit: cover;" id="profileImage" class="rounded-circle border border-white border-4 d-block mx-auto" width="100" src="" />
                         <!-- profile image input -->
                         <div class="my-4">
@@ -496,10 +496,7 @@ const modalForm = () => {
                             <textarea class="form-control" placeholder="Leave a comment here" id="description" style="height: 110px;"></textarea>
                             <label for="description">自己紹介</label>
                         </div>
-                        <div class="btn-group">
-                            <button type="submit" id="image-name-description-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
-                            <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
-                        </div>
+                            <button type="submit" id="image-name-description-submit-button" class="btn btn-primary">変更を保存</button>
                     </form>
                 </div>
             </div>
@@ -510,7 +507,7 @@ const modalForm = () => {
                     </button>
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                    <form class="accordion-body">
+                    <form id="edit-form2" class="accordion-body">
                         <div class="mb-3">
                             <div class="form-floating">
                                 <input type="password" class="form-control position-relative" id="currentPassword" placeholder="Current password">
@@ -523,42 +520,34 @@ const modalForm = () => {
                         </div>
                         <div class="mb-3">
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control position-relative" id="newPassword" placeholder="New password">
+                                <input type="password" class="form-control position-relative new-password-input" id="newPassword" placeholder="New password">
                                 <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
                                 </div>
                                 <label for="newPassword">新しいパスワード</label>
                             </div>
-                            <div class="input-error-text">test</div>
                         </div>
                         <div class="mb-3">
-                            <div class="form-floating mb-3">
-                                <input type="password" class="form-control position-relative" id="confirmNewPassword" placeholder=" Confirm new password">
+                            <div class="form-floating">
+                                <input type="password" class="form-control position-relative new-password-input" id="confirmNewPassword" placeholder=" Confirm new password">
                                 <div class="pass-word-eye position-absolute top-50 end-0 translate-middle">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 612" width="15" height="15" style="fill: #566d83;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c8.4-19.3 10.6-41.4 4.8-63.3c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zM373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5L373 389.9z"/></svg>
                                 </div>
                                 <label for="confirmNewPassword">新しいパスワードを再入力</label>
                             </div>
-                            <div class="btn-group">
-                                <button type="submit" id="password-submit-button" class="btn btn-primary" data-bs-dismiss="modal">変更を保存</button>
-                                <button type="button" class="btn btn-secondary btnModalClose" data-bs-dismiss="modal">キャンセル</button>
-                            </div>
                             <div class="input-error-text">test</div>
                         </div>
+                        <button type="submit" id="password-submit-button" class="btn btn-primary">変更を保存</button>
                     </form>
                 </div>
             </div>
         </div>
-    `);
-    const modalFooter = addElement("div", { class: "modal-footer justify-content-start"},
-        `
     `);
 
     modalDialog.innerHTML = ""; // Clear existing content
     modalDialog.appendChild(modalContent);
     modalContent.appendChild(modalHeader);
     modalContent.appendChild(modalBody);
-    modalContent.appendChild(modalFooter);
     const currentImage = localStorage.getItem('userImage') || userImage;
     const currentDescription = localStorage.getItem('userDescription') || userDescription;
     const currentName = localStorage.getItem('userName') || userName;
@@ -634,7 +623,8 @@ const modalForm = () => {
 
 // modal loaded
 const modalLoaded = () =>{
-    const modalContent = document.querySelector('.modal-content');
+    const editForm1 = document.querySelector('#edit-form1');
+    const editForm2 = document.querySelector('#edit-form2');
     const imageInput = document.querySelector('#formFile');
     const profileImage = document.querySelector('#profileImage');
     //modal image load
@@ -647,10 +637,18 @@ const modalLoaded = () =>{
             profileImage.src = localStorage.getItem('userImage');
         }
     });
-    modalContent.addEventListener('submit', (event) => {
+    editForm1.addEventListener('submit', (event) => {
+        event.preventDefault();
+        console.log('submit editForm1');
+            let newDate = {};
+            modalSubmit(imageInput, modalDialog, profileImage);
+    });
+    editForm2.addEventListener('submit', (event) => {
+        event.preventDefault();
+        console.log('submit editForm2');
         const flag = checkPaswordEdit(document.querySelector("#currentPassword").value, document.querySelector("#newPassword").value, document.querySelector("#confirmNewPassword").value);
+        console.log(flag);
         if (flag) {
-            event.preventDefault();
             let newDate = {};
             modalSubmit(imageInput, modalDialog, profileImage);
         } else {
@@ -675,64 +673,64 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
 
             // saveUserInfo(localStorage.getItem('userID', newData);
             // save user description DB
-            const dbRequest = indexedDB.open('userDatabase', 1);
-            dbRequest.onsuccess = function(event){
-                const db = event.target.result;
-                const transaction = db.transaction(["users"], "readwrite");
-                const objectStore = transaction.objectStore("users");
-                const getUserRequest = objectStore.get(userEmail);
+            // const dbRequest = indexedDB.open('userDatabase', 1);
+            // dbRequest.onsuccess = function(event){
+            //     const db = event.target.result;
+            //     const transaction = db.transaction(["users"], "readwrite");
+            //     const objectStore = transaction.objectStore("users");
+            //     const getUserRequest = objectStore.get(userEmail);
 
-                getUserRequest.onsuccess = function() {
-                    const user = getUserRequest.result;
-                    if(user){
-                        user.description = description;
-                        const updateUserRequest = objectStore.put(user);
+            //     getUserRequest.onsuccess = function() {
+            //         const user = getUserRequest.result;
+            //         if(user){
+            //             user.description = description;
+            //             const updateUserRequest = objectStore.put(user);
 
-                        updateUserRequest.onerror = function(event){
-                            console.error("Error updating user:", event);
-                        };
-                        updateUserRequest.onsuccess = function(event){
-                            console.log(`${userID}:User taks updated`, event)
-                        };
-                    } else{
-                        console.error(`${userID} user not found`);
-                    }
-                };
-                getUserRequest.onerror = function(event){
-                    console.error("error: user not found", event)
-                };
-            };
+            //             updateUserRequest.onerror = function(event){
+            //                 console.error("Error updating user:", event);
+            //             };
+            //             updateUserRequest.onsuccess = function(event){
+            //                 console.log(`${userID}:User taks updated`, event)
+            //             };
+            //         } else{
+            //             console.error(`${userID} user not found`);
+            //         }
+            //     };
+            //     getUserRequest.onerror = function(event){
+            //         console.error("error: user not found", event)
+            //     };
+            // };
         }
 
         if(imageInput.files.length > 0){
             // save user description DB
-            const dbRequest = indexedDB.open('userDatabase', 1);
-            dbRequest.onsuccess = function(event){
-                const db = event.target.result;
-                const transaction = db.transaction(["users"], "readwrite");
-                const objectStore = transaction.objectStore("users");
-                const getUserRequest = objectStore.get(userEmail);
+            // const dbRequest = indexedDB.open('userDatabase', 1);
+            // dbRequest.onsuccess = function(event){
+            //     const db = event.target.result;
+            //     const transaction = db.transaction(["users"], "readwrite");
+            //     const objectStore = transaction.objectStore("users");
+            //     const getUserRequest = objectStore.get(userEmail);
                 
-                getUserRequest.onsuccess = function() {
-                    const user = getUserRequest.result;
-                    if(user){
-                        user.image = instantFile;
-                        const updateUserRequest = objectStore.put(user);
+            //     getUserRequest.onsuccess = function() {
+            //         const user = getUserRequest.result;
+            //         if(user){
+            //             user.image = instantFile;
+            //             const updateUserRequest = objectStore.put(user);
 
-                        updateUserRequest.onerror = function(event){
-                            console.error("Error updating user:", event);
-                        };
-                        updateUserRequest.onsuccess = function(event){
-                            console.log(`${userID}:User taks updated`)
-                        };
-                    } else{
-                        console.error(`${userID} user not found`);
-                    }
-                };
-                getUserRequest.onerror = function(event){
-                    console.error("error: user not found", event)
-                };
-            };
+            //             updateUserRequest.onerror = function(event){
+            //                 console.error("Error updating user:", event);
+            //             };
+            //             updateUserRequest.onsuccess = function(event){
+            //                 console.log(`${userID}:User taks updated`)
+            //             };
+            //         } else{
+            //             console.error(`${userID} user not found`);
+            //         }
+            //     };
+            //     getUserRequest.onerror = function(event){
+            //         console.error("error: user not found", event)
+            //     };
+            // };
             const reader = new FileReader();
             
             reader.onload = function(e){
@@ -743,13 +741,14 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
             reader.readAsDataURL(instantFile);
             document.querySelector('#userImage').src = URL.createObjectURL(instantFile);
         }
-        modalDialog.innerHTML = "";
+        // modalDialog.innerHTML = "";
     } else {
         console.error('something went wrong'); // Mostramos una alerta si los datos son incorrectos
     }
 };
 
 function saveUserInfo(userID, newData) {
+    console.log(userID);
     fetch(`/users/${userID}`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
@@ -761,16 +760,74 @@ function saveUserInfo(userID, newData) {
 }
 
 function checkPaswordEdit(currentPassword, newPassword, confirmNewPassword) {
-    if (currentPassword !== '' || newPassword !== '' || confirmNewPassword !== '') { //(currentPassword === localStorage.getItem('userPassword') && newPassword !== '' && confirmNewPassword !== '' && newPassword === confirmNewPassword)
-        const inputErrorText = document.querySelectorAll('.input-error-text');
-        const formFloating = document.querySelectorAll('.form-floating');
-        //現在のパスワードが間違っていた場合
-        if(currentPassword !== localStorage.getItem('userID')) {
-            inputErrorText[0].textContent = 'パスワードが一致しません';
-            inputErrorText[0].classList.add("input-error-text-display");
-            formFloating[0].style.borderColor = '#ff2121 !important';
-            return false;
+    const inputErrorText = document.querySelectorAll('.input-error-text');
+    const currentPasswordInput = document.querySelector('#currentPassword');
+    const  newPasswordInput = document.querySelectorAll('.new-password-input');
+    inputErrorText.forEach(text => text.classList.add("input-error-text-display"));
+    let currentPasswordFlag = false;
+    let newPasswordFlag = false;
+    //現在のパスワードが間違っていた場合
+    if (currentPassword !== localStorage.getItem('userPassword') || currentPassword === '') {
+        inputErrorText[0].textContent = 'パスワードの認証に失敗しました。';
+        if (!inputErrorText[0].classList.contains('text-danger')) {
+            inputErrorText[0].classList.add('text-danger');
         }
+        if (!currentPasswordInput.classList.contains('border-danger')) {
+            currentPasswordInput.classList.add('border-danger');
+        }
+        inputErrorText[0].classList.remove('text-success');
+        currentPasswordInput.classList.remove('border-success');
+        currentPasswordFlag = false;
+    //現在のパスワードが合っていた場合
+    } else {
+        inputErrorText[0].textContent = 'パスワードの認証に成功しました';
+        if (!inputErrorText[0].classList.contains("text-success")) {
+            inputErrorText[0].classList.add('text-success');
+        }
+        if (!currentPasswordInput.classList.contains('border-success')) {
+            currentPasswordInput.classList.add('border-success');
+        }
+        inputErrorText[0].classList.remove('text-danger');
+        currentPasswordInput.classList.remove('border-danger');
+        currentPasswordFlag = true;
+    }
+    //新しいパスワードと再入力したパスワードが一致しなかった場合
+    if (newPassword !== confirmNewPassword) {
+        inputErrorText[1].textContent = '再入力されたパスワードが一致しません。';
+        if (!inputErrorText[1].classList.contains('text-danger')) {
+            inputErrorText[1].classList.add('text-danger');
+        }
+        inputErrorText[1].classList.remove('text-success');
+        newPasswordInput.forEach(inputElm => {
+            if (!inputElm.classList.contains('border-danger')) {
+                inputElm.classList.add('border-danger');
+            }
+            inputElm.classList.remove('border-success');
+        })
+        newPasswordFlag = false;
+    //新しいパスワードと再入力したパスワードが一致した場合
+    } else {
+        inputErrorText[1].textContent = '新しいパスワードは正しく入力されました';
+        if (!inputErrorText[1].classList.contains('text-success')) {
+            inputErrorText[1].classList.add('text-success');
+        }
+        inputErrorText[1].classList.remove('text-danger');
+        newPasswordInput.forEach(inputElm => {
+            if (!inputElm.classList.contains('border-success')) {
+                inputElm.classList.add('border-success');
+            }
+            inputElm.classList.remove('border-danger');
+        })
+        newPasswordFlag = true;
+    }
+    if (currentPasswordFlag && newPasswordFlag) {
+        console.log('入力できてまっせ')
+        let newData = {password: newPassword};
+        const userID = localStorage.getItem('userID');
+        const actualUser = (userID).replace(/\W+/g, '');
+        saveUserInfo(actualUser, newData);
+    } else {
+        return;
     }
 }
 

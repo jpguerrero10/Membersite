@@ -18,12 +18,6 @@ function profile() {
     }
     userTask = JSON.parse(localStorage.getItem(`userTask_${userID}`));
     //プロジェクトの読み込み
-    fetch(`http://${serverIP}:3000/projects`)
-        .then(response => response.json())
-        .then(projects => {
-            localStorage.setItem(('projects'), JSON.stringify(projects));
-        })
-        .catch(error => console.error('Error al obtener las tareas:', error));
     const projects = JSON.parse(localStorage.getItem('projects'));
 
     // ----------------------------------------- displaying data on screen ------------------------------------------------------
@@ -682,6 +676,7 @@ function profile() {
         };
         //user achievements DB update
         function updateAchievements(userID, achievements){
+            console.log('put', userID)
             fetch(`http://${serverIP}:3000/users/${userID}`, {
                 method: 'PUT',
                 headers: {

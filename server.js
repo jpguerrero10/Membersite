@@ -134,25 +134,16 @@ app.delete('/users/:id', async (req, res) => {
     }
 });
 
-//ユーザー情報の特定のプロパティのみを更新
-app.patch('/users/:id', async(req, res) => {
-    try {
-        const updatedUser = await updateItem('users', req.params.id, req.body);
-        res.json({message: 'Usuario actualizado', user: updatedUser});
-    } catch (error) {
-        res.status(404).json({error: error.message});
-    }
-});
-
-//ユーザー情報の特定のプロパティのみを更新
-app.patch('/users/:id', async(req, res) => {
-    try {
-        const updatedUser = await updateItem('users', req.params.id, req.body);
-        res.json({message: 'Usuario actualizado', user: updatedUser});
-    } catch (error) {
-        res.status(404).json({error: error.message});
-    }
-});
+// //ユーザー情報の特定のプロパティのみを更新
+// app.patch('/users/:id/', async(req, res) => {
+//     try {
+//         console.log(req.params.id);
+//         const updatedUser = await updateItem('users', req.params.id, req.body);
+//         res.json({message: 'Usuario actualizado', user: updatedUser});
+//     } catch (error) {
+//         res.status(404).json({error: error.message});
+//     }
+// });
 
 // task route // rutas tareas --------------------------------------------------------------------------------------------
 
