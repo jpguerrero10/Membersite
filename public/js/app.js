@@ -22,14 +22,15 @@ const showLoader = () => {
 //------------------------------------------------------------------------------------------------------------------------
 
 // get IP from server and put it at localStorage
-fetch('http://192.168.12.11:3000/get-server-ip')
-    .then(response => response.json())
-    .then(data => {
-        localStorage.setItem('serverIP', data.ip);
-    })
-    .catch(error => console.error('Error getting the server IP:', error));
+// fetch('http://192.168.12.11:3000/get-server-ip')
+//     .then(response => response.json())
+//     .then(data => {
+//         localStorage.setItem('serverIP', data.ip);
+//     })
+//     .catch(error => console.error('Error getting the server IP:', error));
 
-const serverIP = localStorage.getItem('serverIP');
+// const serverIP = localStorage.getItem('serverIP');
+const serverIP = "192.168.12.11";
 
 // if (!serverIP) {
 //     resetPage();
@@ -52,7 +53,6 @@ const loadView = async (view, targetId = null) => {
             setTimeout(() => {
                 if(view !== 'login' && view !== 'register'){
                     tabCreation(view);
-                    responsiveSize();
                     moveNav();
                 }
                 if (targetId) {
@@ -643,16 +643,6 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
 //------------------------------------------------------------------------------------------------------------------------
 
 // responsive
-
-function responsiveSize() {
-    moveNav();
-}
-
-let userType;
-if(localStorage.getItem('userType') !== ""){
-    userType = localStorage.getItem('userType');
-}
-
 function moveNav() {
     const nav = document.querySelector(".navbar");
     const header = document.querySelector("#asterisk-members-header");
@@ -669,5 +659,9 @@ function moveNav() {
 
 
 // if size change
-window.addEventListener('resize', responsiveSize);
+window.addEventListener('resize', moveNav);
 
+let userType;
+if(localStorage.getItem('userType') !== ""){
+    userType = localStorage.getItem('userType');
+}
