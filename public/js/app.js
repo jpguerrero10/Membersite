@@ -793,7 +793,7 @@ function checkPaswordEdit(currentPassword, newPassword, confirmNewPassword) {
     }
     //新しいパスワードと再入力したパスワードが一致しなかった場合
     if (newPassword !== confirmNewPassword) {
-        inputErrorText[1].textContent = '再入力されたパスワードが一致しません。';
+        inputErrorText[1].textContent = '再入力されたパスワードが一致しません';
         if (!inputErrorText[1].classList.contains('text-danger')) {
             inputErrorText[1].classList.add('text-danger');
         }
