@@ -26,7 +26,6 @@ function team() {
     const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
     if (userID) {
@@ -46,8 +45,7 @@ function team() {
 
     // ----------------------------------------- handling the logout -------------------------------------------------------------------
     document.querySelector('#logout').addEventListener('click', function() {
-        localStorageRemoveItem(userID)
-        loadView("login");
+        logout(userID);
     });
 
     // team users ----------------------------------------------------------------------------------------------------------------------
@@ -72,7 +70,8 @@ function team() {
                     usersImage.src = user.image;
                 }
                 const usersTitle = addElement("h3", {class: "text-center text-primary-emphasis fs-5"}, user.name);
-                const usersID = addElement("p", { class:"text-center mb-4 text-body-tertiary"}, user.id)
+                const usersID = addElement("p", { class:"text-center mb-4 text-body-tertiary"}, user.id);
+                const usersDescription = addElement("p", { class:"text-center mb-4 text-body-tertiary"}, user.description);
                 const shareBtnGroup = addElement("div", {class:"btn-group btn-group-sm", role:"group"},`
                     <button type="button" class="btn btn-seemore btn-outline-primary">タスク</button>
                     <button type="button" class="btn btn-reports btn-outline-dark">報告書</button>
@@ -103,6 +102,8 @@ function team() {
                 
                 teamContainer.querySelector(`.${userIdClass}`).classList.remove('col-6', 'col-md-6', 'col-lg-4');
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('col-12', 'col-md-12', 'col-lg-12');
+                
+                // usersCard.appendChild(usersDescription);
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('order-first', 'card-group');
                 teamContainer.querySelector(`.${userIdClass} .profileCard`).classList.add('justify-content-center');
                 
@@ -361,8 +362,6 @@ function team() {
     
                     // Llama a la función de notificación
                     notifications(notificationContainer, NotiDescription, NotiTitle);
-                    
-                    team();
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
             }

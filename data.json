@@ -5,7 +5,7 @@
             "password": "password123",
             "name": "John Doe",
             "id": "@johnD",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "description": "1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
                 "tasksAdded": 5,
@@ -285,8 +285,8 @@
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
                 "tasksAdded": 2,
-                "tasksCompleted": 3,
-                "tasksShared": 18,
+                "tasksCompleted": 5,
+                "tasksShared": 22,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -299,7 +299,6 @@
                         100
                     ],
                     "tasksShared": [
-                        20,
                         50
                     ]
                 },
@@ -307,7 +306,8 @@
                     "tasksAdded": [],
                     "tasksCompleted": [],
                     "tasksShared": [
-                        5
+                        5,
+                        20
                     ]
                 }
             },
@@ -321,6 +321,19 @@
                     "completedTask": "test",
                     "complain": "",
                     "nextTask": "test",
+                    "objective": "",
+                    "message": "",
+                    "commentsArray": []
+                },
+                {
+                    "id": "report2025-02-28",
+                    "type": "月報",
+                    "dateStart": "2025-02-01",
+                    "dateEnd": "2025-02-28",
+                    "skills": "HTML, CSS, JS, PHP, Adobe Suite",
+                    "completedTask": "JS project",
+                    "complain": "",
+                    "nextTask": "JS project",
                     "objective": "",
                     "message": "",
                     "commentsArray": []
@@ -377,7 +390,8 @@
             "assignedUsers": [
                 "neeman"
             ],
-            "id": "75569b35-c405-4ed3-8842-b12d8059071e"
+            "id": "75569b35-c405-4ed3-8842-b12d8059071e",
+            "project": []
         },
         {
             "title": "タスク共有システムを作成",
@@ -519,7 +533,9 @@
                 "neeman",
                 "johnD",
                 "marodriguez",
-                "genchan"
+                "genchan",
+                "emiD",
+                "moongirl"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
             "checkList": [],
@@ -553,7 +569,7 @@
             "title": "スケジュール表示を作成",
             "description": "Agregar al calendario del dashboard un sistema de cronograma de tareas y planificador.",
             "deadline": "2025-02-21",
-            "isChecked": false,
+            "isChecked": true,
             "assignedUsers": [
                 "neeman",
                 "johnD",
@@ -586,7 +602,7 @@
                     "listName": "Crear la funcion de \"todo el dia\""
                 },
                 {
-                    "listCompleted": false,
+                    "listCompleted": true,
                     "listName": "crear visualizacion modal solo lectura del evento"
                 }
             ],
@@ -643,15 +659,21 @@
             ]
         },
         {
-            "title": "タスクフォームのコードをリファクタリング",
-            "description": "refactorizar el codigo que genera el formulario de las tasks",
+            "title": "タスクフォームのコードをリファクタリング2",
+            "description": "refactorizar el codigo que genera el formulario de las tasks,test2",
             "deadline": "2025-02-28",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
-                "genchan"
+                "genchan",
+                "breezthy"
             ],
-            "checkList": [],
+            "checkList": [
+                {
+                    "listCompleted": false,
+                    "listName": "test"
+                }
+            ],
             "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
             "project": [
                 "Asterisk"
@@ -826,6 +848,8 @@
             "title": "test not all day/recurrence 2",
             "start": "2025-02-22T15:30:00",
             "end": "2025-02-22T18:30:00",
+            "place": "本社",
+            "content": "Lorem ipsum dolor sit amet",
             "assignedUsers": [
                 "neeman"
             ],
@@ -834,6 +858,17 @@
                 "interval": "3",
                 "endDate": "2025-03-20"
             }
+        },
+        {
+            "title": "test",
+            "start": "2025-03-01",
+            "end": "2025-03-01",
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ],
+            "place": "test",
+            "content": "test"
         }
     ],
     "projects": [

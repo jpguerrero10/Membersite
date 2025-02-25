@@ -16,10 +16,8 @@ function admin(){
     
     // ---------------------------------------- Getting user's data from localStorage --------------------------------------------------
     const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     
     const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
     
@@ -51,9 +49,8 @@ function admin(){
     
     // ----------------------------------------- handling the logout -------------------------------------------------------------------
     logoutButton.addEventListener('click', function() {
-        localStorageRemoveItem(userID);
         cleanUp();
-        loadView("login");
+        logout(userID);
     });
 
     function handleLogout() {

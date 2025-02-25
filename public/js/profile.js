@@ -2,10 +2,8 @@ function profile() {
 
     // ---------------------------------------- Getting user's data from localStorage --------------------------------------------
     const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
     if (userID) {
@@ -27,8 +25,7 @@ function profile() {
 
     // ------------------------------------------ handling the logout -----------------------------------------------------------
     document.querySelector('#logout').addEventListener('click', function() {
-        localStorageRemoveItem(userID)
-        loadView("login");
+        logout(userID);
     });
 
     //ランダムにIDを生成する処理
@@ -325,14 +322,15 @@ function profile() {
             newTaskItem.appendChild(fragment);
             newTaskItem.appendChild( deadlineChecklist);
             taskContainer.insertBefore(newTaskItem, taskContainer.firstChild);
-
+            
             if (project) {
                 renderLabel(newTaskItem, project);
             }
             
             if (checklistLength === 0) {
                 if (!paragraphChecklist.classList.contains("opacity-0")) {
-                    paragraphChecklist.classList.add("opacity-0");
+                    paragraphChecklist.classList.remove("d-block");
+                    paragraphChecklist.classList.add("d-none");
                 }
             } else {
                 if (checklistLength === checklistCompletedCount) {
@@ -580,10 +578,10 @@ function profile() {
 
                     const taskIndex = tasks.findIndex(task => task.id === id);
                     if (taskIndex !== -1) {
-                        tasks[taskIndex] = newEditTask; // Sobreescribe la tarea existente
+                        tasks[taskIndex] = newEditTask;
                     } else {
-                        console.warn("⚠ La tarea no fue encontrada, agregando como nueva.");
-                        tasks.push(newEditTask); // Si por alguna razón la tarea no existe, agrégala
+                        console.warn("⚠ Task not found");
+                        tasks.push(newEditTask);
                     }
                     saveTask("edition", newEditTask, newEditTask.title);
                     renderLabel(newTaskItem, currentProjects);
@@ -645,7 +643,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al agregar la tarea:', err));
             } else if( action == "edition"){
-                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://192.168.12.11:3000/tasks/${task.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -654,7 +652,7 @@ function profile() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('タスクはアップデートされた:', data);
+                    console.log(task.id, 'タスクはアップデートされた:', data);
                     updateAchievements(userID, achievements);
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
@@ -887,10 +885,6 @@ function profile() {
         let index = 0;
         if (userTask.length > 0) {
             let filteredTasks = userTask;
-            // userTask.forEach(task => {
-            //     task.id = `task${index}-${task.deadline}`;
-            //     index++;
-            // });
 
             //filter by keyword
             if(keyword){
