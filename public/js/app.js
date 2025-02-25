@@ -22,12 +22,12 @@ const showLoader = () => {
 //------------------------------------------------------------------------------------------------------------------------
 
 // get IP from server and put it at localStorage
-fetch('http://192.168.11.42:3000/get-server-ip')
+fetch('http://192.168.12.11:3000/get-server-ip')
     .then(response => response.json())
     .then(data => {
         localStorage.setItem('serverIP', data.ip);
     })
-    .catch(error => console.error('Error al obtener la IP del servidor:', error));
+    .catch(error => console.error('Error getting the server IP:', error));
 
 const serverIP = localStorage.getItem('serverIP');
 
@@ -40,20 +40,26 @@ const serverIP = localStorage.getItem('serverIP');
 // }
 
 // View controller Function
-const loadView = async (view) => {
+const loadView = async (view, targetId = null) => {
     showLoader();
     localStorage.setItem('currentView', view);
     try {
-        const response = await fetch(`views/${view}.html`); // Archivo HTML
+        const response = await fetch(`views/${view}.html`);
         if (!response.ok) throw new Error('Page not found');
         const html = await response.text();
-        document.getElementById('app').innerHTML = html; // Cargar contenido en el div con id 'app'
+        document.getElementById('app').innerHTML = html;
         loadScript(`js/${view}.js`, () => {
             setTimeout(() => {
                 if(view !== 'login' && view !== 'register'){
                     tabCreation(view);
                     responsiveSize();
                     moveNav();
+                }
+                if (targetId) {
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: "center" });
+                    }
                 }
             }, 0);
         });
@@ -69,18 +75,18 @@ const loadView = async (view) => {
         `;
     } finally {
         setTimeout(() => {
-            hideLoader(); // Ocultar el loader una vez que la vista se ha cargado
+            hideLoader();
         }, 100);
     }
 };
 function loadScript(scriptPath, callback){
-    // Eliminamos scripts previos
+    // Eliminate previous script
     const oldScript = document.querySelector("#dynamicJS");
     if(oldScript){
         oldScript.remove();
     }
 
-    // Creamos el nuevo script
+    // create new script
     const newScript = document.createElement("script");
     newScript.id = "dynamicJS";
     // newScript.type = "module";
@@ -96,11 +102,29 @@ function loadScript(scriptPath, callback){
     
     document.body.appendChild(newScript);
 };
-// Cargar vista 
+// load view 
 window.addEventListener('load', () => {
     const currentView = localStorage.getItem('currentView') || 'login';
     loadView(currentView);
 });
+
+// logout
+function logout(userID){
+    // clean stored data
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userImage');
+    localStorage.removeItem('userID');
+    localStorage.removeItem('userDescription');
+    localStorage.removeItem('projects');
+    localStorage.removeItem(`userTask_${userID}`);
+    localStorage.removeItem(`achievements_${userID}`);
+    localStorage.removeItem(`userReports_${userID}`);
+    localStorage.removeItem(`userEvents_${userID}`);
+    localStorage.removeItem('userType');
+    
+    loadView("login");
+}
 
 // -----------------------------------------------------------------------------------------------------------------------
 
@@ -160,9 +184,9 @@ function tabController(tabsContainer) {
         event.preventDefault();
 
         const tab = event.target.closest(".nav-link");
-        if (!tab) return; // Ignora clics fuera de las tabs
+        if (!tab) return;
 
-        const view = tab.dataset.view; // Obtén el nombre de la vista desde un atributo data
+        const view = tab.dataset.view; // get view's name from dataset
         if (view) {
             loadView(view);
         }
@@ -329,7 +353,7 @@ const generateReportView = (reports, reportData, reportUserID, loggedUserName, l
         const errorMessage = addElement("span", { class:"comment-alert text-danger" }, "*このフィールドを入力してください。");
         if (commentInput.value.trim() === "") {
             commentInput.insertAdjacentElement('afterend', errorMessage);
-            return;  // Salir sin ejecutar commentCreation
+            return; 
         }
         //comment saving
         commentsArray = reportData.commentsArray || [];
@@ -531,7 +555,7 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
     const instantFile = imageInput.files[0];
     let image;
     
-    // Validamos si los datos ingresados coinciden con los del "usuario registrado"
+    // validate user data
     const userIndex = userID;
     
     if (userIndex !== -1) {
@@ -612,7 +636,7 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
         
         modalDialog.innerHTML = "";
     } else {
-        console.error('something went wrong'); // Mostramos una alerta si los datos son incorrectos
+        console.error('something went wrong'); 
     }
 };
 
@@ -621,32 +645,7 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
 // responsive
 
 function responsiveSize() {
-    const screenSize = window.innerWidth;
-    const mobileArrow = addElement("div", {class: "arrow-sm", id: "infoArrow"}, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>`);
-    const profileContainer = document.getElementById("profileInfo");
     moveNav();
-}
-
-function midSize() {
-    const userDescription = document.getElementById("userDescription");
-
-    userDescription.classList.remove("opacity-0");
-
-    const oldArrow = document.getElementById("infoArrow");
-    if(oldArrow){
-        oldArrow.remove();
-    } 
-}
-
-function bigSize() {
-    const userDescription = document.getElementById("userDescription");
-
-    userDescription.classList.remove("opacity-0");
-    
-    const oldArrow = document.getElementById("infoArrow");
-    if(oldArrow){
-        oldArrow.remove();
-    } 
 }
 
 let userType;

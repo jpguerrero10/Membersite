@@ -2,7 +2,7 @@ function dashboard(){
     const loadUsersFromDB = (callback) => {
         const userID = localStorage.getItem('userID');
         Promise.all([
-            fetch(`http://${serverIP}:3000/users`) // Cambia esta URL según tu configuración
+            fetch(`http://${serverIP}:3000/users`)
                 .then(response => {
                     if (!response.ok) throw new Error('Error fetching users');
                     return response.json();
@@ -31,10 +31,8 @@ function dashboard(){
 
     // ---------------------------------------- Getting user's data from localStorage --------------------------------------------------
     const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask = JSON.parse(localStorage.getItem(`userTask_${userID}`));
 
@@ -45,20 +43,7 @@ function dashboard(){
 
     // ----------------------------------------- handling the logout -------------------------------------------------------------------
     document.querySelector('#logout').addEventListener('click', function() {
-        
-        // clean stored data
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userImage');
-        localStorage.removeItem('userID');
-        localStorage.removeItem('userDescription');
-        localStorage.removeItem(`userTask_${userID}`);
-        localStorage.removeItem(`achievements_${userID}`);
-        localStorage.removeItem(`userReports_${userID}`);
-        localStorage.removeItem(`userEvents_${userID}`);
-        localStorage.removeItem('userType');
-        
-        loadView("login");
+        logout(userID);
     });
     
     const aisatsu = addElement('h3', {class: 'text-primary-emphasis my-4 fs-4 text-center'}, `ようこそ、 <span class="text-info">${userName.match(/^[^\s]+/)}</span>さん。 <span style="display: inline-block;">今日のタスクを確認しましょう。</span>`);
@@ -102,7 +87,7 @@ function dashboard(){
                 start: task.deadline,       
                 color: taskColor, 
                 textColor: textColor,
-                extendedProps: { type: 'task' } // Propiedad adicional para diferenciar en clics
+                extendedProps: { type: 'task', id: task.id } // Propiedad adicional para diferenciar en clics
             };
         });
 
@@ -165,7 +150,7 @@ function dashboard(){
             return generatedEvents;
         };
         
-        // 🛠 Formatea la fecha manteniendo la hora original si existe
+        // Formatea la fecha manteniendo la hora original si existe
         const formatDateTime = (original, newDate) => {
             let [datePart, timePart] = original.split("T");
             
@@ -203,7 +188,7 @@ function dashboard(){
             },                  
             eventClick: function(info) {
                 if (info.event.extendedProps.type === 'task') {
-                    alert(`Tarea: ${info.event.title}\nFecha: ${info.event.start.toISOString().split('T')[0]}`);
+                    loadView('profile', info.event.extendedProps.id);
                 } else {
                     generateModalView(info.event);
                 }
@@ -217,9 +202,23 @@ function dashboard(){
         fadeIn(card, 20);
     }, 150);
 
+    function formatDate(dateStr) {
+        let date = new Date(dateStr);
+        
+        let year = date.getFullYear();
+        let month = String(date.getMonth() + 1).padStart(2, '0'); // +1 porque los meses empiezan desde 0
+        let day = String(date.getDate()).padStart(2, '0');
+        let hours = String(date.getHours()).padStart(2, '0');
+        let minutes = String(date.getMinutes()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
     //event modal view creation -----------------------------------------------------------------------------
     const generateModalView = (infoEvent) => {
-        console.log(infoEvent);
+        let startFormatted = formatDate(infoEvent.startStr);
+        let endFormatted = formatDate(infoEvent.endStr);
+
         const modalContent = addElement("div",{class: "modal-content"});
         const modalHeader = addElement("div", { class: "modal-header"}, `<h3 class="modal-title fs-5" id="exampleModalLabel">イベント：${infoEvent.title}</h3><button type="button" class="btn-close btnModalClose" data-bs-dismiss="modal" aria-label="Close"></button>`);
         const modalBody = addElement("div", { class: "modal-body" });
@@ -231,7 +230,7 @@ function dashboard(){
 
         // Sections Mapping
         const sections = [
-            { title: "日時", content: (infoEvent.endStr ? `${infoEvent.startStr}　～　${infoEvent.endStr}` : infoEvent.startStr) },
+            { title: "日時", content: (infoEvent.endStr ? `${(startFormatted)}　～　${endFormatted}` : startFormatted) },
             ...(infoEvent.extendedProps.content? [{ title: "内容", content: infoEvent.extendedProps.content }] : [{ title: "内容", content: "no content" }]),
             ...(infoEvent.extendedProps.place ? [{ title: "場所", content: infoEvent.extendedProps.place }] : [])
         ];
@@ -775,7 +774,7 @@ function dashboard(){
                 }
             };
 
-            // Crear y renderizar el gráfico
+            // render chart
             new Chart(ctx, config);
         });
     }

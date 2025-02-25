@@ -2,10 +2,8 @@ function profile() {
 
     // ---------------------------------------- Getting user's data from localStorage --------------------------------------------
     const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
     let userImage = localStorage.getItem('userImage');
     const userID = localStorage.getItem('userID');
-    const userDescription = localStorage.getItem('userDescription');
     let achievements = JSON.parse(localStorage.getItem(`achievements_${userID}`));
     let userTask
     if (userID) {
@@ -33,19 +31,7 @@ function profile() {
 
     // ------------------------------------------ handling the logout -----------------------------------------------------------
     document.querySelector('#logout').addEventListener('click', function() {
-        
-        // clean stored data
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userImage');
-        localStorage.removeItem('userID');
-        localStorage.removeItem('userDescription');
-        localStorage.removeItem(`userTask_${userID}`);
-        localStorage.removeItem(`achievements_${userID}`);
-        localStorage.removeItem(`userReports_${userID}`);
-        localStorage.removeItem('userType');
-        
-        loadView("login");
+        logout(userID);
     });
 
     //ランダムにIDを生成する処理
@@ -342,14 +328,15 @@ function profile() {
             newTaskItem.appendChild(fragment);
             newTaskItem.appendChild( deadlineChecklist);
             taskContainer.insertBefore(newTaskItem, taskContainer.firstChild);
-
+            
             if (project) {
                 renderLabel(newTaskItem, project);
             }
             
             if (checklistLength === 0) {
                 if (!paragraphChecklist.classList.contains("opacity-0")) {
-                    paragraphChecklist.classList.add("opacity-0");
+                    paragraphChecklist.classList.remove("d-block");
+                    paragraphChecklist.classList.add("d-none");
                 }
             } else {
                 if (checklistLength === checklistCompletedCount) {
@@ -597,10 +584,10 @@ function profile() {
 
                     const taskIndex = tasks.findIndex(task => task.id === id);
                     if (taskIndex !== -1) {
-                        tasks[taskIndex] = newEditTask; // Sobreescribe la tarea existente
+                        tasks[taskIndex] = newEditTask;
                     } else {
-                        console.warn("⚠ La tarea no fue encontrada, agregando como nueva.");
-                        tasks.push(newEditTask); // Si por alguna razón la tarea no existe, agrégala
+                        console.warn("⚠ Task not found");
+                        tasks.push(newEditTask);
                     }
                     saveTask("edition", newEditTask, newEditTask.title);
                     renderLabel(newTaskItem, currentProjects);
