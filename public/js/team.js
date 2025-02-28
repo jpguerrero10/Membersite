@@ -71,7 +71,7 @@ function team() {
                 }
                 const usersTitle = addElement("h3", {class: "text-center text-primary-emphasis fs-5"}, user.name);
                 const usersID = addElement("p", { class:"text-center mb-4 text-body-tertiary"}, user.id);
-                const usersDescription = addElement("p", { class:"text-center mb-4 text-body-tertiary"}, user.description);
+                const usersDescription = addElement("p", { class:"text-center mb-4 px-3 d-none text-body-tertiary userdescription"}, user.description);
                 const shareBtnGroup = addElement("div", {class:"btn-group btn-group-sm", role:"group"},`
                     <button type="button" class="btn btn-seemore btn-outline-primary">タスク</button>
                     <button type="button" class="btn btn-reports btn-outline-dark">報告書</button>
@@ -81,6 +81,7 @@ function team() {
                 usersCard.appendChild(usersImage);
                 usersCard.appendChild(usersTitle);
                 usersCard.appendChild(usersID);
+                usersCard.appendChild(usersDescription);
                 usersCard.appendChild(shareBtnGroup);
 
                 setTimeout(() => {
@@ -102,8 +103,7 @@ function team() {
                 
                 teamContainer.querySelector(`.${userIdClass}`).classList.remove('col-6', 'col-md-6', 'col-lg-4');
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('col-12', 'col-md-12', 'col-lg-12');
-                
-                // usersCard.appendChild(usersDescription);
+                teamContainer.querySelector(`.${userIdClass} .userdescription`).classList.remove('d-none');
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('order-first', 'card-group');
                 teamContainer.querySelector(`.${userIdClass} .profileCard`).classList.add('justify-content-center');
                 
@@ -129,24 +129,31 @@ function team() {
                             "data-task-id": index
                         }, "タスク受領");
 
-                        // add listener to share tasks
-                        shareButton.addEventListener('click', function() {
-                            // Insertar la nueva tarea en el contenedor de tareas
-                            const clonedTasks = addElement("div", { class: "task alert alert-light my-1" }, `<span>${task.deadline}</span> ${task.title}`);
-                            const shareButtonDisabled = addElement("button", {
-                                type: "button",
-                                class: "btn btn-outline-secondary btn-sm",
-                                disabled: true
-                            }, "タスク共有");
-                            clonedTasks.appendChild(shareButtonDisabled);
-                            shareTasks.appendChild(clonedTasks);
-                            
-                            noTaskVerification(taskAdded, shareTasks);
+                        const taskExists = userTask.some(userTaskItem => userTaskItem.id === task.id);
 
-                            task.assignedUsers.push((userID).replace(/\W+/g, ''));
-                            shareTask(task);
-                        });
-                        
+                        if (taskExists) {
+                            shareButton.disabled = true;
+                            shareButton.classList.replace('btn-outline-info', 'btn-outline-secondary');
+                        } else {
+                            // add listener to share tasks
+                            shareButton.addEventListener('click', function() {
+                                shareButton.disabled = true;
+                                
+                                const clonedTasks = addElement("div", { class: "task alert alert-light my-1" }, `<span>${task.deadline}</span> ${task.title}`);
+                                const shareButtonDisabled = addElement("button", {
+                                    type: "button",
+                                    class: "btn btn-outline-secondary btn-sm",
+                                    disabled: true
+                                }, "タスク共有");
+                                clonedTasks.appendChild(shareButtonDisabled);
+                                shareTasks.appendChild(clonedTasks);
+                                
+                                noTaskVerification(taskAdded, shareTasks);
+    
+                                task.assignedUsers.push((userID).replace(/\W+/g, ''));
+                                shareTask(task);
+                            });
+                        }
                         
                         tasks.appendChild(shareButton);
                         shareTasks.appendChild(tasks);
@@ -157,47 +164,54 @@ function team() {
 
                 function shareTask(task){
                     userTask = userTask.filter(usertask => usertask.title !== task.title || usertask.description !== task.description);
-                    userTask.push({title: task.title, description: task.description, deadline: task.deadline, isChecked: task.isChecked, assignedUsers: task.assignedUsers});//falta arreglar el push
-                    let sharedTask = {title: task.title, description: task.description, deadline: task.deadline, isChecked: task.isChecked, assignedUsers: task.assignedUsers};
-                    saveAtDB(sharedTask, task.title);
+                    userTask.push({title: task.title, description: task.description, deadline: task.deadline, isChecked: task.isChecked, assignedUsers: task.assignedUsers});
+                    saveAtDB(task, task.title);
                 }
 
                 let selfTaskAdded = false;
                 const sendTaskTitle = addElement("h4", { class: "text-body-secondary fs-6 ms-3 mt-3" }, `自分のタスク`);
                 shareTasks.appendChild(sendTaskTitle);
                 loggedUserTasks.forEach((task, index) => {
+                    const allTasks = tasks.filter(task => task.assignedUsers.includes((user.id).replace(/\W+/g, '')));;
                     if (task.isChecked === false) {
                         selfTaskAdded = true;
                         
                         // Create button and assign listener
                         const tasks = addElement("div", { class: "task alert alert-light my-1" }, `<span>${task.deadline}</span> ${task.title}`);
-
+                        
                         const shareButton = addElement("button", {
                             type: "button",
                             class: "btn btn-outline-info btn-sm",
                             "data-task-id": index
                         }, "タスク共有");
 
-                        // add listener
-                        shareButton.addEventListener('click', function(event) {
-                            achievements.tasksShared++;
-                            checkAchievements(achievements);
+                        const taskExists = allTasks.some(userTaskItem => userTaskItem.id === task.id);
 
-                            // Insertar la nueva tarea en el contenedor de tareas
-                            const clonedTasks = addElement("div", { class: "task alert alert-light my-1" }, `<span>${task.deadline}</span> ${task.title}`);
-                            const shareButtonDisabled = addElement("button", {
-                                type: "button",
-                                class: "btn btn-outline-secondary btn-sm",
-                                disabled: true
-                            }, "タスク受領");
-                            clonedTasks.appendChild(shareButtonDisabled);
-                            sendTaskTitle.parentNode.insertBefore(clonedTasks, sendTaskTitle);
-
-                            noTaskVerification(selfTaskAdded, shareTasks);
-
-                            task.assignedUsers.push((user.id).replace(/\W+/g, ''));
-                            shareTask(task);
-                        });
+                        if (taskExists) {
+                            shareButton.disabled = true;
+                            shareButton.classList.replace('btn-outline-info', 'btn-outline-secondary');
+                        } else {
+                            // add listener
+                            shareButton.addEventListener('click', function(event) {
+                                shareButton.disabled = true;
+                                achievements.tasksShared++;
+                                checkAchievements(achievements);
+    
+                                const clonedTasks = addElement("div", { class: "task alert alert-light my-1" }, `<span>${task.deadline}</span> ${task.title}`);
+                                const shareButtonDisabled = addElement("button", {
+                                    type: "button",
+                                    class: "btn btn-outline-secondary btn-sm",
+                                    disabled: true
+                                }, "タスク受領");
+                                clonedTasks.appendChild(shareButtonDisabled);
+                                sendTaskTitle.parentNode.insertBefore(clonedTasks, sendTaskTitle);
+    
+                                noTaskVerification(selfTaskAdded, shareTasks);
+    
+                                task.assignedUsers.push((user.id).replace(/\W+/g, ''));
+                                shareTask(task);
+                            });
+                        }
 
                         tasks.appendChild(shareButton);
                         shareTasks.appendChild(tasks);
@@ -220,6 +234,7 @@ function team() {
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('col-12', 'col-md-12', 'col-lg-12');
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('order-first', 'card-group');
                 teamContainer.querySelector(`.${userIdClass} .profileCard`).classList.add('justify-content-center');
+                teamContainer.querySelector(`.${userIdClass} .userdescription`).classList.remove('d-none');
                 
                 const showedReports = addElement("div", { class: "card pt-3 pb-5 shadow-sm viewReports", style: "flex: 2 0 0%;" });
                 const closeBtn = addElement("button", { type: "button", class: "ms-auto me-2 mb-3 btn-close" });
@@ -279,6 +294,7 @@ function team() {
                 teamContainer.querySelector(`.${userIdClass}`).classList.remove('col-12', 'col-md-12', 'col-lg-12');
                 teamContainer.querySelector(`.${userIdClass}`).classList.add('col-6', 'col-md-6', 'col-lg-4');
                 teamContainer.querySelector(`.${userIdClass}`).classList.remove('order-first', 'card-group');
+                teamContainer.querySelector(`.${userIdClass} .userdescription`).classList.add('d-none');
                 teamContainer.querySelector(`.${userIdClass} .profileCard`).classList.remove('justify-content-center');
                 teamContainer.querySelector(`.${userIdClass} .btn-seemore`).classList.replace('btn-outline-secondary', 'btn-outline-primary');
                 teamContainer.querySelector(`.${userIdClass} .btn-reports`).classList.replace('btn-outline-secondary', 'btn-outline-dark');
@@ -326,6 +342,7 @@ function team() {
                         e.classList.remove('order-first', 'card-group');
                         e.classList.remove('col-12', 'col-md-12', 'col-lg-12');
                         e.classList.add('col-6', 'col-md-6', 'col-lg-4');
+                        e.querySelector(`.userdescription`).classList.add('d-none');
                     });
                 }
                 if(viewReport){
@@ -339,11 +356,12 @@ function team() {
                         e.classList.remove('order-first', 'card-group');
                         e.classList.remove('col-12', 'col-md-12', 'col-lg-12');
                         e.classList.add('col-6', 'col-md-6', 'col-lg-4');
+                        e.querySelector(`.userdescription`).classList.add('d-none');
                     });
                 }
             }
             function saveAtDB(task, title) {
-                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${task.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'

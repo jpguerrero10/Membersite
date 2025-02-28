@@ -649,7 +649,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al agregar la tarea:', err));
             } else if( action == "edition"){
-                fetch(`http://192.168.12.11:3000/tasks/${task.id}`, {
+                fetch(`http://${serverIP}:3000/tasks/${task.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -663,7 +663,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
             } else if( action == "delete"){
-                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${task.id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {

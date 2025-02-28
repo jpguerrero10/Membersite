@@ -62,9 +62,9 @@
             "image": "img/user2.jpg",
             "reports": [],
             "achievements": {
-                "tasksAdded": 0,
+                "tasksAdded": 1,
                 "tasksCompleted": 0,
-                "tasksShared": 0,
+                "tasksShared": 3,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -286,7 +286,7 @@
             "achievements": {
                 "tasksAdded": 2,
                 "tasksCompleted": 5,
-                "tasksShared": 22,
+                "tasksShared": 52,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -298,16 +298,15 @@
                         50,
                         100
                     ],
-                    "tasksShared": [
-                        50
-                    ]
+                    "tasksShared": []
                 },
                 "shownMilestones": {
                     "tasksAdded": [],
                     "tasksCompleted": [],
                     "tasksShared": [
                         5,
-                        20
+                        20,
+                        50
                     ]
                 }
             },
@@ -534,8 +533,7 @@
                 "johnD",
                 "marodriguez",
                 "genchan",
-                "emiD",
-                "moongirl"
+                "emiD"
             ],
             "id": "a51372b1-4f6b-4537-ae61-a7572789f00e",
             "checkList": [],
@@ -573,8 +571,7 @@
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "genchan",
-                "moongirl"
+                "genchan"
             ],
             "checkList": [
                 {
@@ -631,8 +628,7 @@
                 "genchan",
                 "neeman",
                 "marodriguez",
-                "johnD",
-                "moongirl"
+                "johnD"
             ],
             "checkList": [
                 {
@@ -659,8 +655,8 @@
             ]
         },
         {
-            "title": "タスクフォームのコードをリファクタリング2",
-            "description": "refactorizar el codigo que genera el formulario de las tasks,test2",
+            "title": "タスクフォームをリファクタリング",
+            "description": "refactorizar el codigo que genera el formulario de las tasks",
             "deadline": "2025-02-28",
             "isChecked": false,
             "assignedUsers": [
@@ -668,15 +664,24 @@
                 "genchan",
                 "breezthy"
             ],
-            "checkList": [
-                {
-                    "listCompleted": false,
-                    "listName": "test"
-                }
-            ],
+            "checkList": [],
             "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
             "project": [
                 "Asterisk"
+            ]
+        },
+        {
+            "title": "test",
+            "description": "test",
+            "deadline": "2025-02-28",
+            "isChecked": false,
+            "assignedUsers": [
+                "marodriguez"
+            ],
+            "checkList": [],
+            "id": "e7b27339-919d-4cc5-be6a-f7a7d4f67558",
+            "project": [
+                "Project1"
             ]
         }
     ],
@@ -765,7 +770,6 @@
             "end": "2025-02-14T18:30:00",
             "assignedUsers": [
                 "marodriguez",
-                "moongirl",
                 "johnD",
                 "genchan",
                 "neeman",

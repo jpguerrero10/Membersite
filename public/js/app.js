@@ -21,24 +21,7 @@ const showLoader = () => {
     
 //------------------------------------------------------------------------------------------------------------------------
 
-// get IP from server and put it at localStorage
-// fetch('http://192.168.12.11:3000/get-server-ip')
-//     .then(response => response.json())
-//     .then(data => {
-//         localStorage.setItem('serverIP', data.ip);
-//     })
-//     .catch(error => console.error('Error getting the server IP:', error));
-
-// const serverIP = localStorage.getItem('serverIP');
-const serverIP = "192.168.12.11";
-
-// if (!serverIP) {
-//     resetPage();
-// }
-// function resetPage(){
-//     location.reload();
-//     return;
-// }
+const serverIP = "192.168.11.42";
 
 // View controller Function
 const loadView = async (view, targetId = null) => {
@@ -53,7 +36,10 @@ const loadView = async (view, targetId = null) => {
             setTimeout(() => {
                 if(view !== 'login' && view !== 'register'){
                     tabCreation(view);
-                    moveNav();
+                    // if size change
+                    window.addEventListener('resize', moveNav);
+                } else{
+                    window.removeEventListener('resize', moveNav);
                 }
                 if (targetId) {
                     const targetElement = document.getElementById(targetId);
@@ -644,6 +630,7 @@ const modalSubmit = (imageInput, modalDialog, profileImage) => {
 
 // responsive
 function moveNav() {
+    console.log("entre");
     const nav = document.querySelector(".navbar");
     const header = document.querySelector("#asterisk-members-header");
     if (window.innerWidth <= 768) {
@@ -656,10 +643,6 @@ function moveNav() {
         }
     }
 }
-
-
-// if size change
-window.addEventListener('resize', moveNav);
 
 let userType;
 if(localStorage.getItem('userType') !== ""){

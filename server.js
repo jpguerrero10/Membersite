@@ -179,7 +179,7 @@ app.post('/tasks', async (req, res) => {
 app.put('/tasks/:id', async (req, res) => {
     try {
         const id = decodeURIComponent(req.params.id).trim();
-        console.log('Título recibido:', id);
+        console.log('id recibido:', id);
 
         const updatedTask = req.body;
         const data = await readData();
