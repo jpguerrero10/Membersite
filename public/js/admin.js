@@ -55,16 +55,7 @@ function admin(){
 
     function handleLogout() {
         // Limpiar datos almacenados
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userImage');
-        localStorage.removeItem('userID');
-        localStorage.removeItem('userDescription');
-        localStorage.removeItem(`userTask_${userID}`);
-        localStorage.removeItem(`achievements_${userID}`);
-        localStorage.removeItem(`userReports_${userID}`);
-        localStorage.removeItem('userType');
-        
+        localStorageRemoveItem(userID);
         cleanUp(); // Limpiar recursos
 
         loadView("login"); // Redirigir al login

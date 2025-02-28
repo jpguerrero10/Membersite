@@ -29,6 +29,14 @@ function login(){
         // Obtenemos los valores ingresados por el usuario
         const email = document.querySelector('#email').value;
         const password = document.querySelector('#password').value;
+
+        //プロジェクトの読み込み
+        fetch(`http://${serverIP}:3000/projects`)
+        .then(response => response.json())
+        .then(projects => {
+            localStorage.setItem(('projects'), JSON.stringify(projects));
+        })
+        .catch(error => console.error('Error al obtener las tareas:', error));
         
         // cargamos datos desde DB
         loadUsersFromDB(function(users){
@@ -42,6 +50,7 @@ function login(){
                 localStorage.setItem('userName', user.name);
                 localStorage.setItem('userEmail', user.email);
                 localStorage.setItem('userDescription', user.description);
+                localStorage.setItem('userPassword', user.password);
                 const imagePath = user.image;
                 if(imagePath instanceof Blob){
                     const blob = URL.createObjectURL(imagePath);
