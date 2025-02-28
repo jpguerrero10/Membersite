@@ -330,11 +330,11 @@
                     "dateStart": "2025-02-01",
                     "dateEnd": "2025-02-28",
                     "skills": "HTML, CSS, JS, PHP, Adobe Suite",
-                    "completedTask": "JS project",
+                    "completedTask": "【就業先業務】\n\n◆業務\n　・キッティング機器\n◆学習\n・Javascript：\n  -カレンダーのJSライブラリの実装\n  -スケジュール表示を作成\n  -イベントとタスクをスケジュールフォーマットに変換\n  -カレンダーでのクリックするとイベントを追加するように機能を作成\n  -繰り返し機能を作成\n  -終日機能を作成\n  -イベントのModal表示を作成",
                     "complain": "",
-                    "nextTask": "JS project",
-                    "objective": "",
-                    "message": "",
+                    "nextTask": "◆OAKマネジメント\n  -情報アーキテクチャを行い\n  -必要な素材を準備\n  -ワイヤーフレームを作成",
+                    "objective": "◆専門語力の向上\n・日本語能力試験N1を受ける\n・敬語の練習\n\n◆技術向上\n・ReactとVueJSの勉強",
+                    "message": "今月、現場での作業が無事に終了しました。これからはOAKサイトのリフォームプロジェクトに取り組んでいきます。",
                     "commentsArray": []
                 }
             ]
