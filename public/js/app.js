@@ -30,7 +30,7 @@ const showLoader = () => {
 //     .catch(error => console.error('Error getting the server IP:', error));
 
 // const serverIP = localStorage.getItem('serverIP');
-const serverIP = "192.168.12.11";
+const serverIP = "192.168.11.38";
 
 // if (!serverIP) {
 //     resetPage();
@@ -642,11 +642,11 @@ const modalForm = () => {
             }
         });
     }, 0);
-    modalLoaded();
+    modalLoaded(currentName, currentDescription);
 };
 
 // modal loaded
-const modalLoaded = () =>{
+const modalLoaded = (currentName, currentDescription) =>{
     const editForm1 = document.querySelector('#edit-form1');
     const editForm2 = document.querySelector('#edit-form2');
     const imageInput = document.querySelector('#formFile');
@@ -654,6 +654,7 @@ const modalLoaded = () =>{
     //modal image load
     imageInput.addEventListener('change', (event) => {
         const instantFile = event.target.files[0];
+        console.log(instantFile)
         if (instantFile){
             const imageURL = URL.createObjectURL(instantFile);
             profileImage.src = imageURL;
@@ -663,117 +664,63 @@ const modalLoaded = () =>{
     });
     editForm1.addEventListener('submit', (event) => {
         event.preventDefault();
-        console.log('submit editForm1');
-            let newDate = {};
-            modalSubmit(imageInput, modalDialog, profileImage);
+        modalSubmit(currentName, currentDescription, imageInput);
     });
     editForm2.addEventListener('submit', (event) => {
         event.preventDefault();
-        console.log('submit editForm2');
-        const flag = checkPaswordEdit(document.querySelector("#currentPassword").value, document.querySelector("#newPassword").value, document.querySelector("#confirmNewPassword").value);
-        console.log(flag);
-        if (flag) {
-            let newDate = {};
-            modalSubmit(imageInput, modalDialog, profileImage);
-        } else {
-            return;
-        }
+        checkPaswordEdit(document.querySelector("#currentPassword").value, document.querySelector("#newPassword").value, document.querySelector("#confirmNewPassword").value);
     });
 };
 
 //modal submit
-const modalSubmit = (imageInput, modalDialog, profileImage) => {
-    const description = document.querySelector('#description').value;
+const modalSubmit = async(currentName, currentDescription, imageInput) => {
+    const newName = document.querySelector("#editUserName").value;
+    const newDescription = document.querySelector('#description').value;
     const instantFile = imageInput.files[0];
-    let image;
-    
-    // validate user data
-    const userIndex = userID;
-    
-    if (userIndex !== -1) {
-        if(description){
-            localStorage.setItem('userDescription', description);
-            document.querySelector('#userDescription').textContent = localStorage.getItem('userDescription') || userDescription;
-
-            // saveUserInfo(localStorage.getItem('userID', newData);
-            // save user description DB
-            // const dbRequest = indexedDB.open('userDatabase', 1);
-            // dbRequest.onsuccess = function(event){
-            //     const db = event.target.result;
-            //     const transaction = db.transaction(["users"], "readwrite");
-            //     const objectStore = transaction.objectStore("users");
-            //     const getUserRequest = objectStore.get(userEmail);
-
-            //     getUserRequest.onsuccess = function() {
-            //         const user = getUserRequest.result;
-            //         if(user){
-            //             user.description = description;
-            //             const updateUserRequest = objectStore.put(user);
-
-            //             updateUserRequest.onerror = function(event){
-            //                 console.error("Error updating user:", event);
-            //             };
-            //             updateUserRequest.onsuccess = function(event){
-            //                 console.log(`${userID}:User taks updated`, event)
-            //             };
-            //         } else{
-            //             console.error(`${userID} user not found`);
-            //         }
-            //     };
-            //     getUserRequest.onerror = function(event){
-            //         console.error("error: user not found", event)
-            //     };
-            // };
-        }
-
-        if(imageInput.files.length > 0){
-            // save user description DB
-            // const dbRequest = indexedDB.open('userDatabase', 1);
-            // dbRequest.onsuccess = function(event){
-            //     const db = event.target.result;
-            //     const transaction = db.transaction(["users"], "readwrite");
-            //     const objectStore = transaction.objectStore("users");
-            //     const getUserRequest = objectStore.get(userEmail);
-                
-            //     getUserRequest.onsuccess = function() {
-            //         const user = getUserRequest.result;
-            //         if(user){
-            //             user.image = instantFile;
-            //             const updateUserRequest = objectStore.put(user);
-
-            //             updateUserRequest.onerror = function(event){
-            //                 console.error("Error updating user:", event);
-            //             };
-            //             updateUserRequest.onsuccess = function(event){
-            //                 console.log(`${userID}:User taks updated`)
-            //             };
-            //         } else{
-            //             console.error(`${userID} user not found`);
-            //         }
-            //     };
-            //     getUserRequest.onerror = function(event){
-            //         console.error("error: user not found", event)
-            //     };
-            // };
-            const reader = new FileReader();
-            
-            reader.onload = function(e){
-                imageData = e.target.result;
-                const image = imageData;
-                localStorage.setItem('userImage', image);
-            }
-            reader.readAsDataURL(instantFile);
-            document.querySelector('#userImage').src = URL.createObjectURL(instantFile);
-        }
-        // modalDialog.innerHTML = "";
-    } else {
-        console.error('something went wrong'); 
+    const userID = localStorage.getItem('userID');
+    let newData = {};
+    //名前に変更があった場合
+    if (newName !== currentName) {
+        newData.name = newName;
+        localStorage.setItem('userName', newName);
+        document.querySelector("#userName").textContent = newName;
     }
+    //自己紹介に変更があった場合
+    if (newDescription !== currentDescription) {
+        newData.description = newDescription;
+        localStorage.setItem('userDescription', newDescription);
+    }
+    //画像に変更があった場合
+    if (instantFile !== undefined) {
+        try {
+            const formData = new FormData();
+            formData.append("image", instantFile);
+            console.log(formData)
+            const response = await fetch(`http://${serverIP}:3000/upload`, {
+                method: "post",
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`サ;ーバーエラー: ${response.status} ${response.statusText}`);
+            }
+            const result = await response.json();
+            if (result.filePath) {
+                newData.image = result.filePath;
+                localStorage.setItem("userImage", newData.image);
+                document.querySelector('#userImage').src = result.filePath;
+            } else {
+                console.error("画像のアップロードに失敗しました")
+            }
+        } catch (error) {
+            console.error("アップロードエラー:", error);
+        }
+    }
+    saveUserInfo(userID, newData);
 };
 
 function saveUserInfo(userID, newData) {
-    console.log(userID);
-    fetch(`/users/${userID}`, {
+    fetch(`http://${serverIP}:3000/users/${userID}`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(newData)
@@ -790,69 +737,74 @@ function checkPaswordEdit(currentPassword, newPassword, confirmNewPassword) {
     inputErrorText.forEach(text => text.classList.add("input-error-text-display"));
     let currentPasswordFlag = false;
     let newPasswordFlag = false;
-    //現在のパスワードが間違っていた場合
-    if (currentPassword !== localStorage.getItem('userPassword') || currentPassword === '') {
-        inputErrorText[0].textContent = 'パスワードの認証に失敗しました。';
-        if (!inputErrorText[0].classList.contains('text-danger')) {
-            inputErrorText[0].classList.add('text-danger');
-        }
-        if (!currentPasswordInput.classList.contains('border-danger')) {
-            currentPasswordInput.classList.add('border-danger');
-        }
-        inputErrorText[0].classList.remove('text-success');
-        currentPasswordInput.classList.remove('border-success');
-        currentPasswordFlag = false;
-    //現在のパスワードが合っていた場合
-    } else {
-        inputErrorText[0].textContent = 'パスワードの認証に成功しました';
-        if (!inputErrorText[0].classList.contains("text-success")) {
-            inputErrorText[0].classList.add('text-success');
-        }
-        if (!currentPasswordInput.classList.contains('border-success')) {
-            currentPasswordInput.classList.add('border-success');
-        }
-        inputErrorText[0].classList.remove('text-danger');
-        currentPasswordInput.classList.remove('border-danger');
-        currentPasswordFlag = true;
-    }
-    //新しいパスワードと再入力したパスワードが一致しなかった場合
-    if (newPassword !== confirmNewPassword) {
-        inputErrorText[1].textContent = '再入力されたパスワードが一致しません';
-        if (!inputErrorText[1].classList.contains('text-danger')) {
-            inputErrorText[1].classList.add('text-danger');
-        }
-        inputErrorText[1].classList.remove('text-success');
-        newPasswordInput.forEach(inputElm => {
-            if (!inputElm.classList.contains('border-danger')) {
-                inputElm.classList.add('border-danger');
-            }
-            inputElm.classList.remove('border-success');
-        })
-        newPasswordFlag = false;
-    //新しいパスワードと再入力したパスワードが一致した場合
-    } else {
-        inputErrorText[1].textContent = '新しいパスワードは正しく入力されました';
-        if (!inputErrorText[1].classList.contains('text-success')) {
-            inputErrorText[1].classList.add('text-success');
-        }
-        inputErrorText[1].classList.remove('text-danger');
-        newPasswordInput.forEach(inputElm => {
-            if (!inputElm.classList.contains('border-success')) {
-                inputElm.classList.add('border-success');
-            }
-            inputElm.classList.remove('border-danger');
-        })
-        newPasswordFlag = true;
-    }
-    if (currentPasswordFlag && newPasswordFlag) {
-        console.log('入力できてまっせ')
-        let newData = {password: newPassword};
-        const userID = localStorage.getItem('userID');
-        const actualUser = (userID).replace(/\W+/g, '');
-        saveUserInfo(actualUser, newData);
-    } else {
-        return;
-    }
+    let passwordBefore = '';
+    fetch(`http://${serverIP}:3000/users/${userID.textContent}`)
+            .then(response => response.json())
+            .then(password => {
+                passwordBefore = password.password;
+                //現在のパスワードが間違っていた場合
+                if (currentPassword !== passwordBefore || currentPassword === '') {
+                    inputErrorText[0].textContent = 'パスワードの認証に失敗しました。';
+                    if (!inputErrorText[0].classList.contains('text-danger')) {
+                        inputErrorText[0].classList.add('text-danger');
+                    }
+                    if (!currentPasswordInput.classList.contains('border-danger')) {
+                        currentPasswordInput.classList.add('border-danger');
+                    }
+                    inputErrorText[0].classList.remove('text-success');
+                    currentPasswordInput.classList.remove('border-success');
+                    currentPasswordFlag = false;
+                //現在のパスワードが合っていた場合
+                } else {
+                    inputErrorText[0].textContent = 'パスワードの認証に成功しました';
+                    if (!inputErrorText[0].classList.contains("text-success")) {
+                        inputErrorText[0].classList.add('text-success');
+                    }
+                    if (!currentPasswordInput.classList.contains('border-success')) {
+                        currentPasswordInput.classList.add('border-success');
+                    }
+                    inputErrorText[0].classList.remove('text-danger');
+                    currentPasswordInput.classList.remove('border-danger');
+                    currentPasswordFlag = true;
+                }
+                //新しいパスワードと再入力したパスワードが一致しなかった場合
+                if (newPassword !== confirmNewPassword) {
+                    inputErrorText[1].textContent = '再入力されたパスワードが一致しません';
+                    if (!inputErrorText[1].classList.contains('text-danger')) {
+                        inputErrorText[1].classList.add('text-danger');
+                    }
+                    inputErrorText[1].classList.remove('text-success');
+                    newPasswordInput.forEach(inputElm => {
+                        if (!inputElm.classList.contains('border-danger')) {
+                            inputElm.classList.add('border-danger');
+                        }
+                        inputElm.classList.remove('border-success');
+                    })
+                    newPasswordFlag = false;
+                //新しいパスワードと再入力したパスワードが一致した場合
+                } else {
+                    inputErrorText[1].textContent = '新しいパスワードは正しく入力されました';
+                    if (!inputErrorText[1].classList.contains('text-success')) {
+                        inputErrorText[1].classList.add('text-success');
+                    }
+                    inputErrorText[1].classList.remove('text-danger');
+                    newPasswordInput.forEach(inputElm => {
+                        if (!inputElm.classList.contains('border-success')) {
+                            inputElm.classList.add('border-success');
+                        }
+                        inputElm.classList.remove('border-danger');
+                    })
+                    newPasswordFlag = true;
+                }
+                if (currentPasswordFlag && newPasswordFlag) {
+                    let newData = {password: newPassword};
+                    const userID = localStorage.getItem('userID');
+                    saveUserInfo(userID, newData);
+                } else {
+                    return;
+                }
+            })
+            .catch(error => console.error('Error al obtener las tareas:', error));
 }
 
 //------------------------------------------------------------------------------------------------------------------------
@@ -885,7 +837,6 @@ function localStorageRemoveItem(userID) {
     localStorage.removeItem('userType');
     localStorage.removeItem('userPassword');
 }
-
 
 // if size change
 window.addEventListener('resize', moveNav);

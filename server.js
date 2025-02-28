@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require("multer");
 const cors = require('cors');
 const fs = require('fs/promises');
 const path = require('path');
@@ -133,16 +134,27 @@ app.delete('/users/:id', async (req, res) => {
     }
 });
 
-// //ユーザー情報の特定のプロパティのみを更新
-// app.patch('/users/:id/', async(req, res) => {
-//     try {
-//         console.log(req.params.id);
-//         const updatedUser = await updateItem('users', req.params.id, req.body);
-//         res.json({message: 'Usuario actualizado', user: updatedUser});
-//     } catch (error) {
-//         res.status(404).json({error: error.message});
-//     }
-// });
+async function updateItem(collection, id ,newData) {
+    const data = await readData();
+    const itemIndex = data[collection].findIndex(item => String(item.id) === String(id));
+    if (itemIndex === -1) {
+        throw new Error('Item not found');
+    }
+    data[collection][itemIndex] = {...data[collection][itemIndex], ...newData};
+    await writeData(data);
+    return data[collection][itemIndex];
+}
+
+//ユーザー情報の特定のプロパティのみを更新
+app.patch('/users/:id/', async(req, res) => {
+    console.log(req.params.id);
+    try {
+        const updatedUser = await updateItem('users', req.params.id, req.body);
+        res.json({message: 'Usuario actualizado', user: updatedUser});
+    } catch (error) {
+        res.status(404).json({error: error.message});
+    }
+});
 
 // task route // rutas tareas --------------------------------------------------------------------------------------------
 
@@ -306,6 +318,39 @@ app.get('/projects', async (req, res) => {
         res.status(500).json({ error: 'Error al leer los datos del archivo' });
     }
 });
+
+// 画像の保存に関する処理
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "img/");
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({storage: storage});
+
+app.post("/upload",
+    upload.single("image"), (req, res) => {
+    try {
+        console.log('アップロードされたファイル:', req.file)
+        if (!req.file) {
+            return res.status(400).json({error: "画像がアップロードされていません"});
+        }
+        res.json({
+            message: "画像のアップロードに成功しました",
+            filePath: `/img/${req.file.filename}`
+        });
+    } catch (error) {
+        console.error('アップロード処理中にエラー:', error);
+        res.status(500).json({error: "サーバー内部エラー"});
+    }
+});
+
+app.use("/img",
+    express.static("img")
+);
 
 //---------------------------------------------------------- server starts ------------------------------------------------------------------
 
