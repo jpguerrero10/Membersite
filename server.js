@@ -176,14 +176,14 @@ app.post('/tasks', async (req, res) => {
 });
 
 // Actualizar una tarea por su título
-app.put('/tasks/:title', async (req, res) => {
+app.put('/tasks/:id', async (req, res) => {
     try {
-        const title = decodeURIComponent(req.params.title).trim();
-        console.log('Título recibido:', title);
+        const id = decodeURIComponent(req.params.id).trim();
+        console.log('id recibido:', id);
 
         const updatedTask = req.body;
         const data = await readData();
-        const taskIndex = data.tasks.findIndex(task => task.title.trim() === title);
+        const taskIndex = data.tasks.findIndex(task => task.id.trim() === id);
 
         if (taskIndex === -1) {
             return res.status(404).json({ error: 'Tarea no encontrada' });
@@ -199,12 +199,12 @@ app.put('/tasks/:title', async (req, res) => {
 });
 
 // Eliminar una tarea por su título
-app.delete('/tasks/:title', async (req, res) => {
+app.delete('/tasks/:id', async (req, res) => {
     try {
-        const taskTitle = decodeURIComponent(req.params.title.trim());
+        const taskid = decodeURIComponent(req.params.id.trim());
         let data = await readData();
 
-        const taskIndex = data.tasks.findIndex(task => task.title.trim() === taskTitle);
+        const taskIndex = data.tasks.findIndex(task => task.id.trim() === taskid);
         
         if (taskIndex === -1) {
             return res.status(404).json({ error: 'Tarea no encontrada' });

@@ -5,7 +5,7 @@
             "password": "password123",
             "name": "John Doe",
             "id": "@johnD",
-            "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "description": "1Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "image": "img/user1.jpg",
             "achievements": {
                 "tasksAdded": 5,
@@ -62,9 +62,9 @@
             "image": "img/user2.jpg",
             "reports": [],
             "achievements": {
-                "tasksAdded": 0,
+                "tasksAdded": 1,
                 "tasksCompleted": 0,
-                "tasksShared": 0,
+                "tasksShared": 3,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -285,8 +285,8 @@
             "image": "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?t=st=1729035691~exp=1729039291~hmac=af1f015be4e2265a3b6f47a0c71539af89297f46ad77ca8a9cfc1c64c289a8a1&w=740",
             "achievements": {
                 "tasksAdded": 2,
-                "tasksCompleted": 4,
-                "tasksShared": 19,
+                "tasksCompleted": 5,
+                "tasksShared": 52,
                 "milestones": {
                     "tasksAdded": [
                         10,
@@ -298,16 +298,15 @@
                         50,
                         100
                     ],
-                    "tasksShared": [
-                        20,
-                        50
-                    ]
+                    "tasksShared": []
                 },
                 "shownMilestones": {
                     "tasksAdded": [],
                     "tasksCompleted": [],
                     "tasksShared": [
-                        5
+                        5,
+                        20,
+                        50
                     ]
                 }
             },
@@ -572,8 +571,7 @@
             "assignedUsers": [
                 "neeman",
                 "johnD",
-                "genchan",
-                "moongirl"
+                "genchan"
             ],
             "checkList": [
                 {
@@ -630,8 +628,7 @@
                 "genchan",
                 "neeman",
                 "marodriguez",
-                "johnD",
-                "moongirl"
+                "johnD"
             ],
             "checkList": [
                 {
@@ -658,18 +655,33 @@
             ]
         },
         {
-            "title": "タスクフォームのコードをリファクタリング",
+            "title": "タスクフォームをリファクタリング",
             "description": "refactorizar el codigo que genera el formulario de las tasks",
             "deadline": "2025-02-28",
             "isChecked": false,
             "assignedUsers": [
                 "neeman",
-                "genchan"
+                "genchan",
+                "breezthy"
             ],
             "checkList": [],
             "id": "fd1c34c0-7713-49e6-b81e-e96767586ad3",
             "project": [
                 "Asterisk"
+            ]
+        },
+        {
+            "title": "test",
+            "description": "test",
+            "deadline": "2025-02-28",
+            "isChecked": false,
+            "assignedUsers": [
+                "marodriguez"
+            ],
+            "checkList": [],
+            "id": "e7b27339-919d-4cc5-be6a-f7a7d4f67558",
+            "project": [
+                "Project1"
             ]
         }
     ],
@@ -758,7 +770,6 @@
             "end": "2025-02-14T18:30:00",
             "assignedUsers": [
                 "marodriguez",
-                "moongirl",
                 "johnD",
                 "genchan",
                 "neeman",
@@ -811,6 +822,17 @@
                 "interval": "3",
                 "endDate": "2025-03-20"
             }
+        },
+        {
+            "title": "test",
+            "start": "2025-03-01",
+            "end": "2025-03-01",
+            "assignedUsers": [
+                "neeman",
+                "genchan"
+            ],
+            "place": "test",
+            "content": "test"
         }
     ],
     "projects": [

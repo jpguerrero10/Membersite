@@ -649,7 +649,7 @@ function profile() {
                 })
                 .catch(err => console.error('Error al agregar la tarea:', err));
             } else if( action == "edition"){
-                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${task.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -658,12 +658,12 @@ function profile() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('タスクはアップデートされた:', data);
+                    console.log(task.id, 'タスクはアップデートされた:', data);
                     updateAchievements(userID, achievements);
                 })
                 .catch(err => console.error('Error al actualizar la tarea:', err));
             } else if( action == "delete"){
-                fetch(`http://${serverIP}:3000/tasks/${encodeURIComponent(title)}`, {
+                fetch(`http://${serverIP}:3000/tasks/${task.id}`, {
                     method: 'DELETE'
                 })
                 .then(response => {
